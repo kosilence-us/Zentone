@@ -17,6 +17,7 @@ const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
 const multer = require('multer');
+const exphbs = require('express-handlebars');
 const db = require('./models/db.js');
 
 const upload = multer({ dest: path.join(__dirname, 'uploads') });
@@ -49,8 +50,24 @@ const app = express();
  */
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+
+const hbs = exphbs.create({
+  defaultLayout: 'main',
+  helpers: {
+    ifeq: function(a, b, options) {
+      if (a === b) {
+        return options.fn(this);
+      }
+      return options.inverse(this);
+    },
+    toJSON : function(object) {
+      return JSON.stringify(object);
+    }
+  }
+});
+
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
 app.use(expressStatusMonitor());
 app.use(compression());
 app.use(sass({
