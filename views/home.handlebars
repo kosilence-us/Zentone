@@ -1,58 +1,57 @@
 <div class="container-fluid">
-  {{#if messages.success}}
+    {{#if messages.success}}
     <div role="alert" class="alert alert-success">
       {{#each messages.success}}
         <div>{{msg}}</div>
       {{/each}}
     </div>
   {{/if}}
-  {{#if messages.error}}
+    {{#if messages.error}}
     <div role="alert" class="alert alert-danger">
       {{#each messages.error}}
         <div>{{msg}}</div>
       {{/each}}
     </div>
   {{/if}}
-  {{#if messages.info}}
+    {{#if messages.info}}
     <div role="alert" class="alert alert-info">
       {{#each messages.info}}
         <div>{{msg}}</div>
       {{/each}}
     </div>
   {{/if}}
-  <div class="row">
-    <div class="col-sm-4">
-      <div class="panel">
-        <div class="panel-body">
-          <h3>Heading</h3>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris
-            condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod.
-            Donec sed odio dui.</p>
-          <a href="#" role="button" class="btn btn-default">View details</a>
+    <div class="carousel slide" data-ride="carousel" id="carousel-1">
+        <div class="carousel-inner" role="listbox"></div>
+        <div>
+            <a class="carousel-control-prev" href="#carousel-1" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carousel-1" role="button" data-slide="next">
+                <span class="carousel-control-next-icon"></span>
+                <span class="sr-only">Next</span>
+            </a>
         </div>
-      </div>
+        <ol class="carousel-indicators"></ol>
     </div>
-    <div class="col-sm-4">
-      <div class="panel">
-        <div class="panel-body">
-          <h3>Heading</h3>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris
-            condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod.
-            Donec sed odio dui.</p>
-          <a href="#" role="button" class="btn btn-default">View details</a>
+    <div class="swiper-button-prev" style="margin:-120px 20px;"></div>
+    <div class="simple-slider">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" style="background-image:url(https://placeholdit.imgix.net/~text?txtsize=68&amp;txt=Slideshow+Image&amp;w=1920&amp;h=500);"></div>
+                <div class="swiper-slide" style="background-image:url(https://placeholdit.imgix.net/~text?txtsize=68&amp;txt=Slideshow+Image&amp;w=1920&amp;h=500);"></div>
+                <div class="swiper-slide" style="background-image:url(https://placeholdit.imgix.net/~text?txtsize=68&amp;txt=Slideshow+Image&amp;w=1920&amp;h=500);"></div>
+            </div>
+            <div class="swiper-pagination"></div>
         </div>
-      </div>
     </div>
-    <div class="col-sm-4">
-      <div class="panel">
-        <div class="panel-body">
-          <h3>Heading</h3>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris
-            condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod.
-            Donec sed odio dui.</p>
-          <a href="#" role="button" class="btn btn-default">View details</a>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-lg-9 offset-lg-0"><img src="img/itsme.jpg" style="height:71px;width:56px;padding:10px;"></div>
+                <div class="col-md-6 col-lg-3"><i class="fa fa-share-alt float-right" style="padding:20px;"></i></div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+    <div class="swiper-button-next" style="margin:-120px 20px;"></div>
 </div>

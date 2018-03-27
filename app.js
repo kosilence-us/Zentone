@@ -34,6 +34,7 @@ const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
+const slideController = require('./controllers/slide');
 
 /**
  * API keys and Passport configuration.
@@ -54,13 +55,13 @@ app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
 const hbs = exphbs.create({
   defaultLayout: 'main',
   helpers: {
-    ifeq: function(a, b, options) {
+    ifeq: function (a, b, options) {
       if (a === b) {
         return options.fn(this);
       }
       return options.inverse(this);
     },
-    toJSON : function(object) {
+    toJSON: function (object) {
       return JSON.stringify(object);
     }
   }
@@ -115,6 +116,7 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
  * Primary app routes.
  */
 app.get('/', homeController.index);
+app.get('/upload', slideController.upload);
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
