@@ -45,7 +45,7 @@ textarea {
 }
 
 .slide-form {
-  margin: 20px;
+  margin: auto;
   padding: 20px;
 }
 
@@ -106,7 +106,37 @@ textarea {
 
 .img-share {
   margin-top: 20px;
+  margin-right: auto;
   font-size: 40px;
+}
+
+// Responsiveness
+// -------------------------
+/* xs */
+img {
+  width: 100%;
+  height: auto;
+}
+/* sm */
+@media only screen and (max-width: 768px) {
+  body {
+    padding: 0;
+  }
+  .simple-slider {
+    width: 100%;
+  }
+  .img-share {
+    margin-top: 25px;
+    font-size: 30px;
+  }
+}
+/* md */
+@media (min-width: 992px) {
+
+}
+/* lg */
+@media (min-width: 1200px) {
+
 }
 
 // Footer-Basic
