@@ -40,10 +40,23 @@ textarea {
   resize: vertical;
 }
 
-#slide-form {
-  margin: 0 40px 0 0;
-  padding:20px;
-  height:436px;
+.form-control {
+  border-radius: 5px;
+}
+
+.slide-form {
+  margin: 20px;
+  padding: 20px;
+}
+
+.btn {
+  border-radius: 5px;
+}
+
+.btn-primary {
+  position: relative;
+  margin-left: 60px;
+  background-color: #5FC0DC;
 }
 
 // Navbar
@@ -80,6 +93,20 @@ textarea {
 
 .fa {
   margin-right: 6px;
+}
+
+// Images
+// -------------------------
+
+.img-user {
+  height: 71px;
+  width: 56px;
+  padding: 10px;
+}
+
+.img-share {
+  margin-top: 20px;
+  font-size: 40px;
 }
 
 // Footer-Basic
