@@ -17,7 +17,6 @@ html {
 }
 
 body {
-  padding:0 80px;
   margin-bottom: 75px;
 }
 
@@ -31,6 +30,23 @@ footer {
   p, ul {
     margin-bottom: 0;
   }
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+// Positioning
+// -------------------------
+
+.white-sides {
+  padding: 0 80px;
+}
+
+.flex {
+  display: flex;
+  flex: 1;
+  flex-wrap: nowrap;
 }
 
 // Input Fields
@@ -49,6 +65,9 @@ textarea {
   padding: 20px;
 }
 
+// Buttons
+// -------------------------
+
 .btn {
   border-radius: 5px;
 }
@@ -59,17 +78,91 @@ textarea {
   background-color: #5FC0DC;
 }
 
+.button-slides > a {
+  color: black;
+
+  &:hover {
+    color: lightgrey;
+  }
+}
+
+#button-share {
+  font-size: xx-large;
+  color: lightgrey;
+
+  &:hover {
+    color: grey;
+  }
+}
+
 // Navbar
 // -------------------------
 
-.navbar-nav img {
-  width: 30px;
-  height: 30px;
-  margin: -15px 15px -15px;
+.navbar {
+  flex-wrap: nowrap;
+}
+
+.navbar-nav {
+  flex-direction: row;
+  float: none;
 }
 
 .navbar-collapse {
-  flex-basis: 80%;
+  flex-basis: 0;
+}
+
+.navbar-container {
+  padding: 0 80px;
+  display: flex;
+}
+
+.navbar-nav > li > a {
+  float: none;
+  text-align: right;
+}
+
+.teaser-note {
+  width: 350px;
+  text-align: right;
+}
+
+.navbar-brand {
+  position: relative;
+  height: auto;
+  width: 120px;
+  bottom: 3px;
+  margin: auto;
+}
+
+.navbar > .container {
+  display: flex;
+  justify-content: space-around;
+}
+
+#teaser-note {
+  margin: auto;
+}
+
+#button-upload {
+  background-color: #279dff;
+  width: 78px;
+  height: 50px;
+  border-radius: 8px;
+
+  &:hover {
+    background-color: white;
+    width: 80px;
+    height: 48px;
+    @include transition(.4s);
+  }
+}
+
+#button-upload > a {
+  color: white;
+
+  &:hover {
+    color: #76B9F4;
+  }
 }
 
 // Alerts
@@ -98,6 +191,10 @@ textarea {
 // Images
 // -------------------------
 
+.img-dummy {
+  background-image: url(https://placeholdit.imgix.net/~text?txtsize=68&amp;txt=Slideshow+Image&amp;w=1920&amp;h=500);
+}
+
 .img-user {
   height: 71px;
   width: 56px;
@@ -110,13 +207,6 @@ textarea {
   font-size: 40px;
 }
 
-.logo {
-  position: relative;
-  height: 35px;
-  width: 100px;
-  bottom: 15px;
-}
-
 // Responsiveness
 // -------------------------
 /* xs */
@@ -126,7 +216,7 @@ img {
 }
 /* sm */
 @media only screen and (max-width: 768px) {
-  body {
+  .white-sides {
     padding: 0;
   }
   .simple-slider {
@@ -135,6 +225,9 @@ img {
   .img-share {
     margin-top: 25px;
     font-size: 30px;
+  }
+  .navbar-container {
+    padding: 0 10px;
   }
 }
 /* md */
@@ -145,6 +238,7 @@ img {
 @media (min-width: 1200px) {
 
 }
+
 
 // Footer-Basic
 // -------------------------
@@ -240,4 +334,32 @@ img {
   .simple-slider .swiper-slide {
     height:360px;
   }
+}
+
+.views {
+  padding: 30px 0;
+  text-align: center;
+}
+
+.views > a:hover {
+  text-decoration: none;
+}
+
+// Slide Foot
+// -------------------------
+
+#slide-foot {
+  display: flex;
+}
+
+.slide-random {
+  position: absolute;
+  right: 10px;
+  font-size: 24px;
+}
+
+.slide-next {
+  position: absolute;
+  left: 40px;
+  font-size: 24px;
 }
