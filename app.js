@@ -55,15 +55,13 @@ app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000);
 const hbs = exphbs.create({
   defaultLayout: 'main',
   helpers: {
-    ifeq: function (a, b, options) {
+    ifeq: (a, b, options) => {
       if (a === b) {
         return options.fn(this);
       }
       return options.inverse(this);
     },
-    toJSON: function (object) {
-      return JSON.stringify(object);
-    }
+    toJSON: object => JSON.stringify(object)
   }
 });
 
