@@ -1,10 +1,13 @@
 $(document).ready(() => {
+  console.log('pdf loading data...');
   // If absolute URL from the remote server is provided, configure the CORS
   // header on that server.
   const url = '//cdn.mozilla.net/pdfjs/tracemonkey.pdf';
   // Loaded via <script> tag, create shortcut to access PDF.js exports.
   const pdfjsLib = window['pdfjs-dist/build/pdf'];
   // The workerSrc property shall be specified.
+  console.log('pdfjsLib');
+  console.log(pdfjsLib);
   pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
   const scale = 0.8;
   const canvas = document.getElementById('the-canvas');

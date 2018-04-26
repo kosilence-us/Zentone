@@ -1,4 +1,5 @@
-$((document).ready(() => {
+
+$(document).ready(() => {
   console.log('Dropzone initializing...');
   // $('div#slide-upload').dropzone({
   window.Dropzone.options.slideDropzone = {

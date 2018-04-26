@@ -12,17 +12,25 @@
     "postinstall": "npm rebuild node-sass",
     "start": "node app.js",
     "test": "mocha --reporter spec",
-    "lint": "eslint **/*.js"
+    "lint": "eslint **/*.js",
+    "develop": "webpack --mode development --watch",
+    "build": "webpack --mode production"
   },
   "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.5",
     "@types/express": "^4.11.1",
+    "babel-loader": "^7.1.4",
     "bcrypt-nodejs": "^0.0.3",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
+    "bootstrap": "^4.1.0",
+    "bootstrap-tagsinput": "^0.7.1",
     "chalk": "^2.1.0",
     "cheerio": "^1.0.0-rc.2",
     "compression": "^1.7.0",
+    "css-loader": "^0.28.11",
     "dotenv": "^5.0.1",
+    "dropzone": "^5.4.0",
     "errorhandler": "^1.5.0",
     "express": "^4.15.4",
     "express-flash": "^0.0.2",
@@ -30,12 +38,14 @@
     "express-session": "^1.15.5",
     "express-status-monitor": "^1.0.0",
     "express-validator": "^5.0.3",
+    "extract-text-webpack-plugin": "^3.0.2",
     "fbgraph": "^1.4.1",
+    "jquery": "^3.3.1",
     "lusca": "^1.5.1",
     "morgan": "^1.8.2",
     "multer": "^1.3.0",
     "node-linkedin": "^0.5.6",
-    "node-sass": "^4.7.2",
+    "node-sass": "^4.8.3",
     "node-sass-middleware": "^0.11.0",
     "nodemailer": "^4.0.1",
     "passport": "0.4.0",
@@ -46,13 +56,20 @@
     "passport-oauth": "^1.0.0",
     "passport-twitter": "^1.0.4",
     "paypal-rest-sdk": "^1.7.1",
+    "pdfjs-dist": "^2.0.489",
     "pg": "^7.4.1",
+    "popper.js": "^1.14.3",
     "pug": "^2.0.0-rc.3",
     "request": "^2.81.0",
+    "sass-loader": "^7.0.1",
+    "script-loader": "^0.7.2",
     "sequelize": "^4.36.1",
+    "swiper": "^4.2.2",
     "twit": "^2.2.9",
     "uuid": "^3.2.1",
-    "validator": "^9.4.1"
+    "validator": "^9.4.1",
+    "webpack": "^4.6.0",
+    "webpack-bundle-analyzer": "^2.11.1"
   },
   "peerDependencies": {
     "node-sass": "^4.7.2"
@@ -66,6 +83,7 @@
     "mocha": "^5.0.2",
     "sinon": "^4.4.2",
     "sinon-mongoose": "^2.0.2",
-    "supertest": "^3.0.0"
+    "supertest": "^3.0.0",
+    "webpack-cli": "^2.0.15"
   }
 }
