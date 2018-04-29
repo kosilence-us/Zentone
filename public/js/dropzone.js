@@ -7,7 +7,10 @@ $(document).ready(() => {
     uploadMultiple: false,
     addRemoveLinks: true,
     dictResponseError: 'Server not Configured',
-    acceptedFiles: '.png,.jpg,.gif,.bmp,.jpeg,.pdf',
+    acceptedFiles: '.pdf',
+    headers: {
+      'X-CSRF-Token': $('input[name="csrf_token"]').val()
+    },
     init() {
       const self = this;
       // config
@@ -26,7 +29,7 @@ $(document).ready(() => {
       // File upload Progress
       self.on('totaluploadprogress', (progress) => {
         console.log('progress ', progress);
-        $('.roller').width(progress + '%');
+        $('.roller').width(`${progress}%`);
       });
 
       self.on('queuecomplete', (progress) => {
@@ -43,7 +46,4 @@ $(document).ready(() => {
       return done();
     }
   };
-  console.log('Dropzone instance data: ');
-  console.log('-----------------------');
-  console.log(window.Dropzone.options);
 });

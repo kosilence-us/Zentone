@@ -35,15 +35,17 @@ exports.getFileUpload = (req, res) => {
 };
 
 exports.postFileUpload = (req, res, err) => {
-  if (err) {
-    console.log('--> Bad Request');
-    console.log(req.body);
-    res.status(400).send(err);
-  } else {
-    console.log('--> API Route Reached');
-    // req.flash('success', { msg: 'File was uploaded successfully.' });
-    res.redirect('/api/upload');
+  if (req.file.mimetype !== 'application/pdf') {
+    console.log('The uploaded file must be a pdf');
+    console.log(req.file.mimetype);
+    return res.status(422).json({
+      error: 'The uploaded file must be a pdf'
+    });
   }
+  console.log('--> API Route Reached');
+  console.log(req.file);
+  req.flash('success', { msg: 'File was uploaded successfully.' });
+  return res.status(200).send(req.file);
 };
 
 /**
