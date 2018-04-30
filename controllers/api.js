@@ -5,6 +5,10 @@ const graph = require('fbgraph');
 const Twit = require('twit');
 const Linkedin = require('node-linkedin')(process.env.LINKEDIN_ID, process.env.LINKEDIN_SECRET, process.env.LINKEDIN_CALLBACK_URL);
 const paypal = require('paypal-rest-sdk');
+const uuidv4 = require('uuid/v4');
+const db = require('.././models/db');
+
+const Slides = db.slides;
 
 /**
  * GET /api
@@ -35,17 +39,27 @@ exports.getFileUpload = (req, res) => {
 };
 
 exports.postFileUpload = (req, res, err) => {
-  if (req.file.mimetype !== 'application/pdf') {
-    console.log('The uploaded file must be a pdf');
-    console.log(req.file.mimetype);
+  const { file } = req;
+  console.log(file);
+  if (file.mimetype !== 'application/pdf') {
+    req.flash('error', { msg: 'File must be in .pdf format.' });
     return res.status(422).json({
       error: 'The uploaded file must be a pdf'
     });
   }
-  console.log('--> API Route Reached');
-  console.log(req.file);
-  req.flash('success', { msg: 'File was uploaded successfully.' });
-  return res.status(200).send(req.file);
+  Slides
+    .create({
+      id: uuidv4(),
+      userID: 'asdfig1234',
+      fileName: file.filename,
+      uploadDate: file.date,
+      size: file.size
+    })
+    .then((slide) => {
+      console.log(slide.get({ plain: true }));
+      req.flash('success', { msg: 'File was uploaded successfully.' });
+      return res.status(200).send(file);
+    });
 };
 
 /**

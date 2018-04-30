@@ -8,8 +8,8 @@ module.exports = {
   devtool: debug ? 'inline-sourcemap' : false,
   entry: [
     'script-loader!jquery/dist/jquery.min.js',
-    './public/js/main.js',
-    './public/css/main.scss'
+    './public/js/main.js'
+    // './public/css/imports.scss'
   ],
   externals: {
     jquery: 'jQuery'

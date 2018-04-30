@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => sequelize
-  .define('User', {
+  .define('Slides', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -7,21 +7,20 @@ module.exports = (sequelize, DataTypes) => sequelize
       allowNull: false,
       unique: true
     },
-    phone: {
+    userID: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
+      unique: false
+    },
+    fileName: {
+      type: DataTypes.STRING,
+      allowNull: false,
       unique: true
     },
-    age: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+    uploadDate: {
+      type: DataTypes.STRING
     },
-    gender: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    location: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
+    size: {
+      type: DataTypes.STRING
+    }
   });
