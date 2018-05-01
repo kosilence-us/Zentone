@@ -1,0 +1,1 @@
+{"dependencies":[],"generated":{"js":"module.exports = {\n  \"universal\": 50,\n  \"tag\": 30,\n  \"attribute\": 1,\n  \"pseudo\": 0,\n  \"descendant\": -1,\n  \"child\": -1,\n  \"parent\": -1,\n  \"sibling\": -1,\n  \"adjacent\": -1\n}\n;"},"hash":"0e306e5f9c789670065bd189940824d4","cacheData":{}}

@@ -1,0 +1,75 @@
+<div class="container-fluid">
+    {{#if messages.success}}
+        <div role="alert" class="alert alert-success">
+            {{#each messages.success}}
+                <div>{{msg}}</div>
+            {{/each}}
+        </div>
+    {{/if}}
+    {{#if messages.error}}
+        <div role="alert" class="alert alert-danger">
+            {{#each messages.error}}
+                <div>{{msg}}</div>
+            {{/each}}
+        </div>
+    {{/if}}
+    {{#if messages.info}}
+        <div role="alert" class="alert alert-info">
+            {{#each messages.info}}
+                <div>{{msg}}</div>
+            {{/each}}
+        </div>
+    {{/if}}
+    {{> slide-viewer}}
+    <div class="container slide-form">
+        <form>
+            <div class="form-group row">
+                <label class="col-md-1 col-form-label">Tags</label>
+                <div class="col-md-11">
+                    <input class="form-control"
+                           value="slide"
+                           data-role="tagsinput"
+                           name="tags"
+                           required=""
+                           placeholder="Add up to three tags for your post"
+                           style="font-size:10px;">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-1 col-form-label">Title</label>
+                <div class="col-md-11">
+                    <input class="form-control"
+                           name="title"
+                           required=""
+                           placeholder="Add Title Here (up to 100 characters)"
+                           maxlength="100"
+                           minlength="1">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-1 col-form-label">Blog</label>
+                <div class="col-md-11">
+                        <textarea class="form-control slide-form-bio"
+                                  name="bio"
+                                  required=""
+                                  placeholder="Enter the presentation's description or a blog post here."
+                                  style="font-size:12px;height:250px;">
+                        </textarea>
+                </div>
+            </div>
+            <button class="btn btn-primary">Post!</button>
+        </form>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-9 offset-lg-0">
+                <a href="#"><img src="img/itsme.jpg" class="img-user"></a>
+            </div>
+            <div class="col-3">
+                <a href="#" id="button-share">
+                    <i class="fa fa-share pull-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

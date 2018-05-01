@@ -1,12 +1,12 @@
-@import "themes/default/variables";
-
 @import "lib/bootstrap/bootstrap";
+// @import "lib/ionicons-2.0.1/scss/ionicons";
 @import "lib/font-awesome/font-awesome";
-
+@import "lib/bootstrap-social";
+@import "lib/bootstrap-tagsinput.css";
+@import "lib/dropzone.css";
+@import "lib/tagsinput.css";
+@import "themes/default/variables";
 @import "themes/default/default";
-//@import "themes/flatly/flatly";
-//@import "themes/gsdk/gsdk";
-//@import "themes/modern/modern";
 
 // Scaffolding
 // -------------------------
@@ -154,6 +154,7 @@ textarea {
 .navbar > .container {
   display: flex;
   justify-content: space-around;
+  align-content: center;
 }
 
 #teaser-note {

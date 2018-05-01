@@ -1,21 +1,10 @@
-module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('User', {
+module.exports = (sequelize, DataTypes) => sequelize
+  .define('User', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
       allowNull: false,
-      unique: true
-
-    },
-    wechatId: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      unique: true
-    },
-    openId: {
-      type: DataTypes.STRING,
-      allowNull: true,
       unique: true
     },
     phone: {
@@ -36,4 +25,3 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true
     },
   });
-};

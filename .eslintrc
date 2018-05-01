@@ -8,7 +8,11 @@
     "no-shadow": 0,
     "no-console": 0,
     "no-plusplus": 0,
+<<<<<<< HEAD
     "linebreak-style": 0
+=======
+    "no-alert": 0
+>>>>>>> upstream/master
   },
   "env": {
     "browser": true,
