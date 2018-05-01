@@ -33,14 +33,30 @@ exports.upload = (req, res) => {
 };
 
 exports.getFileUpload = (req, res) => {
-  res.render('api/upload', {
-    title: 'File Upload'
-  });
+  const file = req.body;
+  console.log('fetching file...');
+  console.log(file);
+  Slides
+    .findAll({
+      where: { fileName: file.filename }
+    })
+    .then((file) => {
+      console.log('success!');
+      console.log(file[0].dataValues);
+      // console.log(req.hostname);
+      res.render('audio-upload.handlebars', file);
+    }, (err) => {
+      console.log('error');
+      console.log(err);
+      return res.status(400).send(err);
+    });
 };
 
-exports.postFileUpload = (req, res, err) => {
+exports.postFileUpload = (req, res) => {
   const { file } = req;
-  console.log(file);
+  const date = new Date().getTime();
+  console.log('-------api request-----------');
+  // console.log(file);
   if (file.mimetype !== 'application/pdf') {
     req.flash('error', { msg: 'File must be in .pdf format.' });
     return res.status(422).json({
@@ -52,13 +68,17 @@ exports.postFileUpload = (req, res, err) => {
       id: uuidv4(),
       userID: 'asdfig1234',
       fileName: file.filename,
-      uploadDate: file.date,
+      uploadDate: date,
       size: file.size
     })
     .then((slide) => {
       console.log(slide.get({ plain: true }));
       req.flash('success', { msg: 'File was uploaded successfully.' });
-      return res.status(200).send(file);
+      return res.status(200).send(slide);
+    }, (err) => {
+      console.log(err);
+      req.flash('warning', { msg: 'The file was unable to upload correctly' });
+      return res.status(400).send(err);
     });
 };
 

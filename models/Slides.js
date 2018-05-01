@@ -21,6 +21,6 @@ module.exports = (sequelize, DataTypes) => sequelize
       type: DataTypes.STRING
     },
     size: {
-      type: DataTypes.STRING
+      type: DataTypes.INTEGER
     }
   });

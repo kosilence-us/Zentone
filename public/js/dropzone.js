@@ -1,3 +1,25 @@
+function retrieveSlide(file) {
+  // console.log('---------ajax--------');
+  // console.log(file.fileName);
+  $.ajax({
+    url: 'api/download',
+    type: 'post',
+    contentType: 'application/json',
+    data: JSON.stringify({
+      filename: file.fileName
+    }),
+    success(res) {
+      console.log('successfully retieved slide!');
+      console.log(res);
+      $('body').html(res);
+    },
+    error(err) {
+      console.log(err);
+      $('body').html(err.message);
+    }
+  });
+}
+
 $('#slide-dropzone').dropzone({
   url: '/api/upload',
   maxFilesize: 50, // mb
@@ -8,14 +30,14 @@ $('#slide-dropzone').dropzone({
   headers: {
     'X-CSRF-Token': $('input[name="csrf_token"]').val()
   },
-  renameFile(filename) {
-    const date = new Date().getTime();
-    return `${date} ${filename}`;
-  },
+  // renameFilename(filename) {
+  //
+  //   return ;
+  // },
   init() {
     console.log('initializing...');
-    console.log(this);
     const self = this;
+    const date = new Date().getTime();
     // config
     self.options.addRemoveLinks = true;
     self.options.dictRemoveFile = 'Delete';
@@ -24,17 +46,16 @@ $('#slide-dropzone').dropzone({
       console.log('dropzone upload err ', err);
     });
     // New file added
-    this.on('addedfile', (file) => {
+    self.on('addedfile', (file) => {
       console.log('new file added ', file);
     });
     // Send file starts
     self.on('sending', (file) => {
       file.fileMeta = {
-        fileName: file.name,
         size: file.size,
-        date: new Date().getTime()
+        date
       };
-      console.log('upload started', file);
+      console.log('upload started');
       $('.meter').show();
     });
     // File upload Progress
@@ -47,9 +68,7 @@ $('#slide-dropzone').dropzone({
     });
     // File success
     self.on('success', (file, res) => {
-      console.log('success!');
-      console.log(file);
-      console.log(res);
+      retrieveSlide(res);
     });
     // On removing file
     self.on('removedfile', (file) => {

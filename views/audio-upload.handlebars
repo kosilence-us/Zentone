@@ -20,7 +20,7 @@
             {{/each}}
         </div>
     {{/if}}
-    <form class="dropzone" id="slide-dropzone"></form>
+    {{> slide-viewer}}
     <div class="container slide-form">
         <form>
             <div class="form-group row">
@@ -49,12 +49,12 @@
             <div class="form-group row">
                 <label class="col-md-1 col-form-label">Blog</label>
                 <div class="col-md-11">
-                    <textarea class="form-control slide-form-bio"
-                              name="bio"
-                              required=""
-                              placeholder="Enter the presentation's description or a blog post here."
-                              style="font-size:12px;height:250px;">
-                    </textarea>
+                        <textarea class="form-control slide-form-bio"
+                                  name="bio"
+                                  required=""
+                                  placeholder="Enter the presentation's description or a blog post here."
+                                  style="font-size:12px;height:250px;">
+                        </textarea>
                 </div>
             </div>
             <button class="btn btn-primary">Post!</button>

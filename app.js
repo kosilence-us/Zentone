@@ -17,10 +17,28 @@ const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
 const multer = require('multer');
+const aliOssStorage = require('multer-ali-oss');
 const exphbs = require('express-handlebars');
 const db = require('./models/db.js');
 
-const upload = multer({ dest: path.join(__dirname, 'uploads') });
+const storage = multer.diskStorage({
+  storage: aliOssStorage({
+    config: {
+      accessKeyId: process.env.ALI_CLOUD_OSS_ACCESSKEY_ID,
+      accessKeySecret: process.env.ALI_CLOUD_OSS_ACCESSKEY_SECRET,
+      bucket: process.env.ALI_CLOUD_OSS_BUCKET,
+      region: process.env.ALI_CLOUD_OSS_REGION
+    },
+    filename(req, file, cb) {
+      const date = new Date().getTime();
+      const str = `${date} ${file.originalname}`;
+      const filename = str.replace(/\s+/g, '-').toLowerCase();
+      cb(null, filename);
+    }
+  })
+});
+const upload = multer({ storage });
+// const upload = multer({ dest: path.join(__dirname, 'uploads') });
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -34,7 +52,7 @@ const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
-const slideController = require('./controllers/slide');
+const uploadsController = require('./controllers/uploads');
 
 /**
  * API keys and Passport configuration.
@@ -82,7 +100,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
-  if (req.path === '/api/upload') {
+  if (req.path === '/api/upload' || req.path === '/api/download') {
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -114,7 +132,9 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
  * Primary app routes.
  */
 app.get('/', homeController.index);
-app.get('/slide-upload', slideController.slide);
+app.get('/home', homeController.index);
+app.get('/slide-upload', uploadsController.slide);
+app.get('/audio-upload', uploadsController.audio);
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
@@ -144,7 +164,7 @@ app.get('/api/linkedin', passportConfig.isAuthenticated, passportConfig.isAuthor
 app.get('/api/paypal', apiController.getPayPal);
 app.get('/api/paypal/success', apiController.getPayPalSuccess);
 app.get('/api/paypal/cancel', apiController.getPayPalCancel);
-app.get('/api/upload', apiController.getFileUpload);
+app.post('/api/download', apiController.getFileUpload);
 app.post('/api/upload', upload.single('file'), apiController.postFileUpload);
 app.get('/api/google-maps', apiController.getGoogleMaps);
 

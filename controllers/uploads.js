@@ -8,3 +8,13 @@ exports.slide = (req, res) => {
     page: 'slide-upload'
   });
 };
+/**
+ * GET /audio-upload
+ * Audio Upload page.
+ */
+exports.audio = (req, res) => {
+  res.render('audio-upload', {
+    title: 'Audio Upload',
+    page: 'audio-upload'
+  });
+};
