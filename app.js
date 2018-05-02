@@ -19,6 +19,7 @@ const sass = require('node-sass-middleware');
 const Multer = require('multer');
 const exphbs = require('express-handlebars');
 const db = require('./models/db.js');
+dotenv.load({ path: '.env' });
 
 // const upload = multer({ dest: path.join(__dirname, 'uploads') });
 
@@ -45,7 +46,7 @@ const upload = Multer({
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
-dotenv.load({ path: '.env' });
+
 
 /**
  * Controllers (route handlers).

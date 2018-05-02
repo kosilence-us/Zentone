@@ -1,17 +1,16 @@
 function retrieveSlide(file) {
-  // console.log('---------ajax--------');
-  // console.log(file.fileName);
+  console.log('---------ajax--------');
+  console.log(file);
   $.ajax({
     url: 'api/download',
     type: 'post',
     contentType: 'application/json',
     data: JSON.stringify({
-      filename: file.fileName
+      fileName: file.fileName
     }),
     success(res) {
-      console.log('successfully retieved slide!');
+      console.log('successfully retrieved slide!');
       console.log(res);
-      $('body').html(res);
     },
     error(err) {
       console.log(err);

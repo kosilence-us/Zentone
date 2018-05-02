@@ -17,6 +17,16 @@ module.exports = (sequelize, DataTypes) => sequelize
       allowNull: false,
       unique: true
     },
+    originalFileName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: false
+    },
+    fileUrl: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: false
+    },
     uploadDate: {
       type: DataTypes.STRING
     },
