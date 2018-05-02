@@ -38,13 +38,13 @@ exports.getFileUpload = (req, res) => {
   console.log(file);
   Slides
     .findAll({
-      where: { fileName: file.filename }
+      where: { fileName: file.fileName }
     })
     .then((file) => {
       console.log('success!');
       console.log(file[0].dataValues);
       // console.log(req.hostname);
-      res.render('audio-upload.handlebars', file);
+      res.send({fileMeta: file[0].dataValues});
     }, (err) => {
       console.log('error');
       console.log(err);
@@ -55,8 +55,8 @@ exports.getFileUpload = (req, res) => {
 exports.postFileUpload = (req, res) => {
   const { file } = req;
   const date = new Date().getTime();
-  console.log('-------api request-----------');
-  // console.log(file);
+  console.log('-------file from OSS----------');
+  console.log(file);
   if (file.mimetype !== 'application/pdf') {
     req.flash('error', { msg: 'File must be in .pdf format.' });
     return res.status(422).json({
@@ -67,7 +67,9 @@ exports.postFileUpload = (req, res) => {
     .create({
       id: uuidv4(),
       userID: 'asdfig1234',
-      fileName: file.filename,
+      fileName: file.name,
+      originalFileName: file.originalname,
+      fileUrl: file.url,
       uploadDate: date,
       size: file.size
     })

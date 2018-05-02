@@ -16,12 +16,17 @@ const passport = require('passport');
 const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
-const multer = require('multer');
-const aliOssStorage = require('multer-ali-oss');
+const Multer = require('multer');
 const exphbs = require('express-handlebars');
 const db = require('./models/db.js');
+dotenv.load({ path: '.env' });
 
-const storage = multer.diskStorage({
+// const upload = multer({ dest: path.join(__dirname, 'uploads') });
+
+// Aliyun OSS Bucket Config
+const aliOssStorage = require('multer-ali-oss');
+
+const upload = Multer({
   storage: aliOssStorage({
     config: {
       accessKeyId: process.env.ALI_CLOUD_OSS_ACCESSKEY_ID,
@@ -37,13 +42,11 @@ const storage = multer.diskStorage({
     }
   })
 });
-const upload = multer({ storage });
-// const upload = multer({ dest: path.join(__dirname, 'uploads') });
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
-dotenv.load({ path: '.env' });
+
 
 /**
  * Controllers (route handlers).
