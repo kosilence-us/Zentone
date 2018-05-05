@@ -9,12 +9,12 @@ exports.slide = (req, res) => {
   });
 };
 /**
- * GET /audio-upload
- * Audio Upload page.
+ * GET /edit-presentation
+ * Presentation Upload page.
  */
-exports.audio = (req, res) => {
-  res.render('audio-upload', {
-    title: 'Audio Upload',
-    page: 'audio-upload'
+exports.presentation = (req, res) => {
+  res.render('edit-presentation', {
+    title: 'Edit Presentation',
+    page: 'edit-presentation'
   });
 };

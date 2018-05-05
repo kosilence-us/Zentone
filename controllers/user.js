@@ -2,7 +2,9 @@ const bluebird = require('bluebird');
 const crypto = bluebird.promisifyAll(require('crypto'));
 const nodemailer = require('nodemailer');
 const passport = require('passport');
-const User = require('../models/User.js');
+const db = require('../models/db.js');
+
+const User = db.user;
 
 /**
  * GET /login
@@ -91,8 +93,10 @@ exports.postSignup = (req, res, next) => {
     password: req.body.password
   });
 
-  User.findOne({ email: req.body.email }, (err, existingUser) => {
-    if (err) { return next(err); }
+  User.findOne({
+    where: { email: req.body.email }
+  }).then((existingUser) => {
+    // if (err) { return next(err); }
     if (existingUser) {
       req.flash('errors', { msg: 'Account with that email address already exists.' });
       return res.redirect('/signup');
@@ -134,8 +138,8 @@ exports.postUpdateProfile = (req, res, next) => {
     return res.redirect('/account');
   }
 
-  User.findById(req.user.id, (err, user) => {
-    if (err) { return next(err); }
+  User.findById(req.user.id).then((user) => {
+    // if (err) { return next(err); }
     user.email = req.body.email || '';
     user.profile.name = req.body.name || '';
     user.profile.gender = req.body.gender || '';
@@ -170,8 +174,8 @@ exports.postUpdatePassword = (req, res, next) => {
     return res.redirect('/account');
   }
 
-  User.findById(req.user.id, (err, user) => {
-    if (err) { return next(err); }
+  User.findById(req.user.id).then((user) => {
+    // if (err) { return next(err); }
     user.password = req.body.password;
     user.save((err) => {
       if (err) { return next(err); }
@@ -200,8 +204,8 @@ exports.postDeleteAccount = (req, res, next) => {
  */
 exports.getOauthUnlink = (req, res, next) => {
   const { provider } = req.params;
-  User.findById(req.user.id, (err, user) => {
-    if (err) { return next(err); }
+  User.findById(req.user.id).then((user) => {
+    // if (err) { return next(err); }
     user[provider] = undefined;
     user.tokens = user.tokens.filter(token => token.kind !== provider);
     user.save((err) => {
@@ -331,8 +335,9 @@ exports.postForgot = (req, res, next) => {
 
   const setRandomToken = token =>
     User
-      .findOne({ email: req.body.email })
-      .then((user) => {
+      .findOne({
+        where: { email: req.body.email }
+      }).then((user) => {
         if (!user) {
           req.flash('errors', { msg: 'Account with that email address does not exist.' });
         } else {

@@ -1,6 +1,3 @@
-<script>
-    const fileMeta = <%- JSON.stringify(fileMeta) %>;
-</script>
 <div class="container-fluid">
     {{#if messages.success}}
         <div role="alert" class="alert alert-success">
@@ -23,7 +20,9 @@
             {{/each}}
         </div>
     {{/if}}
-    {{> slide-viewer}}
+    <section id="main-display">
+        {{> slide-editor}}
+    </section>
     <div class="container slide-form">
         <form>
             <div class="form-group row">
@@ -52,12 +51,12 @@
             <div class="form-group row">
                 <label class="col-md-1 col-form-label">Blog</label>
                 <div class="col-md-11">
-                        <textarea class="form-control slide-form-bio"
-                                  name="bio"
-                                  required=""
-                                  placeholder="Enter the presentation's description or a blog post here."
-                                  style="font-size:12px;height:250px;">
-                        </textarea>
+                    <textarea class="form-control slide-form-bio"
+                              name="bio"
+                              required=""
+                              placeholder="Enter the presentation's description or a blog post here."
+                              style="font-size:12px;height:250px;">
+                    </textarea>
                 </div>
             </div>
             <button class="btn btn-primary">Post!</button>

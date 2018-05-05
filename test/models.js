@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 require('sinon-mongoose');
 
-const User = require('../models/User');
+const User = require('../models/Users');
 
 describe('User Model', () => {
   it('should create a new user', (done) => {

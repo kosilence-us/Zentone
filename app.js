@@ -17,15 +17,18 @@ const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
 const Multer = require('multer');
+const aliOssStorage = require('multer-ali-oss');
 const exphbs = require('express-handlebars');
 const db = require('./models/db.js');
+
+/**
+ * Load environment variables from .env file, where API keys and passwords are configured.
+ */
 dotenv.load({ path: '.env' });
 
-// const upload = multer({ dest: path.join(__dirname, 'uploads') });
-
-// Aliyun OSS Bucket Config
-const aliOssStorage = require('multer-ali-oss');
-
+/**
+ * Aliyun OSS Bucket Config
+ */
 const upload = Multer({
   storage: aliOssStorage({
     config: {
@@ -42,11 +45,6 @@ const upload = Multer({
     }
   })
 });
-
-/**
- * Load environment variables from .env file, where API keys and passwords are configured.
- */
-
 
 /**
  * Controllers (route handlers).
@@ -72,7 +70,6 @@ const app = express();
  */
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000);
-
 const hbs = exphbs.create({
   defaultLayout: 'main',
   helpers: {
@@ -85,7 +82,6 @@ const hbs = exphbs.create({
     toJSON: object => JSON.stringify(object)
   }
 });
-
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 app.use(expressStatusMonitor());
@@ -102,13 +98,13 @@ app.use(session({ secret: process.env.SESSION_SECRET, resave: true, saveUninitia
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-app.use((req, res, next) => {
-  if (req.path === '/api/upload' || req.path === '/api/download') {
-    next();
-  } else {
-    lusca.csrf()(req, res, next);
-  }
-});
+// app.use((req, res, next) => {
+//   if (req.path === '/api/upload' || req.path === '/api/download') {
+//     next();
+//   } else {
+//     lusca.csrf()(req, res, next);
+//   }
+// });
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 app.use((req, res, next) => {
@@ -137,7 +133,7 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
 app.get('/', homeController.index);
 app.get('/home', homeController.index);
 app.get('/slide-upload', uploadsController.slide);
-app.get('/audio-upload', uploadsController.audio);
+app.get('/edit-presentation', uploadsController.presentation);
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
@@ -158,7 +154,6 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 /**
  * API examples routes.
  */
-app.get('/api', apiController.getApi);
 app.get('/api/scraping', apiController.getScraping);
 app.get('/api/facebook', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFacebook);
 app.get('/api/twitter', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getTwitter);
@@ -167,13 +162,17 @@ app.get('/api/linkedin', passportConfig.isAuthenticated, passportConfig.isAuthor
 app.get('/api/paypal', apiController.getPayPal);
 app.get('/api/paypal/success', apiController.getPayPalSuccess);
 app.get('/api/paypal/cancel', apiController.getPayPalCancel);
-app.post('/api/download', apiController.getFileUpload);
+app.post('/api/download', apiController.postFetchUpload);
 app.post('/api/upload', upload.single('file'), apiController.postFileUpload);
 app.get('/api/google-maps', apiController.getGoogleMaps);
 
 /**
  * OAuth authentication routes. (Sign in)
  */
+app.post('/login', passport.authenticate('local', { failureRedirect: '/login', failureFlash: true, successFlash: 'Welcome!' }), (req, res) => {
+  res.redirect(req.session.returnTo || '/');
+});
+
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');

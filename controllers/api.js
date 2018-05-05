@@ -8,49 +8,12 @@ const paypal = require('paypal-rest-sdk');
 const uuidv4 = require('uuid/v4');
 const db = require('.././models/db');
 
-const Slides = db.slides;
+const Pdfs = db.pdfs;
 
 /**
- * GET /api
- * List of API examples.
+ * POST /api/upload
+ * Upload && Download files
  */
-exports.getApi = (req, res) => {
-  res.render('api/index', {
-    title: 'API Examples'
-  });
-};
-
-/**
- * GET /api/upload
- * File Upload API example.
- */
-exports.upload = (req, res) => {
-  if (req.body) {
-    console.log('UPLOAD req:', req.body);
-    res.status(200).send(res);
-  }
-  res.status(400).send('Error occured.');
-};
-
-exports.getFileUpload = (req, res) => {
-  const file = req.body;
-  console.log('fetching file...');
-  console.log(file);
-  Slides
-    .findAll({
-      where: { fileName: file.fileName }
-    })
-    .then((file) => {
-      console.log('success!');
-      console.log(file[0].dataValues);
-      // console.log(req.hostname);
-      res.send({fileMeta: file[0].dataValues});
-    }, (err) => {
-      console.log('error');
-      console.log(err);
-      return res.status(400).send(err);
-    });
-};
 
 exports.postFileUpload = (req, res) => {
   const { file } = req;
@@ -63,7 +26,7 @@ exports.postFileUpload = (req, res) => {
       error: 'The uploaded file must be a pdf'
     });
   }
-  Slides
+  Pdfs
     .create({
       id: uuidv4(),
       userID: 'asdfig1234',
@@ -74,12 +37,32 @@ exports.postFileUpload = (req, res) => {
       size: file.size
     })
     .then((slide) => {
-      console.log(slide.get({ plain: true }));
+      // console.log(slide.get({ plain: true }));
       req.flash('success', { msg: 'File was uploaded successfully.' });
       return res.status(200).send(slide);
     }, (err) => {
       console.log(err);
       req.flash('warning', { msg: 'The file was unable to upload correctly' });
+      return res.status(400).send(err);
+    });
+};
+
+exports.postFetchUpload = (req, res) => {
+  const file = req.body;
+  console.log('fetching file...');
+  console.log(file);
+  Pdfs
+    .findAll({
+      where: { fileName: file.fileName }
+    })
+    .then((file) => {
+      console.log('success!');
+      console.log(file[0].dataValues);
+      // console.log(req.hostname);
+      return res.status(200).send({ fileMeta: file[0].dataValues });
+    }, (err) => {
+      console.log('error');
+      console.log(err);
       return res.status(400).send(err);
     });
 };

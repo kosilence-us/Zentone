@@ -4,4 +4,7 @@ import 'bootstrap-tagsinput';
 import '@fortawesome/fontawesome';
 import 'swiper';
 // import 'dropzone';
+import './ajax';
+import './dropzone';
+import './pdf';
 // import 'pdfjs-dist/build/pdf';

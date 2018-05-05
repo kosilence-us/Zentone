@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => sequelize
-  .define('Slides', {
+  .define('Audio', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,

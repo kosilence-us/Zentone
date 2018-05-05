@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => sequelize
-  .define('Slides', {
+  .define('Presentations', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
