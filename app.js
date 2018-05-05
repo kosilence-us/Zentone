@@ -166,39 +166,6 @@ app.post('/api/download', apiController.postFetchUpload);
 app.post('/api/upload', upload.single('file'), apiController.postFileUpload);
 app.get('/api/google-maps', apiController.getGoogleMaps);
 
-/**
- * OAuth authentication routes. (Sign in)
- */
-app.post('/login', passport.authenticate('local', { failureRedirect: '/login', failureFlash: true, successFlash: 'Welcome!' }), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
-});
-
-app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/google', passport.authenticate('google', { scope: 'profile email' }));
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/twitter', passport.authenticate('twitter'));
-app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login' }), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/linkedin', passport.authenticate('linkedin', { state: 'SOME STATE' }));
-app.get('/auth/linkedin/callback', passport.authenticate('linkedin', { failureRedirect: '/login' }), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
-});
-
-/**
- * OAuth authorization routes. (API examples)
- */
-// app.get('/auth/foursquare', passport.authorize('foursquare'));
-// app.get('/auth/foursquare/callback',
-// passport.authorize('foursquare', { failureRedirect: '/api' }), (req, res) => {
-//   res.redirect('/api/foursquare');
-// });
-
 
 /**
  * Error Handler.
@@ -209,7 +176,7 @@ app.use(errorHandler());
  * Start Express server.
  */
 db.sequelize.sync({
-  force: true,
+  force: false,
   // CAREFUL!: This clears the database of data
   // Only use after changing the structure of the db
 }).then(() => {
