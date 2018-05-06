@@ -72,7 +72,7 @@
     "request": "^2.81.0",
     "sass-loader": "^7.0.1",
     "script-loader": "^0.7.2",
-    "sequelize": "^4.36.1",
+    "sequelize": "4.37.6",
     "style": "^0.0.3",
     "swiper": "^4.2.2",
     "twit": "^2.2.9",

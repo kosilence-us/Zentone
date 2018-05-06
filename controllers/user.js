@@ -32,6 +32,7 @@ exports.postLogin = (req, res, next) => {
 
   if (errors) {
     req.flash('errors', errors);
+    console.log('errors', errors);
     return res.redirect('/login');
   }
 
@@ -39,11 +40,14 @@ exports.postLogin = (req, res, next) => {
     if (err) { return next(err); }
     if (!user) {
       req.flash('errors', info);
+      console.log('errors', info);
       return res.redirect('/login');
     }
     req.logIn(user, (err) => {
       if (err) { return next(err); }
       req.flash('success', { msg: 'Success! You are logged in.' });
+      console.log('success', { msg: 'Success! You are logged in.' });
+      console.log(user);
       res.redirect(req.session.returnTo || '/');
     });
   })(req, res, next);
@@ -76,23 +80,27 @@ exports.getSignup = (req, res) => {
  * Create a new local account.
  */
 exports.postSignup = (req, res, next) => {
+  console.log('--> ROUTE REACHED: postSignup');
   req.assert('email', 'Email is not valid').isEmail();
   req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+  // req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
   const errors = req.validationErrors();
 
   if (errors) {
+    console.log('--> validationErrors:', errors);
     req.flash('errors', errors);
     return res.redirect('/signup');
   }
 
   const user = new User({
+    username: req.body.name,
     email: req.body.email,
     password: req.body.password
   });
 
+  console.log('--->NewUser:', user);
   User.findOne({
     where: { email: req.body.email }
   }).then((existingUser) => {
@@ -102,7 +110,10 @@ exports.postSignup = (req, res, next) => {
       return res.redirect('/signup');
     }
     user.save((err) => {
-      if (err) { return next(err); }
+      if (err) {
+        console.log('--->Create User Err:', err);
+        return next(err);
+      }
       req.logIn(user, (err) => {
         if (err) {
           return next(err);

@@ -168,10 +168,6 @@ app.get('/api/google-maps', apiController.getGoogleMaps);
 
 /**
  * OAuth authentication routes. (Sign in)
- */
-// app.post('/login', passport.authenticate('local', { failureRedirect: '/login', failureFlash: true, successFlash: 'Welcome!' }), (req, res) => {
-//   res.redirect(req.session.returnTo || '/');
-// });
 
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), (req, res) => {
@@ -199,7 +195,6 @@ app.get('/auth/linkedin/callback', passport.authenticate('linkedin', { failureRe
 //   res.redirect('/api/foursquare');
 // });
 
-
 /**
  * Error Handler.
  */
@@ -209,7 +204,7 @@ app.use(errorHandler());
  * Start Express server.
  */
 db.sequelize.sync({
-  force: true,
+  force: false,
   // CAREFUL!: This clears the database of data
   // Only use after changing the structure of the db
 }).then(() => {
