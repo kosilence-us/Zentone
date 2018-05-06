@@ -66,6 +66,65 @@ a:hover {
   grid-template-rows: auto 50px;
 }
 
+// Templatting CSS
+// -------------------------
+
+.template-bg {
+  background-color: #ffeead
+}
+
+.item1 {
+  background-color: #96ceb4;
+}
+
+.item2 {
+  background-color: #ff6f69;
+}
+
+.item3 {
+  background-color: #ffcc5c;
+}
+
+// Edit-Presentation
+// -------------------------
+
+section > .editing-container {
+  display: grid;
+  grid-gap: 3px;
+  grid-template-columns: repeat(6, minmax(200px, 1fr));
+  grid-template-rows: 600px 150px;
+}
+
+.editing-container > figure {
+  grid-column: 2 / 5;
+  div {
+    margin-top: auto;
+    height: 20px;
+  }
+}
+
+figcaption > div {
+  display: flex;
+  justify-content: space-around;
+}
+
+.slide-edit-viewer {
+  grid-column: 5 / 6;
+  select {
+    height: 550px;
+  }
+}
+
+.audio-viewer {
+  grid-column: 2 / 5;
+}
+
+.audio-dropzone {
+  grid-column: 5 / 6;
+}
+
+
+
 // Input Fields
 // -------------------------
 
@@ -90,8 +149,6 @@ textarea {
 }
 
 .btn-primary {
-  position: relative;
-  margin: 60px;
   background-color: #5FC0DC;
 }
 
@@ -392,10 +449,6 @@ img {
 
 .slide-viewport {
   grid-column: 1 / 4;
-}
-
-.slide-controls {
-  grid-column: 2 / 2;
 }
 
 .slide-count {

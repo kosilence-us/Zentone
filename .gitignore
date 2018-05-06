@@ -14,7 +14,8 @@ results
 tmp
 
 #Build
-public/css/main.css
+public/js/bundle.min.js
+public/js/0.bundle.min.js
 
 # API keys and secrets
 .env

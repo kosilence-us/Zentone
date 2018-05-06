@@ -25,6 +25,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
   User.findOne({
     where: { email: email.toLowerCase() },
   }).then((user) => {
+    console.log(user);
     // if (err) { return done(err); }
     if (!user) {
       return done(null, false, { msg: `Email ${email} not found.` });
@@ -71,8 +72,8 @@ passport.use(new FacebookStrategy({
         req.flash('errors', { msg: 'There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
         done(err);
       } else {
-        User.findById(req.user.id, (err, user) => {
-          if (err) { return done(err); }
+        User.findById(req.user.id).then((user) => {
+          // if (err) { return done(err); }
           user.facebook = profile.id;
           user.tokens.push({ kind: 'facebook', accessToken });
           user.profile.name = user.profile.name || `${profile.name.givenName} ${profile.name.familyName}`;
@@ -86,8 +87,10 @@ passport.use(new FacebookStrategy({
       }
     });
   } else {
-    User.findOne({ facebook: profile.id }, (err, existingUser) => {
-      if (err) { return done(err); }
+    User.findOne({
+      where: { facebook: profile.id }
+    }).then((existingUser) => {
+      // if (err) { return done(err); }
       if (existingUser) {
         return done(null, existingUser);
       }

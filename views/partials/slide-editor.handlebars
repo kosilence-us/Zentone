@@ -1,12 +1,22 @@
-<div class="grid view-grid-3c2r">
-    <div class="slide-viewport">
+<main class="editing-container">
+    <figure>
         <canvas id="the-canvas"></canvas>
+        <figcaption class="slide-count">
+            <div class="slide-controls">
+                <button id="prev" class="btn-primary">&lt</button>
+                <span>Slide: <span id="page_num"></span> / <span id="page_count"></span></span>
+                <button id="next" class="btn-primary">&gt</button>
+            </div>
+        </figcaption>
+
+    </figure>
+    <div class="slide-viewer">
+        <select size="33"></select>
     </div>
-    <div class="slide-controls">
-        <button id="prev" class="btn-primary">&lt</button>
-        <button id="next" class="btn-primary">&gt</button>
+    <div class="audio-viewer">
+        <select size="8"></select>
     </div>
-    <div class="slide-count">
-        <span>Slide: <span id="page_num"></span> / <span id="page_count"></span></span>
+    <div class="audio-dropzone">
+        <form class="dropzone" id="audio-dropzone"></form>
     </div>
-</div>
+</main>

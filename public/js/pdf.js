@@ -2,6 +2,7 @@ import retrievePdf from './ajax';
 
 const domain = window.location.hostname;
 const url = window.location.href;
+const windowWidth = window.innerWidth || document.body.clientWidth;
 const { pdf } = window;
 
 function pdfViewer() {
@@ -117,7 +118,8 @@ function pdfEditor(pdf) {
   console.log('pdfjsLib');
   console.log(pdfjsLib);
   pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
-  const scale = 0.8;
+  const desiredWidth = windowWidth / 2.3;
+  const desiredHeight = 555;
   const canvas = document.getElementById('the-canvas');
   const ctx = canvas.getContext('2d');
   let pdfDoc = null;
@@ -133,9 +135,11 @@ function pdfEditor(pdf) {
     pageRendering = true;
     // Using promise to fetch the page
     pdfDoc.getPage(num).then((page) => {
-      const viewport = page.getViewport(scale);
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
+      const viewport = page.getViewport(1);
+      const scale = desiredHeight / viewport.height;
+      const scaledViewport = page.getViewport(scale);
+      canvas.height = scaledViewport.height;
+      canvas.width = desiredWidth;
 
       // Render PDF page into canvas context
       const renderContext = {
@@ -212,13 +216,13 @@ function pdfEditor(pdf) {
  */
 switch (url) {
   case `http://${domain}:3000/`:
-    console.log('--------case pdf--------');
+    console.log('--------case pdf viewer--------');
     console.log(url);
     console.log(domain);
     pdfViewer();
     break;
   case `http://${domain}:3000/edit-presentation`:
-    console.log('--------case pdf--------');
+    console.log('--------case pdf edit--------');
     console.log(url);
     console.log(domain);
     pdfEditor(pdf);
