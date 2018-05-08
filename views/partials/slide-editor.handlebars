@@ -10,13 +10,60 @@
         </figcaption>
 
     </figure>
-    <div class="slide-viewer">
-        <select size="33"></select>
+    <div id="thumbnail-slider">
+        <div class="inner">
+            <ul>
+                <li>
+                    <a href="/">
+                        <span class="thumb" style="background-image:url(/img/demo/1.jpg)">
+                            This slide demonstrates how to link the thumbnail image to another web page.
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="thumb" href="/img/demo/2.jpg"></a>
+                </li>
+                <li>
+                    <a class="thumb" href="/img/demo/3.jpg"></a>
+                </li>
+                <li>
+                    <a class="thumb" href="/img/demo/4.jpg"></a>
+                </li>
+                <li>
+                    <a class="thumb" href="/img/demo/5.jpg"></a>
+                </li>
+                <li>
+                    <a class="thumb" href="/img/demo/6.jpg"></a>
+                </li>
+                <li>
+                    <a class="thumb" href="/img/demo/7.jpg"></a>
+                </li>
+                <li>
+                    <a class="thumb" href="/img/demo/8.jpg"></a>
+                </li>
+                <li>
+                    <a class="thumb" href="/img/demo/9.jpg"></a>
+                </li>
+                <li>
+                    <a class="thumb" href="/img/demo/10.jpg"></a>
+                </li>
+                <li>
+                    <a class="thumb" href="/img/demo/11.jpg"></a>
+                </li>
+                <li>
+                    <a class="thumb" href="/img/demo/12.jpg"></a>
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="audio-viewer">
-        <select size="8"></select>
+        <select id="audio-box" size="8"></select>
     </div>
     <div class="audio-dropzone">
-        <form class="dropzone" id="audio-dropzone"></form>
+        <form class="dropzone" id="audio-dropzone">
+            <div class="dz-message" data-dz-message>
+                <span>Drag your audio recordings here</span>
+            </div>
+        </form>
     </div>
 </main>

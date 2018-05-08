@@ -8,6 +8,7 @@
 @import url(lib/bootstrap-tagsinput.css);
 @import url(lib/dropzone.css);
 @import url(lib/tagsinput.css);
+@import url(lib/thumbnail-slider.css);
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
@@ -9829,27 +9830,46 @@ section > .editing-container {
   grid-gap: 3px;
   grid-template-columns: repeat(6, minmax(200px, 1fr));
   grid-template-rows: 600px 150px; }
-
-.editing-container > figure {
-  grid-column: 2 / 5; }
-  .editing-container > figure div {
-    margin-top: auto;
-    height: 20px; }
+  section > .editing-container figure {
+    grid-column: 2 / 5; }
+    section > .editing-container figure div {
+      margin-top: auto;
+      height: 20px; }
 
 figcaption > div {
   display: flex;
   justify-content: space-around; }
 
-.slide-edit-viewer {
+.thumbnail-slide {
   grid-column: 5 / 6; }
-  .slide-edit-viewer select {
-    height: 550px; }
 
 .audio-viewer {
   grid-column: 2 / 5; }
+  .audio-viewer select {
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+    border: 1px; }
 
 .audio-dropzone {
-  grid-column: 5 / 6; }
+  grid-column: 5 / 6;
+  background-color: white;
+  overflow: auto;
+  -webkit-transition: 0.4s;
+  -moz-transition: 0.4s;
+  -ms-transition: 0.4s;
+  -o-transition: 0.4s;
+  transition: 0.4s; }
+  .audio-dropzone :hover {
+    background-color: #e0f5fb;
+    -webkit-transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    transition: 0.4s; }
+  .audio-dropzone form {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 0; }
 
 textarea {
   resize: vertical; }
@@ -9883,7 +9903,8 @@ textarea {
 
 .navbar-nav {
   flex-direction: row;
-  float: none; }
+  float: none;
+  align-content: center; }
 
 .navbar-collapse {
   flex-basis: 0; }
@@ -9926,7 +9947,7 @@ textarea {
   -o-transition: 0.4s;
   transition: 0.4s; }
   #button-upload:hover {
-    background-color: white;
+    background-color: #F8F8F8;
     width: 80px;
     height: 48px;
     -webkit-transition: 0.4s;
@@ -10078,7 +10099,7 @@ img {
   font-size: 24px; }
 
 #the-canvas {
-  border: 1px solid #5FC0DC; }
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2); }
 
 .slide-viewport {
   grid-column: 1 / 4; }

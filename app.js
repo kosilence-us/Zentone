@@ -164,6 +164,8 @@ app.get('/api/paypal/success', apiController.getPayPalSuccess);
 app.get('/api/paypal/cancel', apiController.getPayPalCancel);
 app.post('/api/download', apiController.postFetchUpload);
 app.post('/api/upload', upload.single('file'), apiController.postFileUpload);
+app.post('/api/audio-download', apiController.postFetchAudioUpload);
+app.post('/api/audio-upload', upload.single('file'), apiController.postAudioUpload);
 app.get('/api/google-maps', apiController.getGoogleMaps);
 
 /**

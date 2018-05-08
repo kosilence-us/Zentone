@@ -1,4 +1,4 @@
-import retrievePdf from './ajax';
+import { retrievePdf, retrieveMp3 } from './ajax';
 
 const domain = window.location.hostname;
 const url = window.location.href;
@@ -65,12 +65,12 @@ function initPdfDropzone() {
 
 function initAudioDropzone() {
   $('#audio-dropzone').dropzone({
-    url: '/api/upload',
+    url: '/api/audio-upload',
     maxFilesize: 50, // mb
     uploadMultiple: false,
     addRemoveLinks: true,
     dictResponseError: 'Server not Configured',
-    acceptedFiles: '.pdf',
+    acceptedFiles: '.mp3',
     headers: {
       'X-CSRF-Token': $('input[name="csrf_token"]').val()
     },
@@ -107,7 +107,7 @@ function initAudioDropzone() {
       });
       // File success
       self.on('success', (file, res) => {
-        retrievePdf(res);
+        retrieveMp3(res);
       });
       // On removing file
       self.on('removedfile', (file) => {
@@ -120,21 +120,53 @@ function initAudioDropzone() {
   });
 }
 
+function dzNameChange() {
+  const audioDropzoneStyle = $('.audio-dropzone');
+
+  const onDragEnter = (event) => {
+    audioDropzoneStyle.addClass('dragover');
+  };
+
+  const onDragOver = (event) => {
+    event.preventDefault();
+    if (!audioDropzoneStyle.hasClass('dragover'))
+      audioDropzoneStyle.addClass('dragover');
+  };
+
+  const onDragLeave = (event) => {
+    event.preventDefault();
+    audioDropzoneStyle.removeClass('dragover');
+  };
+
+  const onDrop = (event) => {
+    audioDropzoneStyle.removeClass('dragover');
+    audioDropzoneStyle.addClass('dragdrop');
+    console.log(event.originalEvent.dataTransfer.files);
+  };
+
+  audioDropzoneStyle
+    .on('dragenter', onDragEnter)
+    .on('dragover', onDragOver)
+    .on('dragleave', onDragLeave)
+    .on('drop', onDrop);
+}
+
 /**
  * Call Dropzones According to URL
  */
 switch (url) {
   case `http://${domain}:3000/slide-upload`:
-    console.log('--------case pdf dz--------');
+    console.log('--------pdf dz--------');
     console.log(url);
     console.log(domain);
     initPdfDropzone();
     break;
   case `http://${domain}:3000/edit-presentation`:
-    console.log('--------case edit pres dz--------');
+    console.log('--------audio dz--------');
     console.log(url);
     console.log(domain);
     initAudioDropzone();
+    dzNameChange();
     break;
   default:
     console.log('--------default dz--------');

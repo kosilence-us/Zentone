@@ -5,6 +5,7 @@
 @import "lib/bootstrap-tagsinput.css";
 @import "lib/dropzone.css";
 @import "lib/tagsinput.css";
+@import "lib/thumbnail-slider.css";
 @import "themes/default/variables";
 @import "themes/default/default";
 
@@ -66,7 +67,7 @@ a:hover {
   grid-template-rows: auto 50px;
 }
 
-// Templatting CSS
+// Demo Templatting CSS
 // -------------------------
 
 .template-bg {
@@ -93,13 +94,12 @@ section > .editing-container {
   grid-gap: 3px;
   grid-template-columns: repeat(6, minmax(200px, 1fr));
   grid-template-rows: 600px 150px;
-}
-
-.editing-container > figure {
-  grid-column: 2 / 5;
-  div {
-    margin-top: auto;
-    height: 20px;
+  figure {
+    grid-column: 2 / 5;
+    div {
+      margin-top: auto;
+      height: 20px;
+    }
   }
 }
 
@@ -108,19 +108,42 @@ figcaption > div {
   justify-content: space-around;
 }
 
-.slide-edit-viewer {
+#prev {
+
+}
+
+#next {
+
+}
+
+.thumbnail-slide {
   grid-column: 5 / 6;
-  select {
-    height: 550px;
-  }
 }
 
 .audio-viewer {
   grid-column: 2 / 5;
+  select {
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    border: 1px;
+  }
 }
 
 .audio-dropzone {
   grid-column: 5 / 6;
+  background-color: white;
+  overflow: auto;
+
+  @include transition(.4s);
+  :hover {
+    background-color: #e0f5fb;
+    @include transition(.4s);
+  }
+  form {
+    box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+  }
 }
 
 
@@ -179,6 +202,7 @@ textarea {
 .navbar-nav {
   flex-direction: row;
   float: none;
+  align-content: center;
 }
 
 .navbar-collapse {
@@ -226,7 +250,7 @@ textarea {
   @include transition(.4s);
 
   &:hover {
-    background-color: white;
+    background-color: #F8F8F8;
     width: 80px;
     height: 48px;
     @include transition(.4s);
@@ -444,7 +468,7 @@ img {
 // -------------------------
 
 #the-canvas {
-  border: 1px solid #5FC0DC;
+  box-shadow:  0 1px 5px rgba(0,0,0,0.2);
 }
 
 .slide-viewport {

@@ -9,7 +9,8 @@ const db = require('../models/db.js');
 const User = db.user;
 
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  console.log('serializing user: ', user);
+  done(null, user);
 });
 
 passport.deserializeUser((id, done) => {
@@ -25,12 +26,14 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
   User.findOne({
     where: { email: email.toLowerCase() },
   }).then((user) => {
-    console.log(user);
+    console.log('found user...');
+    console.log(user.dataValues);
     // if (err) { return done(err); }
     if (!user) {
       return done(null, false, { msg: `Email ${email} not found.` });
     }
     user.comparePassword(password, (err, isMatch) => {
+      console.log('comparing password...');
       if (err) { return done(err); }
       if (isMatch) {
         console.log('--> PASSWORD MATCHED');

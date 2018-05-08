@@ -9,10 +9,11 @@ const uuidv4 = require('uuid/v4');
 const db = require('.././models/db');
 
 const Pdfs = db.pdfs;
+const Audio = db.audio;
 
 /**
  * POST /api/upload
- * Upload && Download files
+ * Upload && Download PDFs
  */
 
 exports.postFileUpload = (req, res) => {
@@ -52,6 +53,63 @@ exports.postFetchUpload = (req, res) => {
   console.log('fetching file...');
   console.log(file);
   Pdfs
+    .findAll({
+      where: { fileName: file.fileName }
+    })
+    .then((file) => {
+      console.log('success!');
+      console.log(file[0].dataValues);
+      // console.log(req.hostname);
+      return res.status(200).send({ fileMeta: file[0].dataValues });
+    }, (err) => {
+      console.log('error');
+      console.log(err);
+      return res.status(400).send(err);
+    });
+};
+
+/**
+ * POST /api/upload
+ * Upload && Download Audio Files
+ */
+
+exports.postAudioUpload = (req, res) => {
+  const { file } = req;
+  const date = new Date().getTime();
+  console.log('-------audio file from OSS----------');
+  console.log(file);
+  if (file.mimetype !== 'audio/mp3') {
+    req.flash('error', { msg: 'File must be in .mp3 format.' });
+    return res.status(422).json({
+      error: 'The uploaded file must be an mp3'
+    });
+  }
+  Audio
+    .create({
+      id: uuidv4(),
+      userID: 'asdfig1234',
+      fileName: file.name,
+      originalFileName: file.originalname,
+      fileUrl: file.url,
+      uploadDate: date,
+      size: file.size
+    })
+    .then((mp3) => {
+      // console.log(slide.get({ plain: true }));
+      req.flash('success', { msg: 'File was uploaded successfully.' });
+      return res.status(200).send(mp3);
+    }, (err) => {
+      console.log(err);
+      req.flash('warning', { msg: 'The file was unable to upload correctly' });
+      return res.status(400).send(err);
+    });
+};
+
+exports.postFetchAudioUpload = (req, res) => {
+  const file = req.body;
+  console.log('fetching file...');
+  console.log(file);
+  Audio
     .findAll({
       where: { fileName: file.fileName }
     })

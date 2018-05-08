@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.VIRTUAL,
       allowNull: false,
       unique: false,
-      set: function (value) {
+      set(value) {
         const that = this;
         bcrypt.genSalt(10, (err, salt) => {
           if (err) { return console.log('BCRYPT GEN SALT ERR:', err); }

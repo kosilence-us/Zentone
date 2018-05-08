@@ -37,17 +37,18 @@ exports.postLogin = (req, res, next) => {
   }
 
   passport.authenticate('local', (err, user, info) => {
+    const userID = user.dataValues.id;
     if (err) { return next(err); }
     if (!user) {
       req.flash('errors', info);
       console.log('errors', info);
       return res.redirect('/login');
     }
-    req.logIn(user, (err) => {
+    req.logIn(userID, (err) => {
       if (err) { return next(err); }
       req.flash('success', { msg: 'Success! You are logged in.' });
       console.log('success', { msg: 'Success! You are logged in.' });
-      console.log(user);
+      console.log(userID);
       res.redirect(req.session.returnTo || '/');
     });
   })(req, res, next);
@@ -83,7 +84,7 @@ exports.postSignup = (req, res, next) => {
   console.log('--> ROUTE REACHED: postSignup');
   req.assert('email', 'Email is not valid').isEmail();
   req.assert('password', 'Password must be at least 4 characters long').len(4);
-  // req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
   const errors = req.validationErrors();
@@ -100,21 +101,24 @@ exports.postSignup = (req, res, next) => {
     password: req.body.password
   });
 
-  console.log('--->NewUser:', user);
+  console.log('---> New User:', user.dataValues);
   User.findOne({
     where: { email: req.body.email }
   }).then((existingUser) => {
+    console.log('checking existing users...');
     // if (err) { return next(err); }
     if (existingUser) {
       req.flash('errors', { msg: 'Account with that email address already exists.' });
       return res.redirect('/signup');
     }
     user.save((err) => {
+      console.log('saving user...');
       if (err) {
-        console.log('--->Create User Err:', err);
+        console.log('---> Create User Err: ', err);
         return next(err);
       }
       req.logIn(user, (err) => {
+        console.log('logging in...');
         if (err) {
           return next(err);
         }
