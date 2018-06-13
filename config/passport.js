@@ -9,13 +9,15 @@ const db = require('../models/db.js');
 const User = db.user;
 
 passport.serializeUser((user, done) => {
-  console.log('serializing user: ', user);
+  console.log('serializing user: ', user.dataValues.id);
   done(null, user);
 });
 
-passport.deserializeUser((id, done) => {
+passport.deserializeUser((userId, done) => {
+  const { id } = userId;
+  console.log('deserializing user: ', id);
   User.findById(id).then((user) => {
-    done(user);
+    done(null, user);
   });
 });
 
@@ -23,15 +25,14 @@ passport.deserializeUser((id, done) => {
  * Sign in using Email and Password.
  */
 passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-  User.findOne({
+  User.find({
     where: { email: email.toLowerCase() },
   }).then((user) => {
-    console.log('found user...');
-    console.log(user.dataValues);
-    // if (err) { return done(err); }
     if (!user) {
       return done(null, false, { msg: `Email ${email} not found.` });
     }
+    console.log('found user...');
+    console.log(user.dataValues);
     user.comparePassword(password, (err, isMatch) => {
       console.log('comparing password...');
       if (err) { return done(err); }
@@ -41,6 +42,8 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
       }
       return done(null, false, { msg: 'Invalid email or password.' });
     });
+  }, (err) => {
+    done(err);
   });
 }));
 
@@ -122,66 +125,8 @@ passport.use(new FacebookStrategy({
 }));
 
 /**
- * Sign in with GitHub.
+ * Sign in with Twitter.
  */
-// passport.use(new GitHubStrategy({
-//   clientID: process.env.GITHUB_ID,
-//   clientSecret: process.env.GITHUB_SECRET,
-//   callbackURL: '/auth/github/callback',
-//   passReqToCallback: true
-// }, (req, accessToken, refreshToken, profile, done) => {
-//   if (req.user) {
-//     User.findOne({ github: profile.id }, (err, existingUser) => {
-//       if (existingUser) {
-//         req.flash('errors', { msg: 'There is already a GitHub account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
-//         done(err);
-//       } else {
-//         User.findById(req.user.id, (err, user) => {
-//           if (err) { return done(err); }
-//           user.github = profile.id;
-//           user.tokens.push({ kind: 'github', accessToken });
-//           user.profile.name = user.profile.name || profile.displayName;
-//           user.profile.picture = user.profile.picture || profile._json.avatar_url;
-//           user.profile.location = user.profile.location || profile._json.location;
-//           user.profile.website = user.profile.website || profile._json.blog;
-//           user.save((err) => {
-//             req.flash('info', { msg: 'GitHub account has been linked.' });
-//             done(err, user);
-//           });
-//         });
-//       }
-//     });
-//   } else {
-//     User.findOne({ github: profile.id }, (err, existingUser) => {
-//       if (err) { return done(err); }
-//       if (existingUser) {
-//         return done(null, existingUser);
-//       }
-//       User.findOne({ email: profile._json.email }, (err, existingEmailUser) => {
-//         if (err) { return done(err); }
-//         if (existingEmailUser) {
-//           req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with GitHub manually from Account Settings.' });
-//           done(err);
-//         } else {
-//           const user = new User();
-//           user.email = profile._json.email;
-//           user.github = profile.id;
-//           user.tokens.push({ kind: 'github', accessToken });
-//           user.profile.name = profile.displayName;
-//           user.profile.picture = profile._json.avatar_url;
-//           user.profile.location = profile._json.location;
-//           user.profile.website = profile._json.blog;
-//           user.save((err) => {
-//             done(err, user);
-//           });
-//         }
-//       });
-//     });
-//   }
-// }));
-
-// Sign in with Twitter.
-
 passport.use(new TwitterStrategy({
   consumerKey: process.env.TWITTER_KEY,
   consumerSecret: process.env.TWITTER_SECRET,
@@ -352,163 +297,6 @@ passport.use(new LinkedInStrategy({
     });
   }
 }));
-
-/**
- * Sign in with Instagram.
- */
-// passport.use(new InstagramStrategy({
-//   clientID: process.env.INSTAGRAM_ID,
-//   clientSecret: process.env.INSTAGRAM_SECRET,
-//   callbackURL: '/auth/instagram/callback',
-//   passReqToCallback: true
-// }, (req, accessToken, refreshToken, profile, done) => {
-//   if (req.user) {
-//     User.findOne({ instagram: profile.id }, (err, existingUser) => {
-//       if (err) { return done(err); }
-//       if (existingUser) {
-//         req.flash('errors', { msg: 'There is already an Instagram account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
-//         done(err);
-//       } else {
-//         User.findById(req.user.id, (err, user) => {
-//           if (err) { return done(err); }
-//           user.instagram = profile.id;
-//           user.tokens.push({ kind: 'instagram', accessToken });
-//           user.profile.name = user.profile.name || profile.displayName;
-//           user.profile.picture = user.profile.picture || profile._json.data.profile_picture;
-//           user.profile.website = user.profile.website || profile._json.data.website;
-//           user.save((err) => {
-//             req.flash('info', { msg: 'Instagram account has been linked.' });
-//             done(err, user);
-//           });
-//         });
-//       }
-//     });
-//   } else {
-//     User.findOne({ instagram: profile.id }, (err, existingUser) => {
-//       if (err) { return done(err); }
-//       if (existingUser) {
-//         return done(null, existingUser);
-//       }
-//       const user = new User();
-//       user.instagram = profile.id;
-//       user.tokens.push({ kind: 'instagram', accessToken });
-//       user.profile.name = profile.displayName;
-//       // Similar to Twitter API, assigns a temporary e-mail address
-//       // to get on with the registration process. It can be changed later
-//       // to a valid e-mail address in Profile Management.
-//       user.email = `${profile.username}@instagram.com`;
-//       user.profile.website = profile._json.data.website;
-//       user.profile.picture = profile._json.data.profile_picture;
-//       user.save((err) => {
-//         done(err, user);
-//       });
-//     });
-//   }
-// }));
-
-/**
- * Tumblr API OAuth.
- */
-// passport.use('tumblr', new OAuthStrategy({
-//   requestTokenURL: 'http://www.tumblr.com/oauth/request_token',
-//   accessTokenURL: 'http://www.tumblr.com/oauth/access_token',
-//   userAuthorizationURL: 'http://www.tumblr.com/oauth/authorize',
-//   consumerKey: process.env.TUMBLR_KEY,
-//   consumerSecret: process.env.TUMBLR_SECRET,
-//   callbackURL: '/auth/tumblr/callback',
-//   passReqToCallback: true
-// },
-//   (req, token, tokenSecret, profile, done) => {
-//     User.findById(req.user._id, (err, user) => {
-//       if (err) { return done(err); }
-//       user.tokens.push({ kind: 'tumblr', accessToken: token, tokenSecret });
-//       user.save((err) => {
-//         done(err, user);
-//       });
-//     });
-//   }
-// ));
-
-/**
- * Foursquare API OAuth.
- */
-// passport.use('foursquare', new OAuth2Strategy({
-//   authorizationURL: 'https://foursquare.com/oauth2/authorize',
-//   tokenURL: 'https://foursquare.com/oauth2/access_token',
-//   clientID: process.env.FOURSQUARE_ID,
-//   clientSecret: process.env.FOURSQUARE_SECRET,
-//   callbackURL: process.env.FOURSQUARE_REDIRECT_URL,
-//   passReqToCallback: true
-// },
-//   (req, accessToken, refreshToken, profile, done) => {
-//     User.findById(req.user._id, (err, user) => {
-//       if (err) { return done(err); }
-//       user.tokens.push({ kind: 'foursquare', accessToken });
-//       user.save((err) => {
-//         done(err, user);
-//       });
-//     });
-//   }
-// ));
-
-/**
- * Steam API OpenID.
- */
-// passport.use(new OpenIDStrategy({
-//   apiKey: process.env.STEAM_KEY,
-//   providerURL: 'http://steamcommunity.com/openid',
-//   returnURL: 'http://localhost:3000/auth/steam/callback',
-//   realm: 'http://localhost:3000/',
-//   stateless: true
-// }, (identifier, done) => {
-//   const steamId = identifier.match(/\d+$/)[0];
-//   const profileURL = `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.STEAM_KEY}&steamids=${steamId}`;
-//
-//   User.findOne({ steam: steamId }, (err, existingUser) => {
-//     if (err) { return done(err); }
-//     if (existingUser) return done(err, existingUser);
-//     request(profileURL, (error, response, body) => {
-//       if (!error && response.statusCode === 200) {
-//         const data = JSON.parse(body);
-//         const profile = data.response.players[0];
-//
-//         const user = new User();
-//         user.steam = steamId;
-//         user.email = `${steamId}@steam.com`; // steam does not disclose emails, prevent duplicate keys
-//         user.tokens.push({ kind: 'steam', accessToken: steamId });
-//         user.profile.name = profile.personaname;
-//         user.profile.picture = profile.avatarmedium;
-//         user.save((err) => {
-//           done(err, user);
-//         });
-//       } else {
-//         done(error, null);
-//       }
-//     });
-//   });
-// }));
-
-/**
- * Pinterest API OAuth.
- */
-// passport.use('pinterest', new OAuth2Strategy({
-//   authorizationURL: 'https://api.pinterest.com/oauth/',
-//   tokenURL: 'https://api.pinterest.com/v1/oauth/token',
-//   clientID: process.env.PINTEREST_ID,
-//   clientSecret: process.env.PINTEREST_SECRET,
-//   callbackURL: process.env.PINTEREST_REDIRECT_URL,
-//   passReqToCallback: true
-// },
-//   (req, accessToken, refreshToken, profile, done) => {
-//     User.findById(req.user._id, (err, user) => {
-//       if (err) { return done(err); }
-//       user.tokens.push({ kind: 'pinterest', accessToken });
-//       user.save((err) => {
-//         done(err, user);
-//       });
-//     });
-//   }
-// ));
 
 /**
  * Login Required middleware.

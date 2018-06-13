@@ -11,60 +11,48 @@ module.exports = (sequelize, DataTypes) => {
     },
     username: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
+      allowNull: false
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
     },
-    password_hash: {
-      type: DataTypes.STRING
-    },
     password: {
-      type: DataTypes.VIRTUAL,
-      allowNull: false,
-      unique: false,
-      set(value) {
-        const that = this;
-        bcrypt.genSalt(10, (err, salt) => {
-          if (err) { return console.log('BCRYPT GEN SALT ERR:', err); }
-
-          bcrypt.hash(value, salt, null, (error, hash) => {
-            if (error) { return console.log('BCRYPT HASH ERR:', err); }
-
-            console.log('--> SEQ: BCRYPT hash SET', hash);
-            that.setDataValue('password', value);
-            that.setDataValue('password_hash', hash);
-          });
-        });
-      }
+      type: DataTypes.VIRTUAL
     },
     phone: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      unique: true
+      type: DataTypes.STRING
     },
     age: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      type: DataTypes.INTEGER
     },
     gender: {
-      type: DataTypes.STRING,
-      allowNull: true
+      type: DataTypes.STRING
     },
     location: {
-      type: DataTypes.STRING,
-      allowNull: true
+      type: DataTypes.STRING
     },
   });
 
-  Users.prototype.comparePassword = function comparePassword(candidatePassword, cb) {
+  Users.beforeCreate((user, options) => {
+    console.log('--> setting value ');
+    // const that = this;
+    // user.setDataValue('password', user.password);
+    return bcrypt.genSalt(10, (err, salt) => {
+      if (err) return err;
+      bcrypt.hash(user.password, salt, null, (error, hash) => {
+        if (error) return err;
+        user.password = hash;
+      });
+    });
+  });
+  Users.prototype.comparePassword = function (candidatePassword, done) {
     bcrypt.compare(candidatePassword, this.password_hash, (err, isMatch) => {
-      cb(err, isMatch);
+      done(err, isMatch);
     });
   };
+
   return Users;
 };
 

@@ -37,19 +37,23 @@ exports.postLogin = (req, res, next) => {
   }
 
   passport.authenticate('local', (err, user, info) => {
-    const userID = user.dataValues.id;
-    if (err) { return next(err); }
+    console.log('USER CONTROLLER: logging in...');
+    if (err) {
+      return next(err);
+    }
     if (!user) {
       req.flash('errors', info);
       console.log('errors', info);
       return res.redirect('/login');
     }
+    const userID = user.dataValues.id;
     req.logIn(userID, (err) => {
-      if (err) { return next(err); }
+      if (err) {
+        return next(err);
+      }
       req.flash('success', { msg: 'Success! You are logged in.' });
-      console.log('success', { msg: 'Success! You are logged in.' });
-      console.log(userID);
-      res.redirect(req.session.returnTo || '/');
+      console.log('--> Success! UserID:', userID);
+      return req.session.save(() => res.redirect(req.session.returnTo || '/'));
     });
   })(req, res, next);
 };
@@ -80,14 +84,20 @@ exports.getSignup = (req, res) => {
  * POST /signup
  * Create a new local account.
  */
+// TODO: Sessions redirect problem
 exports.postSignup = (req, res, next) => {
-  console.log('--> ROUTE REACHED: postSignup');
+  // console.log('--> ROUTE REACHED: postSignup');
   req.assert('email', 'Email is not valid').isEmail();
   req.assert('password', 'Password must be at least 4 characters long').len(4);
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
   const errors = req.validationErrors();
+  const user = {
+    username: req.body.username,
+    email: req.body.email,
+    password: req.body.password
+  };
 
   if (errors) {
     console.log('--> validationErrors:', errors);
@@ -95,36 +105,32 @@ exports.postSignup = (req, res, next) => {
     return res.redirect('/signup');
   }
 
-  const user = new User({
-    username: req.body.name,
-    email: req.body.email,
-    password: req.body.password
-  });
-
-  console.log('---> New User:', user.dataValues);
-  User.findOne({
+  User.find({
     where: { email: req.body.email }
   }).then((existingUser) => {
-    console.log('checking existing users...');
-    // if (err) { return next(err); }
     if (existingUser) {
+      console.log('---> user exists...');
       req.flash('errors', { msg: 'Account with that email address already exists.' });
       return res.redirect('/signup');
     }
-    user.save((err) => {
-      console.log('saving user...');
-      if (err) {
-        console.log('---> Create User Err: ', err);
-        return next(err);
-      }
-      req.logIn(user, (err) => {
-        console.log('logging in...');
-        if (err) {
-          return next(err);
-        }
-        res.redirect('/');
+
+    console.log('---> saving new user:', JSON.stringify(req.body, undefined, 2));
+    console.log('---> new User:', JSON.stringify(user, undefined, 2));
+    console.log('---> password:', JSON.stringify(req.body.password, undefined, 2));
+
+    User.create(user)
+      .then((user) => {
+        console.log('--> saving user...');
+        req.login(user, (err) => {
+          console.log('---> logging in...');
+          if (err) {
+            return next(err);
+          }
+          req.session.save(() => res.redirect('/'));
+        });
       });
-    });
+  }, (err) => {
+    res.status(400).send(err);
   });
 };
 
@@ -290,7 +296,7 @@ exports.postReset = (req, res, next) => {
       });
 
   const sendResetPasswordEmail = (user) => {
-    if (!user) { return; }
+    if (!user) return;
     const transporter = nodemailer.createTransport({
       service: 'SendGrid',
       auth: {

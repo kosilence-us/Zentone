@@ -4,6 +4,8 @@
 const express = require('express');
 const compression = require('compression');
 const session = require('express-session');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const chalk = require('chalk');
@@ -24,7 +26,9 @@ const db = require('./models/db.js');
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
-dotenv.load({ path: '.env' });
+dotenv.load({
+  path: '.env'
+});
 
 /**
  * Aliyun OSS Bucket Config
@@ -53,12 +57,20 @@ const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
-const uploadsController = require('./controllers/uploads');
+const pagesController = require('./controllers/pages');
 
 /**
  * API keys and Passport configuration.
  */
 const passportConfig = require('./config/passport');
+
+/**
+ * Storage for Sequelize Session
+ */
+const myStore = new SequelizeStore({
+  db: db.sequelize,
+  table: 'Sessions'
+});
 
 /**
  * Create Express server.
@@ -92,9 +104,19 @@ app.use(sass({
 }));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(expressValidator());
-app.use(session({ secret: process.env.SESSION_SECRET, resave: true, saveUninitialized: true }));
+app.use(cookieParser());
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  store: myStore,
+  resave: false, // we support the touch method so per the express-session docs this should be set to false
+  proxy: true, // if you do SSL outside of node.
+  saveUninitialized: true
+}));
+// app.use(session({ secret: process.env.SESSION_SECRET, resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -114,26 +136,28 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   // After successful login, redirect back to the intended page
   if (!req.user &&
-      req.path !== '/login' &&
-      req.path !== '/signup' &&
-      !req.path.match(/^\/auth/) &&
-      !req.path.match(/\./)) {
+    req.path !== '/login' &&
+    req.path !== '/signup' &&
+    !req.path.match(/^\/auth/) &&
+    !req.path.match(/\./)) {
     req.session.returnTo = req.path;
   } else if (req.user &&
-      req.path === '/account') {
+    req.path === '/account') {
     req.session.returnTo = req.path;
   }
   next();
 });
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+app.use(express.static(path.join(__dirname, 'public'), {
+  maxAge: 31557600000
+}));
 
 /**
  * Primary app routes.
  */
 app.get('/', homeController.index);
 app.get('/home', homeController.index);
-app.get('/slide-upload', uploadsController.slide);
-app.get('/edit-presentation', uploadsController.presentation);
+app.get('/slide-upload', pagesController.slide);
+app.get('/edit-presentation', pagesController.presentation);
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
@@ -152,7 +176,17 @@ app.post('/account/delete', passportConfig.isAuthenticated, userController.postD
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
 
 /**
- * API examples routes.
+ * Internal API routes.
+ */
+app.post('/api/pdf/upload', upload.single('file'), apiController.pdfUpload);
+app.get('/api/pdf/download', apiController.retrievePdf);
+app.post('/api/audio/upload', upload.single('file'), apiController.audioUpload);
+app.post('/api/audio/:id', apiController.audioByPresId);
+app.get('/api/presentation', apiController.retrievePres);
+
+
+/**
+ * External API routes.
  */
 app.get('/api/scraping', apiController.getScraping);
 app.get('/api/facebook', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFacebook);
@@ -162,11 +196,6 @@ app.get('/api/linkedin', passportConfig.isAuthenticated, passportConfig.isAuthor
 app.get('/api/paypal', apiController.getPayPal);
 app.get('/api/paypal/success', apiController.getPayPalSuccess);
 app.get('/api/paypal/cancel', apiController.getPayPalCancel);
-app.post('/api/download', apiController.postFetchUpload);
-app.post('/api/upload', upload.single('file'), apiController.postFileUpload);
-app.post('/api/audio-download', apiController.postFetchAudioUpload);
-app.post('/api/audio-upload', upload.single('file'), apiController.postAudioUpload);
-app.get('/api/google-maps', apiController.getGoogleMaps);
 
 /**
  * OAuth authentication routes. (Sign in)

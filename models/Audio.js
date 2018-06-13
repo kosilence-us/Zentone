@@ -7,10 +7,13 @@ module.exports = (sequelize, DataTypes) => sequelize
       allowNull: false,
       unique: true
     },
+    presentationID: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     userID: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: false
+      allowNull: false
     },
     fileName: {
       type: DataTypes.STRING,
@@ -19,13 +22,11 @@ module.exports = (sequelize, DataTypes) => sequelize
     },
     originalFileName: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: false
+      allowNull: false
     },
     fileUrl: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: false
+      allowNull: false
     },
     uploadDate: {
       type: DataTypes.STRING

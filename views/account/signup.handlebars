@@ -8,11 +8,18 @@
           {{/each}}
         </div>
       {{/if}}
+      {{#if messages.info}}
+        <div role="alert" class="alert alert-info">
+          {{#each messages.info}}
+            <div>{{msg}}</div>
+          {{/each}}
+        </div>
+      {{/if}}
       <form method="POST">
         <legend>Create an account</legend>
         <div class="form-group">
           <label for="name">Name</label>
-          <input type="text" name="name" id="name" placeholder="Name" class="form-control" autofocus>
+          <input type="text" name="username" id="name" placeholder="Name" class="form-control" autofocus>
         </div>
         <div class="form-group">
           <label for="email">Email</label>
