@@ -3,7 +3,7 @@
  */
 function initPdfDropzone() {
   $('#slide-dropzone').dropzone({
-    url: '/api/pdf/upload',
+    url: '/api/pdf',
     maxFilesize: 50, // mb
     uploadMultiple: false,
     addRemoveLinks: true,
@@ -62,6 +62,4 @@ function initPdfDropzone() {
 /*
 ******** Function Exports ********
 */
-export {
-  initPdfDropzone,
-};
+export { initPdfDropzone };

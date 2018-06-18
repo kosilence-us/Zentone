@@ -18,79 +18,72 @@ const Presentations = db.presentations;
  * POST /api/pdf/upload
  * Upload PDFs
  */
-exports.pdfUpload = (req, res) => {
-  const { file } = req;
-  const date = new Date().getTime();
-  const presId = uuidv4();
-  const userID = req.user.dataValues.id;
-  console.log('-------file from OSS----------');
-  console.log(file);
-  if (file.mimetype !== 'application/pdf') {
-    req.flash('error', {
-      msg: 'File must be in .pdf format.'
-    });
-    return res.status(422).json({
-      error: 'The uploaded file must be a pdf'
-    });
+exports.pdfUpload = async (req, res) => {
+  try {
+    const { file } = req;
+    const date = new Date().getTime();
+    const userID = req.user.dataValues.id;
+    console.log('-------file from OSS----------');
+    console.log(file);
+    if (file.mimetype !== 'application/pdf') {
+      req.flash('error', {
+        msg: 'File must be in .pdf format.'
+      });
+      return res.status(422).send({
+        error: 'The uploaded file must be a pdf'
+      });
+    }
+    console.log('--> User: ', req.user.dataValues.id);
+    console.log('--> Session: ', req.sessionID);
+    const presentation = await Presentations
+      .create({
+        id: req.sessionID,
+        userID
+      });
+    const pdf = await Pdfs
+      .create({
+        id: uuidv4(),
+        userID,
+        presentationID: req.sessionID,
+        fileName: file.name,
+        originalFileName: file.originalname,
+        fileUrl: file.url,
+        uploadDate: date,
+        size: file.size
+      });
+    // console.log(slide.get({ plain: true }));
+    console.log('--> pdf: ', pdf.presentationID);
+    console.log('--> presentation: ', presentation.id);
+    req.flash('success', { msg: 'File was uploaded successfully.' });
+    res.status(200).send([presentation, pdf]);
+  } catch (error) {
+    res.status(400).send(error);
   }
-  console.log('--> User: ', req.user.dataValues.id);
-  console.log(presId);
-  Promise.all(
-    Presentations.create({
-      id: presId,
-      userID
-    }, err => res.send(err)),
-    Pdfs.create({
-      id: uuidv4(),
-      userID,
-      PresentationId: presId,
-      fileName: file.name,
-      originalFileName: file.originalname,
-      fileUrl: file.url,
-      uploadDate: date,
-      size: file.size
-    })
-      .then((slide) => {
-        // console.log(slide.get({ plain: true }));
-        req.flash('success', {
-          msg: 'File was uploaded successfully.'
-        });
-        console.log('--> slide: ', slide.dataValues);
-        // fetch url
-        return res.status(200).send(slide.dataValues);
-      }, err => res.send(err))
-  )
-    .catch(err => res.send(err));
 };
 
 /**
  * GET /api/upload
  * Upload && Download Audio Files
  */
-exports.retrievePdf = (req, res) => {
-  const { user } = req;
-  console.log('fetching latest file from user...');
-  console.log(user.dataValues.id);
-  Pdfs
-    .findAll({
-      limit: 1,
-      where: {
-        userID: user.id
-      },
-      order: [
-        ['createdAt', 'DESC']
-      ]
-    })
-    .then((file) => {
-      console.log('success!');
-      console.log(file[0].dataValues);
-      // console.log(req.hostname);
-      return res.status(200).send({
-        fileMeta: file[0].dataValues
+exports.retrievePdf = async (req, res) => {
+  try {
+    const { id } = req.session;
+    console.log('---> fetching pdf for current session...');
+    console.log(id);
+    const pdf = await Pdfs
+      .findOne({
+        where: { presentationID: id }
       });
-    }, (err) => {
-      return res.status(400).send(err);
-    });
+    if (!pdf) {
+      return res.status(404).send(`Could not find PDF associated with Presentation ${req.session.id}`);
+    }
+    console.log('success!');
+    console.log(pdf.fileUrl);
+    // console.log(req.hostname);
+    res.status(200).send(pdf);
+  } catch (err) {
+    res.status(400).send(err);
+  }
 };
 
 /**
@@ -162,20 +155,18 @@ exports.audioByPresId = (req, res) => {
  * GET /api/presentation
  * Get lates presentaion by user
  */
-// TODO: req.user not defined
-exports.retrievePres = (req, res) => {
-  console.log('---> retriving presentation from: ', req.user);
-  Presentations.find({
-    where: {
-      userID: id
-    }
-  })
-    .then((pres) => {
-      console.log('success!');
-      console.log(pres);
-      return res.status(200).send({ pres });
-    }, err => res.status(400).send(err));
-};
+// exports.retrievePres = (req, res) => {
+//   Presentations.find({
+//     where: {
+//       id: req.sessionID
+//     }
+//   })
+//     .then((pres) => {
+//       console.log('success!');
+//       console.log(pres);
+//       return res.status(200).send({ pres });
+//     }).catch(err => res.send(err));
+// };
 
 /**
  * GET /api/facebook

@@ -12,7 +12,8 @@
     "no-alert": 0,
     "max-len": 0,
     "func-names": 0,
-    "import/prefer-default-export": 0
+    "import/prefer-default-export": 0,
+    "import/no-dynamic-require": 0
   },
   "env": {
     "browser": true,

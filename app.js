@@ -41,11 +41,11 @@ const upload = Multer({
       bucket: process.env.ALI_CLOUD_OSS_BUCKET,
       region: process.env.ALI_CLOUD_OSS_REGION
     },
-    filename(req, file, cb) {
+    filename(req, file, done) {
       const date = new Date().getTime();
       const str = `${date} ${file.originalname}`;
       const filename = str.replace(/\s+/g, '-').toLowerCase();
-      cb(null, filename);
+      done(null, filename);
     }
   })
 });
@@ -114,9 +114,13 @@ app.use(session({
   store: myStore,
   resave: false, // we support the touch method so per the express-session docs this should be set to false
   proxy: true, // if you do SSL outside of node.
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {},
 }));
-// app.use(session({ secret: process.env.SESSION_SECRET, resave: true, saveUninitialized: true }));
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1); // trust first proxy
+  session.cookie.secure = true; // serve secure cookies
+}
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -178,11 +182,12 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 /**
  * Internal API routes.
  */
-app.post('/api/pdf/upload', upload.single('file'), apiController.pdfUpload);
-app.get('/api/pdf/download', apiController.retrievePdf);
-app.post('/api/audio/upload', upload.single('file'), apiController.audioUpload);
+// TODO: Create Postman Tests
+app.post('/api/pdf', upload.single('file'), apiController.pdfUpload);
+app.get('/api/pdf', apiController.retrievePdf);
+app.post('/api/audio', upload.single('file'), apiController.audioUpload);
 app.post('/api/audio/:id', apiController.audioByPresId);
-app.get('/api/presentation', apiController.retrievePres);
+// app.get('/api/presentation', apiController.retrievePres);
 
 
 /**
@@ -218,15 +223,6 @@ app.get('/auth/linkedin/callback', passport.authenticate('linkedin', { failureRe
 });
 
 /**
- * OAuth authorization routes. (API examples)
- */
-// app.get('/auth/foursquare', passport.authorize('foursquare'));
-// app.get('/auth/foursquare/callback',
-// passport.authorize('foursquare', { failureRedirect: '/api' }), (req, res) => {
-//   res.redirect('/api/foursquare');
-// });
-
-/**
  * Error Handler.
  */
 app.use(errorHandler());
@@ -240,8 +236,8 @@ db.sequelize.sync({
   // Only use after changing the structure of the db
 }).then(() => {
   app.listen(app.get('port'), () => {
+    // console.clear();
     console.log('%s App is running at http://localhost:%d in %s mode', chalk.green('✓'), app.get('port'), app.get('env'));
-    console.log('  Press CTRL-C to stop\n');
   });
 });
 

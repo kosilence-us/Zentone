@@ -9,14 +9,13 @@ const db = require('../models/db.js');
 const User = db.user;
 
 passport.serializeUser((user, done) => {
-  console.log('serializing user: ', user.dataValues.id);
+  // console.log('serializing user: ', user);
   done(null, user);
 });
 
 passport.deserializeUser((userId, done) => {
-  const { id } = userId;
-  console.log('deserializing user: ', id);
-  User.findById(id).then((user) => {
+  // console.log('deserializing user: ', userId);
+  User.findById(userId).then((user) => {
     done(null, user);
   });
 });
@@ -25,16 +24,18 @@ passport.deserializeUser((userId, done) => {
  * Sign in using Email and Password.
  */
 passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-  User.find({
+  User.findOne({
     where: { email: email.toLowerCase() },
   }).then((user) => {
     if (!user) {
       return done(null, false, { msg: `Email ${email} not found.` });
     }
-    console.log('found user...');
-    console.log(user.dataValues);
+    // console.log('found user...');
+    // console.log(user.dataValues);
     user.comparePassword(password, (err, isMatch) => {
-      console.log('comparing password...');
+    // TODO: left off here
+    // user.validate(password, (err, isMatch) => {
+      // console.log('comparing password...');
       if (err) { return done(err); }
       if (isMatch) {
         console.log('--> PASSWORD MATCHED');

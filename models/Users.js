@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       unique: true
     },
     password: {
-      type: DataTypes.VIRTUAL
+      type: DataTypes.STRING
     },
     phone: {
       type: DataTypes.STRING
@@ -36,19 +36,20 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Users.beforeCreate((user, options) => {
-    console.log('--> setting value ');
-    // const that = this;
-    // user.setDataValue('password', user.password);
-    return bcrypt.genSalt(10, (err, salt) => {
-      if (err) return err;
-      bcrypt.hash(user.password, salt, null, (error, hash) => {
-        if (error) return err;
-        user.password = hash;
+    return new Promise((resolve, reject) => {
+      const { password } = user;
+      bcrypt.genSalt(10, (err, salt) => {
+        if (err) reject(err);
+        bcrypt.hash(password, salt, null, (error, hash) => {
+          if (error) reject(err);
+          user.password = hash;
+          resolve(user);
+        });
       });
     });
   });
   Users.prototype.comparePassword = function (candidatePassword, done) {
-    bcrypt.compare(candidatePassword, this.password_hash, (err, isMatch) => {
+    bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
       done(err, isMatch);
     });
   };

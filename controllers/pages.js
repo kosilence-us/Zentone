@@ -7,9 +7,18 @@ exports.slide = (req, res) => {
     req.flash('info', { msg: 'Create an account first!' });
     return res.redirect('/signup');
   }
-  res.render('slide-upload', {
-    title: 'Slide Upload',
-    page: 'slide-upload'
+  const tempSession = req.session;
+  // Regenerate req.session to get a new presentation ID
+  req.session.regenerate((err) => {
+    console.log('--> Regenerating new session...');
+    Object.assign(req.session, tempSession);
+    if (err) {
+      return res.send('Could not regenerate session');
+    }
+    res.render('slide-upload', {
+      title: 'Slide Upload',
+      page: 'slide-upload'
+    });
   });
 };
 /**

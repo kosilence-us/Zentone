@@ -31,19 +31,20 @@ exports.postLogin = (req, res, next) => {
   const errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
-    console.log('errors', errors);
+    req.flash('error', { msg: errors });
+    console.log('error', errors);
     return res.redirect('/login');
   }
 
   passport.authenticate('local', (err, user, info) => {
     console.log('USER CONTROLLER: logging in...');
     if (err) {
-      return next(err);
+      req.flash('error', { msg: 'username and password don\'t match, please try again' });
+      return res.redirect('/login');
     }
     if (!user) {
-      req.flash('errors', info);
-      console.log('errors', info);
+      req.flash('error', info);
+      // console.log('errors', info);
       return res.redirect('/login');
     }
     const userID = user.dataValues.id;
@@ -53,6 +54,7 @@ exports.postLogin = (req, res, next) => {
       }
       req.flash('success', { msg: 'Success! You are logged in.' });
       console.log('--> Success! UserID:', userID);
+      console.log(req.session);
       return req.session.save(() => res.redirect(req.session.returnTo || '/'));
     });
   })(req, res, next);
@@ -84,7 +86,6 @@ exports.getSignup = (req, res) => {
  * POST /signup
  * Create a new local account.
  */
-// TODO: Sessions redirect problem
 exports.postSignup = (req, res, next) => {
   // console.log('--> ROUTE REACHED: postSignup');
   req.assert('email', 'Email is not valid').isEmail();
@@ -101,7 +102,7 @@ exports.postSignup = (req, res, next) => {
 
   if (errors) {
     console.log('--> validationErrors:', errors);
-    req.flash('errors', errors);
+    req.flash('error', errors);
     return res.redirect('/signup');
   }
 
@@ -110,7 +111,7 @@ exports.postSignup = (req, res, next) => {
   }).then((existingUser) => {
     if (existingUser) {
       console.log('---> user exists...');
-      req.flash('errors', { msg: 'Account with that email address already exists.' });
+      req.flash('error', { msg: 'Account with that email address already exists.' });
       return res.redirect('/signup');
     }
 

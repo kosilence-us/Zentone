@@ -9825,6 +9825,9 @@ a:hover {
 .item3 {
   background-color: #ffcc5c; }
 
+.dropzone-big {
+  height: 350px; }
+
 section > .editing-container {
   display: grid;
   grid-gap: 3px;
