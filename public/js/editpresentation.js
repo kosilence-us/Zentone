@@ -1,25 +1,34 @@
+// TODO: Submit data function
+// TODO: update audio entries with page data
 /**
  * Globals
  */
-const mp3Arr = [];
+let audioArr = [];
 let pageNum = 1;
 
 /**
  * Build Audio Box
  */
 // TODO: Select for current page
-function buildAudioSelect(audioArr) {
+function buildAudioSelect() {
   const selectBox = document.querySelector('#audio-box');
+  const pageAudioArr = audioArr.filter(audio => audio.pageNum === pageNum);
+  selectBox.textContent = '';
+  console.info('Populating Select Box...');
+  console.log(audioArr);
 
-  audioArr.forEach((audio) => {
-    selectBox.add(`<option>${audio}</option>`);
+  pageAudioArr.forEach((audio) => {
+    const option = document.createElement('option');
+    option.textContent = audio.originalFileName;
+    selectBox.appendChild(option);
   });
 }
 
 /*
 ******** Presentation Viewport ********
 */
-function pdfEditor(pdf) {
+// TODO: fix viewport scaling issue
+async function pdfEditor(pdf) {
   console.log('pdf loading data...');
   console.log(pdf.fileUrl);
   if (!pdf) {
@@ -34,10 +43,11 @@ function pdfEditor(pdf) {
   // Loaded via <script> tag, create shortcut to access PDF.js exports.
   const pdfjsLib = window['pdfjs-dist/build/pdf'];
   // The workerSrc property shall be specified.
-  console.log({ GlobalWorkerOptions: pdfjsLib.GlobalWorkerOptions });
+  // console.log(pdfjsLib.GlobalWorkerOptions);
   pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
   const desiredWidth = windowWidth / 2.3;
   const desiredHeight = 555;
+  const thumbnailSlider = document.querySelector('#thumbnail-slider');
   const canvas = document.getElementById('the-canvas');
   const ctx = canvas.getContext('2d');
   let pdfDoc = null;
@@ -119,11 +129,39 @@ function pdfEditor(pdf) {
     // Initial/first page rendering
     renderPage(pageNum);
   });
+  function makeThumb(page) {
+    // draw page to fit into 96x96 canvas
+    const vp = page.getViewport(1);
+    const canvas = document.createElement('canvas');
+    canvas.width = 96;
+    canvas.height = 96;
+    const scale = Math.min(canvas.width / vp.width, canvas.height / vp.height);
+    return page.render({ canvasContext: canvas.getContext('2d'), viewport: page.getViewport(scale) }).promise.then(() => canvas);
+  }
+  console.log('page rendered.');
+  pdfjsLib.getDocument(url).promise.then((doc) => {
+    console.log('building thumbs...', doc);
+    const pages = [];
+    while (pages.length < doc.numPages) pages.push(pages.length + 1);
+    return Promise.all(pages.map((num) => {
+      // create a li for each page and build a small canvas for it
+      const li = document.createElement('li');
+      document.body.appendChild(li);
+      return doc.getPage(num).then(makeThumb)
+        .then((canvas) => {
+          li.appendChild(canvas);
+          thumbnailSlider.appendChild(li);
+          console.log(li);
+          console.log(thumbnailSlider);
+        });
+    }));
+  }).catch(console.error);
 }
 
 /*
 ******** Audio Dropzone ********
 */
+// TODO: migrate from jQuery
 function initAudioDropzone() {
   $('#audio-dropzone').dropzone({
     url: '/api/audio',
@@ -137,33 +175,31 @@ function initAudioDropzone() {
     },
     init() {
       const self = this;
-      const date = new Date().getTime();
       self.options.addRemoveLinks = true;
       self.options.dictRemoveFile = 'Delete';
       self.on('error', (err) => {
-        console.log('dropzone upload err ', err);
+        console.error('Upload Error: ', err.xhr.responseText);
       });
       self.on('addedfile', (file) => {
         console.log('new file added ', file);
       });
-      self.on('sending', (file) => {
-        file.fileMeta = {
-          size: file.size,
-          date
-        };
+      self.on('sending', (file, xhr, fileData) => {
+        file.pageNum = pageNum;
+        fileData.append('pageNum', pageNum);
+        fileData.append('size', file.size);
         $('.meter').show();
       });
       self.on('totaluploadprogress', (progress) => {
         console.log('progress ', progress);
         $('.roller').width(`${progress}%`);
       });
-      self.on('queuecomplete', (progress) => {
+      self.on('queuecomplete', () => {
         // $('.meter').delay(999).slideUp(999);
       });
       self.on('success', (file, res) => {
-        // retrieveMp3(res) ; // just send name to buildAudioBox() ?
-        console.log({ file, res });
-        mp3Arr.push(res);
+        // console.log(res);
+        audioArr.push(res);
+        buildAudioSelect();
       });
       self.on('removedfile', (file) => {
         console.log(file);
@@ -178,22 +214,38 @@ function initAudioDropzone() {
 /*
 ******** XML HTTP Requests ********
 */
-function retrieveMp3(presentId) {
-  // TODO: Implement in editing existing presentation
-  console.log(`fetching audio with ID ${presentId}...`);
-  fetch(`/api/audio/${presentId}`).then((audioArr) => {
-    console.log(audioArr);
-    return buildAudioSelect(audioArr);
-  }, err => err);
+// TODO: Implement in editing existing presentation
+// async function retrieveAudioById(presentId) {
+//   try {
+//     console.log(`fetching audio with ID ${presentId}...`);
+//     const res = await fetch(`/api/audio/${presentId}`);
+//     const presAudioArr = await res.json();
+//     if (!res.ok) throw new Error('Could not retrieve PDF');
+//     audioArr = presAudioArr.slice(0);
+//     return buildAudioSelect();
+//   } catch (err) {
+//     return console.log(err);
+//   }
+// }
+async function retrieveAudio() {
+  try {
+    const res = await fetch('api/audio', { credentials: 'include' });
+    const presAudioArr = await res.json();
+    if (res.status === 400) throw new Error('Could not retrieve Audio');
+    audioArr = presAudioArr.slice(0);
+    return buildAudioSelect();
+  } catch (err) {
+    return console.error(err);
+  }
 }
 async function retrievePdf() {
   try {
     const res = await fetch('api/pdf', { credentials: 'include' });
-    if (!res.ok) throw new Error('Could not retrieve PDF');
     const pdf = await res.json();
+    if (res.status === 400) throw new Error('Could not retrieve PDF');
     return pdfEditor(pdf);
   } catch (err) {
-    return console.log(err);
+    return console.error(err);
   }
 }
 
@@ -202,6 +254,6 @@ async function retrievePdf() {
 */
 export {
   retrievePdf,
-  retrieveMp3,
+  retrieveAudio,
   initAudioDropzone,
 };

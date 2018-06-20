@@ -1,18 +1,18 @@
 /* http: //www.menucool.com/jquery-slider */
 
-#thumbnail-slider {
+.thumbnail-container {
   height: 555px;
   display: inline-block;
   *display: inline; /* hack for old IE6-7 */
   background-color: #fff;
-  box-shadow: 0 1px 11px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 8px rgba(0,0,0,0.2);
   padding: 16px;
   /*position: relative;*/
   -webkit-user-select: none;
   user-select: none;
 }
 
-#thumbnail-slider div.inner {
+.thumbnail-container div.inner {
   width: auto;
   padding: 20px;
 
@@ -20,12 +20,12 @@
   height: 100%;
   box-sizing: border-box;
   position: relative;
-  overflow: hidden;
+  overflow: scroll;
   margin: 0 auto;
 }
 
 
-#thumbnail-slider div.inner ul {
+.thumbnail-container div.inner ul {
   /*the followings should not be changed */
   position: relative;
   left: 0; top: 0;
@@ -38,7 +38,7 @@
   height: auto!important;
 }
 
-#thumbnail-slider ul li {
+.thumbnail-container ul li {
   display: block;
   border:  4px solid transparent;
   outline: 1px solid transparent;
@@ -52,16 +52,16 @@
   backface-visibility: hidden;
 }
 
-#thumbnail-slider ul li.active {
+.thumbnail-container ul li.active {
   /*box-shadow: 0 0 4px #999;*/
   outline-color: black;
 }
 
-#thumbnail-slider li:hover {
+.thumbnail-container li:hover {
     border-color: rgba(255,255,255,0.5);
 }
 
-#thumbnail-slider .thumb {
+.thumbnail-container .thumb {
   width: 100%;
   height: 100%;
   background-size: contain;
@@ -75,9 +75,9 @@
 /* --------- navigation controls ------- */
 /* The nav id should be:  slider id + ("-prev", "-next", and "-pause-play") */
 
-#thumbnail-slider-pause-play {display: none;} /*.pause*/
+.thumbnail-container-pause-play {display: none;} /*.pause*/
 
-#thumbnail-slider-prev, #thumbnail-slider-next
+.thumbnail-container-prev, .thumbnail-container-next
 {
     position: absolute;
     width: 100%;
@@ -92,21 +92,21 @@
     backface-visibility: hidden;
 }
 
-#thumbnail-slider-prev {
+.thumbnail-container-prev {
     top: -36px;
 }
 
-#thumbnail-slider-next {
+.thumbnail-container-next {
     bottom: -36px;
 }
-#thumbnail-slider-next.disabled, #thumbnail-slider-prev.disabled {
+.thumbnail-container-next.disabled, .thumbnail-container-prev.disabled {
     opacity: 0.1;
     cursor: default;
 }
 
 
 /* arrows */
-#thumbnail-slider-prev::before, #thumbnail-slider-next::before {
+.thumbnail-container-prev::before, .thumbnail-container-next::before {
   position: absolute;
   content:  "";
   display:  inline-block;
@@ -117,14 +117,14 @@
   border-top:  4px solid black;
 }
 
-#thumbnail-slider-prev::before {
+.thumbnail-container-prev::before {
   top: 12px;
   -ms-transform: rotate(-45deg);/*IE9*/
   -webkit-transform: rotate(45deg);
   transform:  rotate(45deg);
 }
 
-#thumbnail-slider-next::before {
+.thumbnail-container-next::before {
   bottom: 12px;
   -ms-transform: rotate(135deg);/*IE9*/
   -webkit-transform: rotate(-135deg);
@@ -134,9 +134,9 @@
 /*Responsive settings*/
 @media only screen and (max-width: 736px){
 
-    #thumbnail-slider {padding: 10px 26px;}
+    .thumbnail-container {padding: 10px 26px;}
 
-    #thumbnail-slider-prev {left: 0;}
+    .thumbnail-container-prev {left: 0;}
 
-    #thumbnail-slider-next {right: 0;}
+    .thumbnail-container-next {right: 0;}
 }

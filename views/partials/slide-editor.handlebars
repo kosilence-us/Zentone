@@ -10,11 +10,11 @@
         </figcaption>
 
     </figure>
-    <div id="thumbnail-slider">
+    <div class="thumbnail-container">
         <div class="inner">
-            <ul>
-                <li>
-                    <a href="/">
+            <ul id="thumbnail-slider">
+                {{!-- <li>
+                    <a>
                         <span class="thumb" style="background-image:url(/img/demo/1.jpg)">
                             This slide demonstrates how to link the thumbnail image to another web page.
                         </span>
@@ -52,7 +52,7 @@
                 </li>
                 <li>
                     <a class="thumb" href="/img/demo/12.jpg"></a>
-                </li>
+                </li> --}}
             </ul>
         </div>
     </div>
@@ -61,7 +61,7 @@
     </div>
     <div class="audio-dropzone">
         <form class="dropzone" id="audio-dropzone">
-            <div class="dz-message" data-dz-message>
+            <div class="dz-message data-dz-message">
                 <span>Drag your audio recordings here</span>
             </div>
         </form>

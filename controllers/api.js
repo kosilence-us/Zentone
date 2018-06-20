@@ -1,7 +1,5 @@
 const bluebird = require('bluebird');
-const request = bluebird.promisifyAll(require('request'), {
-  multiArgs: true
-});
+const request = bluebird.promisifyAll(require('request'), { multiArgs: true });
 const cheerio = require('cheerio');
 const graph = require('fbgraph');
 const Twit = require('twit');
@@ -22,9 +20,9 @@ exports.pdfUpload = async (req, res) => {
   try {
     const { file } = req;
     const date = new Date().getTime();
-    const userID = req.user.dataValues.id;
+    const userID = req.user.id;
     console.log('-------file from OSS----------');
-    console.log(file);
+    console.log(JSON.stringify(file, undefined, 2));
     if (file.mimetype !== 'application/pdf') {
       req.flash('error', {
         msg: 'File must be in .pdf format.'
@@ -70,12 +68,12 @@ exports.retrievePdf = async (req, res) => {
     const { id } = req.session;
     console.log('---> fetching pdf for current session...');
     console.log(id);
-    const pdf = await Pdfs
-      .findOne({
-        where: { presentationID: id }
-      });
+    const pdf = await Pdfs.findOne({
+      where: { presentationID: id }
+    });
     if (!pdf) {
-      return res.status(404).send(`Could not find PDF associated with Presentation ${req.session.id}`);
+      req.flash('error', { msg: 'Could not retrieve PDF, please upload again' });
+      return res.status(404).send('Could not retrieve PDF');
     }
     console.log('success!');
     console.log(pdf.fileUrl);
@@ -87,68 +85,82 @@ exports.retrievePdf = async (req, res) => {
 };
 
 /**
- * POST /api/audio/upload
+ * POST /api/audio
  * Upload Audio Files
  */
-exports.audioUpload = (req, res) => {
-  const { file } = req;
-  const { user } = req;
-  const { presId } = req;
-  const date = new Date().getTime();
-  console.log('-------audio file from OSS----------');
-  console.log(file);
-  if (file.mimetype !== 'audio/mp3') {
-    req.flash('error', {
-      msg: 'File must be in .mp3 format.'
-    });
-    return res.status(422).json({
-      error: 'The uploaded file must be an mp3'
-    });
-  }
-  Audio
-    .create({
+exports.audioUpload = async (req, res) => {
+  try {
+    const { user, sessionID, file } = req;
+    const { size, pageNum } = req.body;
+    const uploadDate = new Date().getTime();
+    console.log('------- audio file from OSS ----------');
+    // console.log(JSON.stringify(file, undefined, 2));
+    if (!sessionID) {
+      req.flash('error', { msg: 'Session expired, please upload a new presentation' });
+      return res.status(400).send('Session ID does not match presentation');
+    }
+    if (!file.mimetype.match('audio.*')) {
+      req.flash('error', { msg: 'File must be in .mp3 format.' });
+      return res.status(422).send('The uploaded file must be an mp3');
+    }
+    const audio = await Audio.create({
       id: uuidv4(),
-      userID: user.dataValues.id,
-      PresentationId: presId,
+      userID: user.id,
+      presentationID: sessionID,
       fileName: file.name,
       originalFileName: file.originalname,
       fileUrl: file.url,
-      uploadDate: date,
-      size: file.size
-    })
-    .then((mp3) => {
-      console.log(mp3);
-      req.flash('success', {
-        msg: 'File was uploaded successfully.'
-      });
-      return res.status(200).send(mp3);
-    }, (err) => {
-      console.log(err);
-      req.flash('warning', {
-        msg: 'The file was unable to upload correctly'
-      });
-      return res.status(400).send(err);
+      size,
+      pageNum,
+      uploadDate
     });
+    console.log(audio.dataValues);
+    req.flash('success', { msg: 'File was uploaded successfully.' });
+    res.status(200).send(audio);
+  } catch (err) {
+    req.flash('warning', { msg: 'The file was unable to upload correctly' });
+    res.status(400).send(err.message);
+  }
 };
 /**
- * GET /api/audio/download
+ * GET /api/audio
+ * Get Audio Files for Current Session
+ */
+exports.retrieveAudio = async (req, res) => {
+  try {
+    console.log(`--> fetching audio for Presentation: ${req.sessionID}`);
+    const audio = await Audio.findAll({
+      where: { presentationID: req.sessionID }
+    });
+    if (!audio) {
+      return res.status(404).send(`No audio files found for presentation ${req.sessionID}`);
+    }
+    // console.log(JSON.stringify(audio, undefined, 2));
+    console.log('success!');
+    res.status(200).send(audio);
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+};
+
+/**
+ * GET /api/audio/:id
  * Get Audio Files by Presentation ID
  */
-exports.audioByPresId = (req, res) => {
-  const presId = req.params;
-  console.log('fetching files...', presId);
-  Audio.findAll({
-    where: {
-      PresentationId: presId
-    }
-  })
-    .then((audio) => {
-      console.log('success!');
-      console.log(audio);
-      return res.status(200).send({ audio });
-    }, (err) => {
-      return res.status(400).send(err);
+exports.retrieveAudioByPresId = async (req, res) => {
+  try {
+    console.log('fetching files...', req.params);
+    const audio = await Audio.findAll({
+      where: { presentationID: req.params }
     });
+    if (!audio) {
+      return res.status(404).send(`Could not find audio for Presentation: ${req.params}`);
+    }
+    console.log('success!');
+    res.status(200).send(audio);
+  } catch (err) {
+    res.status(400).send(err);
+  }
 };
 
 /**

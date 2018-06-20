@@ -9774,7 +9774,8 @@ button.close {
 
 html {
   position: relative;
-  min-height: 100%; }
+  min-height: 100%;
+  overflow-x: hidden; }
 
 body {
   margin-bottom: 75px; }

@@ -33,6 +33,7 @@ dotenv.load({
 /**
  * Aliyun OSS Bucket Config
  */
+// TODO: move to config
 const upload = Multer({
   storage: aliOssStorage({
     config: {
@@ -48,7 +49,7 @@ const upload = Multer({
       done(null, filename);
     }
   })
-});
+}).single('file');
 
 /**
  * Controllers (route handlers).
@@ -183,10 +184,11 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
  * Internal API routes.
  */
 // TODO: Create Postman Tests
-app.post('/api/pdf', upload.single('file'), apiController.pdfUpload);
+app.post('/api/pdf', upload, apiController.pdfUpload);
 app.get('/api/pdf', apiController.retrievePdf);
-app.post('/api/audio', upload.single('file'), apiController.audioUpload);
-app.post('/api/audio/:id', apiController.audioByPresId);
+app.post('/api/audio', upload, apiController.audioUpload);
+app.get('/api/audio', apiController.retrieveAudio);
+app.post('/api/audio/:id', apiController.retrieveAudioByPresId);
 // app.get('/api/presentation', apiController.retrievePres);
 
 
