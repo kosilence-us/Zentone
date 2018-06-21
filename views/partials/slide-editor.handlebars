@@ -1,69 +1,73 @@
 <main class="editing-container">
-    <figure>
-        <canvas id="the-canvas"></canvas>
-        <figcaption class="slide-count">
-            <div class="slide-controls">
-                <button id="prev" class="btn-primary">&lt</button>
-                <span>Slide: <span id="page_num"></span> / <span id="page_count"></span></span>
-                <button id="next" class="btn-primary">&gt</button>
-            </div>
-        </figcaption>
+  <figure>
+    <canvas id="the-canvas"></canvas>
+    <figcaption class="slide-count">
+      <div class="slide-controls">
+        <button id="prev" class="btn-primary">&lt</button>
+        <span>Slide:
+          <span id="page_num"></span> /
+          <span id="page_count"></span>
+        </span>
+        <button id="next" class="btn-primary">&gt</button>
+      </div>
+    </figcaption>
 
-    </figure>
-    <div class="thumbnail-container">
-        <div class="inner">
-            <ul id="thumbnail-slider">
-                {{!-- <li>
-                    <a>
-                        <span class="thumb" style="background-image:url(/img/demo/1.jpg)">
-                            This slide demonstrates how to link the thumbnail image to another web page.
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    <a class="thumb" href="/img/demo/2.jpg"></a>
-                </li>
-                <li>
-                    <a class="thumb" href="/img/demo/3.jpg"></a>
-                </li>
-                <li>
-                    <a class="thumb" href="/img/demo/4.jpg"></a>
-                </li>
-                <li>
-                    <a class="thumb" href="/img/demo/5.jpg"></a>
-                </li>
-                <li>
-                    <a class="thumb" href="/img/demo/6.jpg"></a>
-                </li>
-                <li>
-                    <a class="thumb" href="/img/demo/7.jpg"></a>
-                </li>
-                <li>
-                    <a class="thumb" href="/img/demo/8.jpg"></a>
-                </li>
-                <li>
-                    <a class="thumb" href="/img/demo/9.jpg"></a>
-                </li>
-                <li>
-                    <a class="thumb" href="/img/demo/10.jpg"></a>
-                </li>
-                <li>
-                    <a class="thumb" href="/img/demo/11.jpg"></a>
-                </li>
-                <li>
-                    <a class="thumb" href="/img/demo/12.jpg"></a>
-                </li> --}}
-            </ul>
-        </div>
+  </figure>
+  <div class="thumbnail-container">
+    <div class="inner">
+      <ul id="thumbnail-slider">
+        {{!--
+        <li>
+          <a>
+            <span class="thumb" style="background-image:url(/img/demo/1.jpg)">
+              This slide demonstrates how to link the thumbnail image to another web page.
+            </span>
+          </a>
+        </li>
+        <li>
+          <a class="thumb" href="/img/demo/2.jpg"></a>
+        </li>
+        <li>
+          <a class="thumb" href="/img/demo/3.jpg"></a>
+        </li>
+        <li>
+          <a class="thumb" href="/img/demo/4.jpg"></a>
+        </li>
+        <li>
+          <a class="thumb" href="/img/demo/5.jpg"></a>
+        </li>
+        <li>
+          <a class="thumb" href="/img/demo/6.jpg"></a>
+        </li>
+        <li>
+          <a class="thumb" href="/img/demo/7.jpg"></a>
+        </li>
+        <li>
+          <a class="thumb" href="/img/demo/8.jpg"></a>
+        </li>
+        <li>
+          <a class="thumb" href="/img/demo/9.jpg"></a>
+        </li>
+        <li>
+          <a class="thumb" href="/img/demo/10.jpg"></a>
+        </li>
+        <li>
+          <a class="thumb" href="/img/demo/11.jpg"></a>
+        </li>
+        <li>
+          <a class="thumb" href="/img/demo/12.jpg"></a>
+        </li> --}}
+      </ul>
     </div>
-    <div class="audio-viewer">
-        <select id="audio-box" size="8"></select>
-    </div>
-    <div class="audio-dropzone">
-        <form class="dropzone" id="audio-dropzone">
-            <div class="dz-message data-dz-message">
-                <span>Drag your audio recordings here</span>
-            </div>
-        </form>
-    </div>
+  </div>
+  <div class="audio-viewer">
+    <select id="audio-box" size="8"></select>
+  </div>
+  <div class="audio-dropzone">
+    <form class="dropzone" id="audio-dropzone">
+      <div class="dz-message data-dz-message">
+        <span>Drag your audio recordings here</span>
+      </div>
+    </form>
+  </div>
 </main>

@@ -5,6 +5,7 @@
  */
 let audioArr = [];
 let pageNum = 1;
+let pageRendering = false;
 
 /**
  * Build Audio Box
@@ -47,45 +48,46 @@ async function pdfEditor(pdf) {
   pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
   const desiredWidth = windowWidth / 2.3;
   const desiredHeight = 555;
-  const thumbnailSlider = document.querySelector('#thumbnail-slider');
   const canvas = document.getElementById('the-canvas');
   const ctx = canvas.getContext('2d');
   let pdfDoc = null;
-  let pageRendering = false;
   let pageNumPending = null;
+  pageRendering = true;
 
   /**
    * Get page info from document, resize canvas accordingly, and render page.
    * @param num Page number.
    */
-  function renderPage(num) {
-    pageRendering = true;
-    // Using promise to fetch the page
-    pdfDoc.getPage(num).then((page) => {
+  async function renderPage(num) {
+    try {
+      // fetch page
+      const page = await pdfDoc.getPage(num);
       const viewport = page.getViewport(1);
       const scale = desiredHeight / viewport.height;
       const scaledViewport = page.getViewport(scale);
       canvas.height = scaledViewport.height;
       canvas.width = desiredWidth;
-      // Render PDF page into canvas context
-      const renderContext = {
+       // Render PDF page into canvas context
+       const renderContext = {
         canvasContext: ctx,
         viewport
       };
-      const renderTask = page.render(renderContext);
       // Wait for rendering to finish
-      renderTask.promise.then(() => {
-        pageRendering = false;
+      await page.render(renderContext);
+      pageRendering = false;
         if (pageNumPending !== null) {
           // New page rendering is pending
           renderPage(pageNumPending);
           pageNumPending = null;
         }
-      });
-    });
-    // Update page counters
-    document.getElementById('page_num').textContent = num;
+      // Update page counters
+      document.getElementById('page_num').textContent = num;
+    } catch (err) {
+      console.log(err);
+    }
+  // TODO: Click event listener
   }
+
   /**
    * If another page rendering in progress, waits until the rendering is
    * finised. Otherwise, executes rendering immediately.
@@ -97,6 +99,7 @@ async function pdfEditor(pdf) {
       renderPage(num);
     }
   }
+
   /**
    * Displays previous page.
    */
@@ -106,8 +109,10 @@ async function pdfEditor(pdf) {
     }
     pageNum--;
     queueRenderPage(pageNum);
+    buildAudioSelect();
   }
   document.getElementById('prev').addEventListener('click', onPrevPage);
+
   /**
    * Displays next page.
    */
@@ -117,45 +122,70 @@ async function pdfEditor(pdf) {
     }
     pageNum++;
     queueRenderPage(pageNum);
+    buildAudioSelect();
   }
   document.getElementById('next').addEventListener('click', onNextPage);
-  /**
-   * Asynchronously downloads PDF.
-   */
-  pdfjsLib.getDocument(url).then((pdfDoc_) => {
-    pdfDoc = pdfDoc_;
-    document.getElementById('page_count').textContent = pdfDoc.numPages;
 
-    // Initial/first page rendering
-    renderPage(pageNum);
-  });
+  // Creates thumb-sized canvas elements and renders the pages inside
   function makeThumb(page) {
     // draw page to fit into 96x96 canvas
-    const vp = page.getViewport(1);
     const canvas = document.createElement('canvas');
+    const vp = page.getViewport(1);
     canvas.width = 96;
     canvas.height = 96;
     const scale = Math.min(canvas.width / vp.width, canvas.height / vp.height);
+    canvas.classList.add('thumb');
     return page.render({ canvasContext: canvas.getContext('2d'), viewport: page.getViewport(scale) }).promise.then(() => canvas);
   }
-  console.log('page rendered.');
-  pdfjsLib.getDocument(url).promise.then((doc) => {
-    console.log('building thumbs...', doc);
+
+  function selectPage() {
+    const prev = document.querySelector('.focus');
+    const pageThumb = this;
+    if (prev) {
+      prev.classList.remove('focus');
+    }
+    pageThumb.classList.add('focus');
+    pageNum = parseInt(pageThumb.dataset.pageNum, 10);
+    console.log({ pageThumb, prev });
+    queueRenderPage(pageNum);
+    buildAudioSelect();
+  }
+
+  try {
+    /**
+     * Asynchronously downloads PDF.
+     */
+    const pdfDoc_ = await pdfjsLib.getDocument(url);
+    pdfDoc = pdfDoc_;
+    document.getElementById('page_count').textContent = pdfDoc.numPages;
+    // Initial/first page rendering
+    renderPage(pageNum);
+
+    /**
+     * Asynchronously Builds PDF Thumbs.
+     */
+    console.log('building thumbs...', pdfDoc);
+    const thumbnailSlider = document.querySelector('#thumbnail-slider');
     const pages = [];
-    while (pages.length < doc.numPages) pages.push(pages.length + 1);
+    while (pages.length < pdfDoc.numPages) pages.push(pages.length + 1);
     return Promise.all(pages.map((num) => {
       // create a li for each page and build a small canvas for it
       const li = document.createElement('li');
-      document.body.appendChild(li);
-      return doc.getPage(num).then(makeThumb)
+      const a = document.createElement('a');
+      
+      li.addEventListener('click', selectPage);
+      li.dataset.pageNum = num;
+      // li.appendChild(a);
+      thumbnailSlider.appendChild(li);
+      return pdfDoc.getPage(num).then(makeThumb)
         .then((canvas) => {
-          li.appendChild(canvas);
-          thumbnailSlider.appendChild(li);
-          console.log(li);
-          console.log(thumbnailSlider);
+          a.appendChild(canvas);
+          li.appendChild(a);
         });
     }));
-  }).catch(console.error);
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 /*
@@ -198,6 +228,7 @@ function initAudioDropzone() {
       });
       self.on('success', (file, res) => {
         // console.log(res);
+        res.pageNum = pageNum; // TODO: return pageNum
         audioArr.push(res);
         buildAudioSelect();
       });
@@ -248,6 +279,27 @@ async function retrievePdf() {
     return console.error(err);
   }
 }
+async function sendPresentation() {
+
+}
+
+/*
+******** Submit Presentation ********
+*/
+function submitPresentation(e) {
+  e.preventDefault();
+  const tags = document.querySelector('input[name="tags"]').value;
+  const title = document.querySelector('input[name="title"]').value;
+  const blog = document.querySelector('textarea[name="blog"]').value;
+  // submit blog entries into blog model
+  // update audioArr entries for presentationID, pageNum
+  console.log({ tags, title, blog, audioArr });
+  // POST data
+}
+function submitListen() {
+  const submit = document.querySelector('#submit');
+  submit.addEventListener('click', submitPresentation);
+}
 
 /*
 ******** Function Exports ********
@@ -256,4 +308,5 @@ export {
   retrievePdf,
   retrieveAudio,
   initAudioDropzone,
+  submitListen,
 };

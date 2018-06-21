@@ -3,9 +3,10 @@
 .thumbnail-container {
   height: 555px;
   display: inline-block;
-  *display: inline; /* hack for old IE6-7 */
+  *display: inline;
+  /* hack for old IE6-7 */
   background-color: #fff;
-  box-shadow: 0 1px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
   padding: 16px;
   /*position: relative;*/
   -webkit-user-select: none;
@@ -15,7 +16,6 @@
 .thumbnail-container div.inner {
   width: auto;
   padding: 20px;
-
   /*the followings should not be changed */
   height: 100%;
   box-sizing: border-box;
@@ -24,26 +24,27 @@
   margin: 0 auto;
 }
 
-
 .thumbnail-container div.inner ul {
   /*the followings should not be changed */
   position: relative;
-  left: 0; top: 0;
+  left: 0;
+  top: 0;
   list-style: none;
   font-size: 0;
   padding: 0;
   margin: 0;
-  float: left!important;
-  width: auto!important;
-  height: auto!important;
+  float: left !important;
+  width: auto !important;
+  height: auto !important;
 }
 
 .thumbnail-container ul li {
   display: block;
-  border:  4px solid transparent;
+  border: 4px solid transparent;
   outline: 1px solid transparent;
   margin: 0;
-  margin-bottom: 3px; /* Spacing between thumbs*/
+  margin-bottom: 3px;
+  /* Spacing between thumbs*/
   box-sizing: content-box;
   text-align: center;
   padding: 0;
@@ -52,13 +53,18 @@
   backface-visibility: hidden;
 }
 
-.thumbnail-container ul li.active {
+.thumbnail-container .focus {
   /*box-shadow: 0 0 4px #999;*/
-  outline-color: black;
+  border-color: black;
+}
+
+.thumbnail-container li:active {
+  /*box-shadow: 0 0 4px #999;*/
+  background-color: rgba(8, 8, 8, 0.062);
 }
 
 .thumbnail-container li:hover {
-    border-color: rgba(255,255,255,0.5);
+  border-color: rgba(234, 231, 231, 0.6);
 }
 
 .thumbnail-container .thumb {
@@ -68,75 +74,89 @@
   background-repeat: no-repeat;
   background-position: center center;
   display: block;
-  position: absolute;
   font-size: 0;
 }
 
 /* --------- navigation controls ------- */
+
 /* The nav id should be:  slider id + ("-prev", "-next", and "-pause-play") */
 
-.thumbnail-container-pause-play {display: none;} /*.pause*/
+.thumbnail-container-pause-play {
+  display: none;
+}
 
-.thumbnail-container-prev, .thumbnail-container-next
-{
-    position: absolute;
-    width: 100%;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    margin: 0;
-    z-index: 10;
-    cursor: pointer;
-    transition: opacity 0.6s;
-    *background-color: #ccc;/*IE7 hack*/
-    backface-visibility: hidden;
+/*.pause*/
+
+.thumbnail-container-prev,
+.thumbnail-container-next {
+  position: absolute;
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  margin: 0;
+  z-index: 10;
+  cursor: pointer;
+  transition: opacity 0.6s;
+  *background-color: #ccc;
+  /*IE7 hack*/
+  backface-visibility: hidden;
 }
 
 .thumbnail-container-prev {
-    top: -36px;
+  top: -36px;
 }
 
 .thumbnail-container-next {
-    bottom: -36px;
-}
-.thumbnail-container-next.disabled, .thumbnail-container-prev.disabled {
-    opacity: 0.1;
-    cursor: default;
+  bottom: -36px;
 }
 
+.thumbnail-container-next.disabled,
+.thumbnail-container-prev.disabled {
+  opacity: 0.1;
+  cursor: default;
+}
 
 /* arrows */
-.thumbnail-container-prev::before, .thumbnail-container-next::before {
+
+.thumbnail-container-prev::before,
+.thumbnail-container-next::before {
   position: absolute;
-  content:  "";
-  display:  inline-block;
-  width:  10px;
-  height:  10px;
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
   margin-left: -20px;
-  border-left:  4px solid black;
-  border-top:  4px solid black;
+  border-left: 4px solid black;
+  border-top: 4px solid black;
 }
 
 .thumbnail-container-prev::before {
   top: 12px;
-  -ms-transform: rotate(-45deg);/*IE9*/
+  -ms-transform: rotate(-45deg);
+  /*IE9*/
   -webkit-transform: rotate(45deg);
-  transform:  rotate(45deg);
+  transform: rotate(45deg);
 }
 
 .thumbnail-container-next::before {
   bottom: 12px;
-  -ms-transform: rotate(135deg);/*IE9*/
+  -ms-transform: rotate(135deg);
+  /*IE9*/
   -webkit-transform: rotate(-135deg);
-  transform:  rotate(-135deg);
+  transform: rotate(-135deg);
 }
 
 /*Responsive settings*/
-@media only screen and (max-width: 736px){
 
-    .thumbnail-container {padding: 10px 26px;}
-
-    .thumbnail-container-prev {left: 0;}
-
-    .thumbnail-container-next {right: 0;}
+@media only screen and (max-width: 736px) {
+  .thumbnail-container {
+    padding: 10px 26px;
+  }
+  .thumbnail-container-prev {
+    left: 0;
+  }
+  .thumbnail-container-next {
+    right: 0;
+  }
 }

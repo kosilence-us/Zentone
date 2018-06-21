@@ -3,7 +3,7 @@
 */
 import { pdfViewer } from './home';
 import { initPdfDropzone } from './slideupload';
-import { retrievePdf, retrieveAudio, initAudioDropzone, } from './editpresentation';
+import { retrievePdf, retrieveAudio, initAudioDropzone, submitListen } from './editpresentation';
 
 /*
 ******** Onload Function Calls ********
@@ -20,6 +20,7 @@ window.onload = function () {
       retrievePdf();
       retrieveAudio();
       initAudioDropzone();
+      submitListen();
       break;
     default:
       break;
