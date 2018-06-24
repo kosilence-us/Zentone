@@ -5,9 +5,6 @@ import { retrieveLatestPdf } from './home';
 import { initPdfDropzone } from './slideupload';
 import { retrievePdf, retrieveAudio, initAudioDropzone, submitListen } from './editpresentation';
 
-
-Dropzone.autoDiscover = false;
-
 /*
 ******** Onload Function Calls ********
 */
@@ -33,5 +30,5 @@ window.onload = function () {
 /*
 ******** Function Calls ********
 */
-// Dropzone.autoDiscover = false;
+Dropzone.autoDiscover = false;
 
