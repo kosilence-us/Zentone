@@ -4,18 +4,22 @@ const Sequelize = require('sequelize');
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(path.join(__dirname, './../config/config.json'))[env];
 const db = {};
+let sequelize;
 
-const sequelize = process.env.NODE_ENV
-  ? new Sequelize(process.env.DATABASE_URL, {
-    dialect: 'postgres', // hack: define dialect here to disable logging
-    logging: false
-  })
-  : new Sequelize(config.database, config.username, config.password, {
+if (env === 'development' || env === 'test') {
+  const config = require(path.join(__dirname, './../config/config.json'))[env];
+
+  sequelize = new Sequelize(config.database, config.username, config.password, {
     dialect: 'postgres', // hack: define dialect here to disable logging
     logging: false
   });
+} else {
+  sequelize =  new Sequelize(process.env.DATABASE_URL, {
+    dialect: 'postgres', // hack: define dialect here to disable logging
+    logging: false
+  })
+}
 
 fs
   .readdirSync(__dirname)
