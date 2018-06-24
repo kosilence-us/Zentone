@@ -27,6 +27,7 @@
   - [ ] User cookies and site tokens
   - [ ] CORS protection
   - [x] Database password encryption
+  - [ ] Set secure cookies
 
 - [ ] Production & Hosting
   - [ ] Prepare code for production environment 
