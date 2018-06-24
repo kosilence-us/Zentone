@@ -9,13 +9,13 @@ const db = require('../models/db.js');
 const User = db.user;
 
 passport.serializeUser((user, done) => {
-  // console.log('serializing user: ', user);
+  // console.log('...serializing user');
   done(null, user);
 });
 
-passport.deserializeUser((userId, done) => {
-  // console.log('deserializing user: ', userId);
-  User.findById(userId).then((user) => {
+passport.deserializeUser((user, done) => {
+  // console.log('...deserializing user', user.id);
+  User.findById(user.id).then((user) => {
     done(null, user);
   });
 });

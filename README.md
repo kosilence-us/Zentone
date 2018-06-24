@@ -13,9 +13,11 @@
   - [ ] User Bar Partial
   - [ ] PDF Editor Controls
   - [ ] Dropzone styles
+  - [ ] Thumbs border moves with next/prev buttons
 
 - [ ] Back End
-  - [ ] Check file before aliyun upload
+  - [ ] Pdf size attached to upload
+  - [x] Check file before aliyun upload
   - [ ] User data collection
   - [ ] Post data collection
   - [x] User Local Authentication Route
@@ -39,8 +41,12 @@
 - [x] Display audio in select box
 - [x] Relate Audio to Slides
 - [x] Regenerate req.session to upload multiple presentations
-- [ ] Thumbnail control pageNum
-- [ ] Send pageNum to dropzone upload
+- [x] Thumbnail control pageNum
+- [x] Send pageNum to dropzone upload
+- [x] POST blog entry
+- [x] UPDATE audioArr
+- [ ] Retrieve pdf to home
+- [ ] Create audio player
 
 
 ### Bugs
@@ -48,6 +54,8 @@
 - [x] Fetch doesn't assign res.user
 - [x] Wrapping two table entries in Promise.all sets multiple res.header
 - [x] Body width overflow
+- [x] POST /api/audio return pageNum
+- [ ] Delayed & stacking message flashing
 
 ### Optimize && Refactor
 - [ ] Organize css into scss pages

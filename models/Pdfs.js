@@ -28,10 +28,11 @@ module.exports = (sequelize, DataTypes) => sequelize
       type: DataTypes.STRING,
       allowNull: false
     },
-    uploadDate: {
-      type: DataTypes.STRING
-    },
     size: {
       type: DataTypes.INTEGER
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
     }
   });

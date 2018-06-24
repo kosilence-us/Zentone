@@ -184,11 +184,16 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
  * Internal API routes.
  */
 // TODO: Create Postman Tests
-app.post('/api/pdf', upload, apiController.pdfUpload);
+app.post('/api/pdf', upload, apiController.sendPdf);
 app.get('/api/pdf', apiController.retrievePdf);
-app.post('/api/audio', upload, apiController.audioUpload);
+app.get('/api/newpdf', apiController.retrievePdfByLatest);
+app.post('/api/audio', upload, apiController.sendAudio);
 app.get('/api/audio', apiController.retrieveAudio);
-app.post('/api/audio/:id', apiController.retrieveAudioByPresId);
+app.get('/api/audio/:id', apiController.retrieveAudioByPresId);
+app.put('/api/audio', apiController.updateAudio);
+app.put('/api/presentation', apiController.updatePresentation);
+app.get('/api/newpresentation', apiController.retrievePresentationByLatest)
+
 // app.get('/api/presentation', apiController.retrievePres);
 
 

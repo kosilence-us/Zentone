@@ -115,18 +115,14 @@ exports.postSignup = (req, res, next) => {
       return res.redirect('/signup');
     }
 
-    console.log('---> saving new user:', JSON.stringify(req.body, undefined, 2));
-    console.log('---> new User:', JSON.stringify(user, undefined, 2));
-    console.log('---> password:', JSON.stringify(req.body.password, undefined, 2));
-
     User.create(user)
       .then((user) => {
-        console.log('--> saving user...');
+        console.log('---> saving new User:', JSON.stringify(user, undefined, 2));
         req.login(user, (err) => {
-          console.log('---> logging in...');
           if (err) {
             return next(err);
           }
+          console.log('---> logging in...');
           req.session.save(() => res.redirect('/'));
         });
       });

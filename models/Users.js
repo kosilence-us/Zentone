@@ -33,10 +33,13 @@ module.exports = (sequelize, DataTypes) => {
     location: {
       type: DataTypes.STRING
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    }
   });
 
-  Users.beforeCreate((user, options) => {
-    return new Promise((resolve, reject) => {
+  Users.beforeCreate((user, options) => new Promise((resolve, reject) => {
       const { password } = user;
       bcrypt.genSalt(10, (err, salt) => {
         if (err) reject(err);
@@ -46,8 +49,7 @@ module.exports = (sequelize, DataTypes) => {
           resolve(user);
         });
       });
-    });
-  });
+    }));
   Users.prototype.comparePassword = function (candidatePassword, done) {
     bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
       done(err, isMatch);

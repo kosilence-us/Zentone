@@ -1,7 +1,7 @@
 /*
 ******** Import Functions ********
 */
-import { pdfViewer } from './home';
+import { retrieveLatestPdf } from './home';
 import { initPdfDropzone } from './slideupload';
 import { retrievePdf, retrieveAudio, initAudioDropzone, submitListen } from './editpresentation';
 
@@ -11,7 +11,7 @@ import { retrievePdf, retrieveAudio, initAudioDropzone, submitListen } from './e
 window.onload = function () {
   switch (window.location.pathname) {
     case '/':
-      pdfViewer();
+      retrieveLatestPdf();
       break;
     case '/slide-upload':
       initPdfDropzone();

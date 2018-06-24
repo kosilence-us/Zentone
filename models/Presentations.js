@@ -10,6 +10,21 @@ module.exports = (sequelize, DataTypes) => sequelize
     userID: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: false
     },
+    tags: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      defaultValue: ['empty']
+    },
+    title: {
+      type: DataTypes.STRING,
+      defaultValue: 'empty'
+    },
+    blog: {
+      type: DataTypes.TEXT,
+      defaultValue: 'empty'
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    }
   });

@@ -16,10 +16,10 @@ const Presentations = db.presentations;
  * POST /api/pdf/upload
  * Upload PDFs
  */
-exports.pdfUpload = async (req, res) => {
+exports.sendPdf = async (req, res) => {
   try {
     const { file } = req;
-    const date = new Date().getTime();
+    const createdAt = new Date().getTime();
     const userID = req.user.id;
     console.log('-------file from OSS----------');
     console.log(JSON.stringify(file, undefined, 2));
@@ -46,8 +46,8 @@ exports.pdfUpload = async (req, res) => {
         fileName: file.name,
         originalFileName: file.originalname,
         fileUrl: file.url,
-        uploadDate: date,
-        size: file.size
+        size: file.size,
+        createdAt
       });
     // console.log(slide.get({ plain: true }));
     console.log('--> pdf: ', pdf.presentationID);
@@ -60,7 +60,7 @@ exports.pdfUpload = async (req, res) => {
 };
 
 /**
- * GET /api/upload
+ * GET /api/pdf
  * Upload && Download Audio Files
  */
 exports.retrievePdf = async (req, res) => {
@@ -73,12 +73,32 @@ exports.retrievePdf = async (req, res) => {
     });
     if (!pdf) {
       req.flash('error', { msg: 'Could not retrieve PDF, please upload again' });
-      return res.status(404).send('Could not retrieve PDF');
+      return res.status(404).send();
     }
-    console.log('success!');
-    console.log(pdf.fileUrl);
+    // console.log(pdf.fileUrl);
     // console.log(req.hostname);
     res.status(200).send(pdf);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
+/**
+ * GET /api/newpdf
+ * Get latest presentaion by user
+ */
+exports.retrievePdfByLatest = async (req, res) => {
+  try {
+    console.log('--> retrieving latest pdf...');
+    const latest = await Pdfs.findAll({
+      limit: 1,
+      order: [[ 'createdAt', 'DESC' ]]
+    });
+    if (!latest) {
+      return res.status(404).send();
+    }
+    console.log(latest[0].dataValues);
+    res.status(200).send(latest[0]);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -88,11 +108,11 @@ exports.retrievePdf = async (req, res) => {
  * POST /api/audio
  * Upload Audio Files
  */
-exports.audioUpload = async (req, res) => {
+exports.sendAudio = async (req, res) => {
   try {
     const { user, sessionID, file } = req;
     const { size, pageNum } = req.body;
-    const uploadDate = new Date().getTime();
+    const createdAt = new Date().getTime();
     console.log('------- audio file from OSS ----------');
     // console.log(JSON.stringify(file, undefined, 2));
     if (!sessionID) {
@@ -112,10 +132,9 @@ exports.audioUpload = async (req, res) => {
       fileUrl: file.url,
       size,
       pageNum,
-      uploadDate
+      createdAt
     });
     console.log(audio.dataValues);
-    req.flash('success', { msg: 'File was uploaded successfully.' });
     res.status(200).send(audio);
   } catch (err) {
     req.flash('warning', { msg: 'The file was unable to upload correctly' });
@@ -136,7 +155,6 @@ exports.retrieveAudio = async (req, res) => {
       return res.status(404).send(`No audio files found for presentation ${req.sessionID}`);
     }
     // console.log(JSON.stringify(audio, undefined, 2));
-    console.log('success!');
     res.status(200).send(audio);
   } catch (err) {
     res.status(400).send(err.message);
@@ -164,21 +182,73 @@ exports.retrieveAudioByPresId = async (req, res) => {
 };
 
 /**
- * GET /api/presentation
- * Get lates presentaion by user
+ * UPDATE /api/audio
+ * Update Multiple Audio in Array
  */
-// exports.retrievePres = (req, res) => {
-//   Presentations.find({
-//     where: {
-//       id: req.sessionID
-//     }
-//   })
-//     .then((pres) => {
-//       console.log('success!');
-//       console.log(pres);
-//       return res.status(200).send({ pres });
-//     }).catch(err => res.send(err));
-// };
+exports.updateAudio = async (req, res) => {
+  try {
+    console.log('--> Updating Audio...');
+    const { audioArr } = req.body;
+    const updated = await audioArr.forEach((audio) => {
+      Audio.update({
+        pageNum: audioArr.pageNum
+      }, {
+        where: { id: audio.id },
+        returning: true
+      });
+    });
+    console.log('--> Updated Audio: ', updated.dataValues);
+    res.status(200).send(audioArr);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
+/**
+ * UPDATE /api/presentation
+ * Update Presentation Blog Contents
+ */
+exports.updatePresentation = async (req, res) => {
+  try {
+    // TODO: conditional for req session or presentationID
+    console.log('--> Updating Presentation...');
+    console.log(req.sessionID);
+    const tags = req.body.tags.split(',');
+    const title = req.body.title.trim();
+    const blog = req.body.blog.trim();
+    console.log({ tags, title, blog });
+    const updated = await Presentations.update({
+      tags, title, blog
+    }, {
+      where: { id: req.sessionID },
+      returning: true
+    });
+    console.log('--> Updated Presentation: ', updated.dataValues);
+    res.status(200).send(updated);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+}
+
+/**
+ * GET /api/newpresentation
+ * Get latest presentaion by user
+ */
+exports.retrievePresentationByLatest = async (req, res) => {
+  try {
+    const latest = await Presentations.findAll({
+      limit: 1,
+      where: {
+        id: req.sessionID
+      },
+      order: [[ 'createdAt', 'DESC' ]]
+    });
+    console.log('--> latest presentation: ', latest);
+    res.status(200).send(latest);
+  } catch (err) {
+    res.send(400).send(err);
+  }
+};
 
 /**
  * GET /api/facebook

@@ -61,6 +61,7 @@ async function pdfEditor(pdf) {
   async function renderPage(num) {
     try {
       // fetch page
+      console.log('rendering page...', num);
       const page = await pdfDoc.getPage(num);
       const viewport = page.getViewport(1);
       const scale = desiredHeight / viewport.height;
@@ -68,7 +69,7 @@ async function pdfEditor(pdf) {
       canvas.height = scaledViewport.height;
       canvas.width = desiredWidth;
        // Render PDF page into canvas context
-       const renderContext = {
+      const renderContext = {
         canvasContext: ctx,
         viewport
       };
@@ -156,6 +157,9 @@ async function pdfEditor(pdf) {
      * Asynchronously downloads PDF.
      */
     const pdfDoc_ = await pdfjsLib.getDocument(url);
+    if (!pdfDoc_) {
+      return new Error('Invalid URL');
+    }
     pdfDoc = pdfDoc_;
     document.getElementById('page_count').textContent = pdfDoc.numPages;
     // Initial/first page rendering
@@ -184,7 +188,7 @@ async function pdfEditor(pdf) {
         });
     }));
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
   }
 }
 
@@ -228,7 +232,7 @@ function initAudioDropzone() {
       });
       self.on('success', (file, res) => {
         // console.log(res);
-        res.pageNum = pageNum; // TODO: return pageNum
+        // res.pageNum = pageNum; // TODO: return pageNum
         audioArr.push(res);
         buildAudioSelect();
       });
@@ -243,7 +247,7 @@ function initAudioDropzone() {
 }
 
 /*
-******** XML HTTP Requests ********
+******** Ajax Requests ********
 */
 // TODO: Implement in editing existing presentation
 // async function retrieveAudioById(presentId) {
@@ -258,6 +262,16 @@ function initAudioDropzone() {
 //     return console.log(err);
 //   }
 // }
+async function retrievePdf() {
+  try {
+    const res = await fetch('api/pdf', { credentials: 'include' });
+    const pdf = await res.json();
+    if (res.status === 400) throw new Error('Could not retrieve PDF');
+    return pdfEditor(pdf);
+  } catch (err) {
+    console.error(err);
+  }
+}
 async function retrieveAudio() {
   try {
     const res = await fetch('api/audio', { credentials: 'include' });
@@ -266,21 +280,40 @@ async function retrieveAudio() {
     audioArr = presAudioArr.slice(0);
     return buildAudioSelect();
   } catch (err) {
-    return console.error(err);
+    console.error(err);
   }
 }
-async function retrievePdf() {
+async function updateAudio(data) {
   try {
-    const res = await fetch('api/pdf', { credentials: 'include' });
-    const pdf = await res.json();
-    if (res.status === 400) throw new Error('Could not retrieve PDF');
-    return pdfEditor(pdf);
+    const res = await fetch('api/audio', {
+      credentials: 'include',
+      method: 'PUT',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    const message = await res.json();
+    return message;
   } catch (err) {
-    return console.error(err);
+    console.log(err);
   }
 }
-async function sendPresentation() {
-
+async function updatePresentation(data) {
+  try {
+    const res = await fetch('api/presentation', {
+      credentials: 'include',
+      method: 'PUT',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    const message = await res.json();
+    return message;
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 /*
@@ -293,8 +326,15 @@ function submitPresentation(e) {
   const blog = document.querySelector('textarea[name="blog"]').value;
   // submit blog entries into blog model
   // update audioArr entries for presentationID, pageNum
-  console.log({ tags, title, blog, audioArr });
+  // console.log({ tags, title, blog, audioArr });
   // POST data
+  Promise.all([
+    updateAudio({ audioArr })
+  ], [
+    updatePresentation({ tags, title, blog })
+  ]).then(() => {
+    window.location = '/';
+  });
 }
 function submitListen() {
   const submit = document.querySelector('#submit');
