@@ -116,7 +116,7 @@ app.use(session({
   resave: false, // we support the touch method so per the express-session docs this should be set to false
   proxy: true, // if you do SSL outside of node.
   saveUninitialized: true,
-  cookie: {},
+  // cookie: {},
 }));
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1); // trust first proxy
