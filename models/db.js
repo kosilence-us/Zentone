@@ -7,12 +7,12 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(path.join(__dirname, './../config/config.json'))[env];
 const db = {};
 
-const sequelize = config.production
-  ? new Sequelize(process.env[config.production], {
+const sequelize = config
+  ? new Sequelize(config.database, config.username, config.password, {
     dialect: 'postgres', // hack: define dialect here to disable logging
     logging: false
   })
-  : new Sequelize(config.database, config.username, config.password, {
+  : new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres', // hack: define dialect here to disable logging
     logging: false
   });

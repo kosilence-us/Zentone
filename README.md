@@ -29,6 +29,7 @@
   - [x] Database password encryption
 
 - [ ] Production & Hosting
+  - [ ] Prepare code for production environment 
   - [ ] Migrate site to custom domain
   - [ ] Give keys and access to owner
 
