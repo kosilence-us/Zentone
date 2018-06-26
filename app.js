@@ -40,7 +40,8 @@ const upload = Multer({
       accessKeyId: process.env.ALI_CLOUD_OSS_ACCESSKEY_ID,
       accessKeySecret: process.env.ALI_CLOUD_OSS_ACCESSKEY_SECRET,
       bucket: process.env.ALI_CLOUD_OSS_BUCKET,
-      region: process.env.ALI_CLOUD_OSS_REGION
+      region: process.env.ALI_CLOUD_OSS_REGION,
+      secure: true
     },
     filename(req, file, done) {
       const date = new Date().getTime();

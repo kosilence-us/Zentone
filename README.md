@@ -33,6 +33,7 @@
   - [ ] Prepare code for production environment 
   - [ ] Migrate site to custom domain
   - [ ] Give keys and access to owner
+  - [ ] Serve pdfs over HTTPS
 
 ### Process
 - [x] Attach aliyun links to presentations & audio
