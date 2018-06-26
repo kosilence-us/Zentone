@@ -55,7 +55,7 @@ exports.postLogin = (req, res, next) => {
       req.flash('success', { msg: 'Success! You are logged in.' });
       console.log('--> Success! UserID:', userID);
       console.log(req.session);
-      return req.session.save(() => res.redirect(req.session.returnTo || '/'));
+      return req.session.save(() => res.redirect('/')); // TODO: req.session.returnTo || 
     });
   })(req, res, next);
 };
