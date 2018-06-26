@@ -19,6 +19,8 @@ const Presentations = db.presentations;
 exports.sendPdf = async (req, res) => {
   try {
     const { file } = req;
+    const { name, originalname, size } = file;
+    const fileUrl = file.url.replace(/^http:\/\//i, 'https://');
     const createdAt = new Date().getTime();
     const userID = req.user.id;
     console.log('-------file from OSS----------');
@@ -43,10 +45,10 @@ exports.sendPdf = async (req, res) => {
         id: uuidv4(),
         userID,
         presentationID: req.sessionID,
-        fileName: file.name,
-        originalFileName: file.originalname,
-        fileUrl: file.url,
-        size: file.size,
+        fileName: name,
+        originalFileName: originalname,
+        fileUrl,
+        size,
         createdAt
       });
     // console.log(slide.get({ plain: true }));
@@ -112,6 +114,7 @@ exports.sendAudio = async (req, res) => {
   try {
     const { user, sessionID, file } = req;
     const { size, pageNum } = req.body;
+    const fileUrl = file.url.replace(/^http:\/\//i, 'https://');
     const createdAt = new Date().getTime();
     console.log('------- audio file from OSS ----------');
     // console.log(JSON.stringify(file, undefined, 2));
@@ -129,7 +132,7 @@ exports.sendAudio = async (req, res) => {
       presentationID: sessionID,
       fileName: file.name,
       originalFileName: file.originalname,
-      fileUrl: file.url,
+      fileUrl,
       size,
       pageNum,
       createdAt
