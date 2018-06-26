@@ -7,18 +7,18 @@ const env = process.env.NODE_ENV || 'development';
 const db = {};
 let sequelize;
 
-if (env === 'development' || env === 'test') {
-  const config = require(path.join(__dirname, './../config/config.json'))[env];
-  sequelize = new Sequelize(config.database, config.username, config.password, {
+if (process.env.DATABASE_URL) {
+  sequelize =  new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres', // hack: define dialect here to disable logging
     protocol: 'postgres',
     logging: false
   });
 } else {
-  sequelize =  new Sequelize(process.env.DATABASE_URL, {
+  const config = require(path.join(__dirname, './../config/config.json'))[env];
+  sequelize = new Sequelize(config.database, config.username, config.password, {
     dialect: 'postgres', // hack: define dialect here to disable logging
     logging: false
-  })
+  });
 }
 
 fs
