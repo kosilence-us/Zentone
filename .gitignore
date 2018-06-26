@@ -16,6 +16,7 @@ tmp
 #Build
 public/js/bundle.min.js
 public/js/0.bundle.min.js
+.cache
 
 # API keys and secrets
 .env

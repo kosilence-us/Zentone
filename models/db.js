@@ -11,6 +11,7 @@ if (env === 'development' || env === 'test') {
   const config = require(path.join(__dirname, './../config/config.json'))[env];
   sequelize = new Sequelize(config.database, config.username, config.password, {
     dialect: 'postgres', // hack: define dialect here to disable logging
+    protocol: 'postgres',
     logging: false
   });
 } else {

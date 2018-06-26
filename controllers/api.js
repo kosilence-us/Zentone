@@ -13,7 +13,7 @@ const Audio = db.audio;
 const Presentations = db.presentations;
 
 /**
- * POST /api/pdf/upload
+ * POST /api/pdf
  * Upload PDFs
  */
 exports.sendPdf = async (req, res) => {
