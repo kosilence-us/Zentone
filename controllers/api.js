@@ -25,6 +25,7 @@ exports.sendPdf = async (req, res) => {
     const userID = req.user.id;
     console.log('-------file from OSS----------');
     console.log(JSON.stringify(file, undefined, 2));
+    console.log('--> Modified URL: ', fileUrl);
     if (file.mimetype !== 'application/pdf') {
       req.flash('error', {
         msg: 'File must be in .pdf format.'
