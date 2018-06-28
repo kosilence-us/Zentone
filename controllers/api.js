@@ -87,6 +87,24 @@ exports.retrievePdf = async (req, res) => {
 };
 
 /**
+ * GET /api/pdf/:id
+ * Get pdf by id
+ */
+exports.retrievePdfById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log('finding pdf...', id);
+    const pdf = await Pdfs.find({
+      where: { presentationID: id }
+    });
+    console.log('--> pdf: ', pdf.dataValues);
+    res.status(200).send(pdf);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
+/**
  * GET /api/newpdf
  * Get latest presentaion by user
  */
@@ -215,8 +233,9 @@ exports.updateAudio = async (req, res) => {
 exports.updatePresentation = async (req, res) => {
   try {
     // TODO: conditional for req session or presentationID
+    const id = req.params.presentationID || req.sessionID
     console.log('--> Updating Presentation...');
-    console.log(req.sessionID);
+    console.log(id);
     const tags = req.body.tags.split(',');
     const title = req.body.title.trim();
     const blog = req.body.blog.trim();
@@ -224,26 +243,15 @@ exports.updatePresentation = async (req, res) => {
     const updated = await Presentations.update({
       tags, title, blog
     }, {
-      where: { id: req.sessionID },
+      where: { id },
       returning: true
     });
-    console.log('--> Updated Presentation: ', updated.dataValues);
-    res.redirect(301, `/presentation/${req.sessionID}`);
+    console.log('--> Updated Presentation: ', updated);
+    res.status(200).send(id);
   } catch (err) {
     res.status(400).send(err);
   }
 }
-
-/**
- * GET /view-presentation
- * Get Presentation View page.
- */
-exports.viewPresentation = (req, res) => {
-  res.render('/api/presentation', {
-    title: 'View Presentation',
-    page: '/api/presentation/:id'
-  });
-};
 
 /**
  * GET /api/newpresentation

@@ -36,3 +36,15 @@ exports.editPresentation = (req, res) => {
   });
 };
 
+/**
+ * GET /view-presentation
+ * Get Presentation View page.
+ */
+exports.viewPresentation = (req, res) => {
+  res.render('view-presentation', {
+    layout: 'presentations',
+    title: 'View Presentation',
+    page: '/view-presentation/:id'
+  });
+};
+

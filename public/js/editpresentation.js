@@ -309,10 +309,11 @@ async function updatePresentation(data) {
       },
       body: JSON.stringify(data)
     });
-    const message = await res.json();
+    const message = await res.text();
+    console.log('--> message', message);
     return message;
   } catch (err) {
-    console.error(err)
+    console.error(err);
   }
 }
 
@@ -329,11 +330,11 @@ function submitPresentation(e) {
   // console.log({ tags, title, blog, audioArr });
   // POST data
   Promise.all([
-    updateAudio({ audioArr })
-  ], [
+    updateAudio({ audioArr }), 
     updatePresentation({ tags, title, blog })
-  ]).then(() => {
-    window.location = '/';
+  ]).then((res) => {
+    console.log('--> presentation', res[1]);
+    window.location = `/view-presentation/?id=${res[1]}`;
   });
 }
 function submitListen() {

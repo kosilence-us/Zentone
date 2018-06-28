@@ -130,9 +130,11 @@ async function retrievePresentationById() {
   const params = JSON.parse(
     `{"${  search.replace(/&/g, '","').replace(/=/g,'":"').replace(/\+/g, '%20')  }"}`,
     (key, value) => key === ""?value:decodeURIComponent(value));
+    console.log(params.id);
   try {
-    const res = await fetch(`/api/presentation/${params.id}`);
+    const res = await fetch(`/api/pdf/${params.id}`);
     const pdf = await res.json();
+    console.log('--> pdf:', pdf);
     pdfViewer(pdf);
   } catch (err) {
     console.error(err);
