@@ -21,11 +21,12 @@ exports.slide = (req, res) => {
     });
   });
 };
+
 /**
  * GET /edit-presentation
  * Presentation Upload page.
  */
-exports.presentation = (req, res) => {
+exports.editPresentation = (req, res) => {
   if (!req.user) {
     return res.redirect('/signup');
   }
@@ -34,3 +35,4 @@ exports.presentation = (req, res) => {
     page: 'edit-presentation'
   });
 };
+

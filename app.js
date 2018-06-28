@@ -163,7 +163,7 @@ app.use(express.static(path.join(__dirname, 'public'), {
 app.get('/', homeController.index);
 app.get('/home', homeController.index);
 app.get('/slide-upload', pagesController.slide);
-app.get('/edit-presentation', pagesController.presentation);
+app.get('/edit-presentation', pagesController.editPresentation);
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
@@ -193,7 +193,8 @@ app.get('/api/audio', apiController.retrieveAudio);
 app.get('/api/audio/:id', apiController.retrieveAudioByPresId);
 app.put('/api/audio', apiController.updateAudio);
 app.put('/api/presentation', apiController.updatePresentation);
-app.get('/api/newpresentation', apiController.retrievePresentationByLatest)
+app.get('/api/presentation/:id', apiController.retrievePresentationById);
+app.get('/api/newpresentation', apiController.retrievePresentationByLatest);
 
 // app.get('/api/presentation', apiController.retrievePres);
 

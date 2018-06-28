@@ -59,8 +59,9 @@
 - [x] Body width overflow
 - [x] POST /api/audio return pageNum
 - [ ] Delayed & stacking message flashing
-- [ ] Production: Login failure
-- [ ] Production: api/pdf returns 400
+- [x] Production: Login failure
+- [x] Production: api/pdf returns 400
+- [ ] Login redirects to /api/newpdf
 
 ### Optimize && Refactor
 - [ ] Organize css into scss pages

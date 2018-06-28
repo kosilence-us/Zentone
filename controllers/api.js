@@ -228,11 +228,22 @@ exports.updatePresentation = async (req, res) => {
       returning: true
     });
     console.log('--> Updated Presentation: ', updated.dataValues);
-    res.status(200).send(updated);
+    res.redirect(301, `/presentation/${req.sessionID}`);
   } catch (err) {
     res.status(400).send(err);
   }
 }
+
+/**
+ * GET /view-presentation
+ * Get Presentation View page.
+ */
+exports.viewPresentation = (req, res) => {
+  res.render('/api/presentation', {
+    title: 'View Presentation',
+    page: '/api/presentation/:id'
+  });
+};
 
 /**
  * GET /api/newpresentation
