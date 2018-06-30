@@ -7,22 +7,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Zentone</title>
   <title>{{title}}</title>
-  <link rel="stylesheet" href="../css/main.css" type="text/css">
+  <link rel="stylesheet" href="/css/main.css" type="text/css">
 
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
 </head>
 
 <body>
-  {{> presentations-header}}
-  <div class="white-sides">
+  {{!-- nav --}} {{> presentations-header}}
+  <main class="main">
     {{{body}}}
-  </div>
-  {{> presentations-footer}}
+  </main>
+  {{!-- footer --}} {{> presentations-footer}}
   <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
-  <script src="../js/lib/dropzone.js"></script>
-  <script src="../js/lib/handlebars-v4.0.11.js"></script>
-  <script src="../js/bundle.min.js"></script>
+  <script src="/js/lib/dropzone.js"></script>
+  <script src="/js/lib/handlebars-v4.0.11.js"></script>
+  <script src="/js/bundle.min.js"></script>
 
   <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
   <script async>

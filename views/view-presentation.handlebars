@@ -1,21 +1,9 @@
-<div class="container-fluid">
-  {{#if messages.success}}
-  <div role="alert" class="alert alert-success">
-    {{#each messages.success}}
-    <div>{{msg}}</div>
-    {{/each}}
-  </div>
-  {{/if}} {{#if messages.error}}
-  <div role="alert" class="alert alert-danger">
-    {{#each messages.error}}
-    <div>{{msg}}</div>
-    {{/each}}
-  </div>
-  {{/if}} {{#if messages.info}}
-  <div role="alert" class="alert alert-info">
-    {{#each messages.info}}
-    <div>{{msg}}</div>
-    {{/each}}
-  </div>
-  {{/if}} {{> slide-viewer}}
-</div>
+<section class="flash">
+  {{> flash}}
+</section>
+<section class="slide-viewer">
+  {{> slide-viewer}}
+</section>
+<section class="blog">
+  {{> blog}}
+</section>

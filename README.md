@@ -14,6 +14,7 @@
   - [ ] PDF Editor Controls
   - [ ] Dropzone styles
   - [ ] Thumbs border moves with next/prev buttons
+  - [ ] Eliminate Bootstrap
 
 - [ ] Back End
   - [ ] Pdf size attached to upload
@@ -21,6 +22,7 @@
   - [ ] User data collection
   - [ ] Post data collection
   - [x] User Local Authentication Route
+  - [ ] DB change blog to article
 
 - [ ] Security & Authentication
   - [ ] User OAuth strategies
