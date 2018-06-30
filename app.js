@@ -188,14 +188,15 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 // TODO: Create Postman Tests
 app.post('/api/pdf', upload, apiController.sendPdf);
 app.get('/api/pdf', apiController.retrievePdf);
-app.get('/api/pdf/:id', apiController.retrievePdfById);
-app.get('/api/newpdf', apiController.retrievePdfByLatest);
+app.get('/api/pdf/:id', apiController.retrievePdfByPresId);
+app.get('/api/pdf/new', apiController.retrievePdfByLatest);
 app.post('/api/audio', upload, apiController.sendAudio);
 app.get('/api/audio', apiController.retrieveAudio);
 app.get('/api/audio/:id', apiController.retrieveAudioByPresId);
 app.put('/api/audio', apiController.updateAudio);
 app.put('/api/presentation', apiController.updatePresentation);
-app.get('/api/newpresentation', apiController.retrievePresentationByLatest);
+app.get('/api/presentation/:id', apiController.retrievePresentationById);
+app.get('/api/presentation/new', apiController.retrievePresentationByLatest);
 
 // app.get('/api/presentation', apiController.retrievePres);
 

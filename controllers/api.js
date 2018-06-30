@@ -88,9 +88,9 @@ exports.retrievePdf = async (req, res) => {
 
 /**
  * GET /api/pdf/:id
- * Get pdf by id
+ * Get pdf by Presentation id
  */
-exports.retrievePdfById = async (req, res) => {
+exports.retrievePdfByPresId = async (req, res) => {
   try {
     const { id } = req.params;
     console.log('finding pdf...', id);
@@ -105,7 +105,7 @@ exports.retrievePdfById = async (req, res) => {
 };
 
 /**
- * GET /api/newpdf
+ * GET /api/pdf/new
  * Get latest presentaion by user
  */
 exports.retrievePdfByLatest = async (req, res) => {
@@ -189,12 +189,13 @@ exports.retrieveAudio = async (req, res) => {
  */
 exports.retrieveAudioByPresId = async (req, res) => {
   try {
-    console.log('fetching files...', req.params);
+    console.log('--> fetching audio...', req.params.id);
+    const { id } = req.params;
     const audio = await Audio.findAll({
-      where: { presentationID: req.params }
+      where: { presentationID: id }
     });
     if (!audio) {
-      return res.status(404).send(`Could not find audio for Presentation: ${req.params}`);
+      return res.status(404).send(`Could not find audio for Presentation: ${id}`);
     }
     console.log('success!');
     res.status(200).send(audio);
@@ -211,14 +212,12 @@ exports.updateAudio = async (req, res) => {
   try {
     console.log('--> Updating Audio...');
     const { audioArr } = req.body;
-    const updated = await audioArr.forEach((audio) => {
-      Audio.update({
+    const updated = await audioArr.map((audio) => Audio.update({
         pageNum: audioArr.pageNum
       }, {
         where: { id: audio.id },
         returning: true
-      });
-    });
+      }));
     console.log('--> Updated Audio: ', updated.dataValues);
     res.status(200).send(audioArr);
   } catch (err) {
@@ -232,7 +231,6 @@ exports.updateAudio = async (req, res) => {
  */
 exports.updatePresentation = async (req, res) => {
   try {
-    // TODO: conditional for req session or presentationID
     const id = req.params.presentationID || req.sessionID
     console.log('--> Updating Presentation...');
     console.log(id);
@@ -254,7 +252,23 @@ exports.updatePresentation = async (req, res) => {
 }
 
 /**
- * GET /api/newpresentation
+ * GET /api/presentation/:id
+ * Get presentation by ID
+ */
+exports.retrievePresentationById = async (req, res) => {
+  try {
+    console.log('--> finding presentation: ', req.params.id);
+    const { id } = req.params;
+    const presentation = await Presentations.findById(id);
+    console.log('--> presentation:', presentation.dataValues);
+    res.status(200).send(presentation);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+}
+
+/**
+ * GET /api/presentation/new
  * Get latest presentaion by user
  */
 exports.retrievePresentationByLatest = async (req, res) => {

@@ -1,9 +1,21 @@
 /**
  * Globals
  */
-const audioArr = [];
+let audioArr = [];
 let pageNum = 1;
 let pageRendering = false;
+
+/**
+ * Get Params from URL
+ */
+function getParams() {
+  const search = window.location.search.substring(1);
+  const params = JSON.parse(
+    `{"${  search.replace(/&/g, '","').replace(/=/g,'":"').replace(/\+/g, '%20')  }"}`,
+    (key, value) => key === ""?value:decodeURIComponent(value));
+    console.log(params.id);
+    return params;
+}
 
 /*
 ******** Presentation Viewport ********
@@ -125,17 +137,34 @@ async function pdfViewer(pdf) {
 /*
 ******** Ajax Requests ********
 */
-async function retrievePresentationById() {
-  const search = window.location.search.substring(1);
-  const params = JSON.parse(
-    `{"${  search.replace(/&/g, '","').replace(/=/g,'":"').replace(/\+/g, '%20')  }"}`,
-    (key, value) => key === ""?value:decodeURIComponent(value));
-    console.log(params.id);
+async function retrievePdfById() {
   try {
+    const params = getParams();
     const res = await fetch(`/api/pdf/${params.id}`);
     const pdf = await res.json();
-    console.log('--> pdf:', pdf);
     pdfViewer(pdf);
+  } catch (err) {
+    console.error(err);
+  }
+}
+async function retrieveAudioByPresId() {
+  try {
+    const params = getParams();
+    const res = await fetch(`/api/audio/${params.id}`);
+    if (res.status === 404) throw new Error(`No Audio Found for ${params.id}`);
+    const presAudioArr = await res.json();
+    audioArr = presAudioArr.slice(0);
+  } catch (err) {
+    console.error(err);
+  }
+}
+async function retrievePresentationById() {
+  try {
+    const params = getParams();
+    const res = await fetch(`/api/presentation/${params.id}`);
+    const presentation = await res.json();
+    console.log(presentation);
+    // TODO: fill out blog
   } catch (err) {
     console.error(err);
   }
@@ -145,5 +174,7 @@ async function retrievePresentationById() {
 ******** Function Exports ********
 */
 export {
+  retrievePdfById,
+  retrieveAudioByPresId,
   retrievePresentationById
 };

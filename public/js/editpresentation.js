@@ -203,7 +203,7 @@ function initAudioDropzone() {
     uploadMultiple: false,
     addRemoveLinks: true,
     dictResponseError: 'Server not Configured',
-    acceptedFiles: '.mp3',
+    acceptedFiles: 'audio/*',
     headers: {
       'X-CSRF-Token': $('input[name="csrf_token"]').val()
     },
@@ -293,8 +293,8 @@ async function updateAudio(data) {
       },
       body: JSON.stringify(data)
     });
-    const message = await res.json();
-    return message;
+    const audio = await res.json();
+    return audio;
   } catch (err) {
     console.log(err);
   }
@@ -309,9 +309,8 @@ async function updatePresentation(data) {
       },
       body: JSON.stringify(data)
     });
-    const message = await res.text();
-    console.log('--> message', message);
-    return message;
+    const presentation = await res.text();
+    return presentation;
   } catch (err) {
     console.error(err);
   }
@@ -325,15 +324,10 @@ function submitPresentation(e) {
   const tags = document.querySelector('input[name="tags"]').value;
   const title = document.querySelector('input[name="title"]').value;
   const blog = document.querySelector('textarea[name="blog"]').value;
-  // submit blog entries into blog model
-  // update audioArr entries for presentationID, pageNum
-  // console.log({ tags, title, blog, audioArr });
-  // POST data
   Promise.all([
     updateAudio({ audioArr }), 
     updatePresentation({ tags, title, blog })
   ]).then((res) => {
-    console.log('--> presentation', res[1]);
     window.location = `/view-presentation/?id=${res[1]}`;
   });
 }

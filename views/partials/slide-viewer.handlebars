@@ -1,12 +1,39 @@
 <div class="grid view-grid-3c2r">
-    <div class="slide-viewport">
-        <canvas id="the-canvas"></canvas>
+  <div class="slide-viewport">
+    <canvas id="the-canvas"></canvas>
+  </div>
+  <div class="slide-controls">
+    <button id="prev" class="btn-primary">&lt</button>
+    <button id="next" class="btn-primary">&gt</button>
+  </div>
+  <div class="slide-count">
+    <span>Slide:
+      <span id="page_num"></span> /
+      <span id="page_count"></span>
+    </span>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-9 offset-lg-0">
+        <a href="#">
+          <img src="/img/itsme.jpg" class="img-user">
+        </a>
+      </div>
+      <div class="col-3 views">
+        <a href="#">
+          <span class="text-muted">100 views</span>
+        </a>
+      </div>
     </div>
-    <div class="slide-controls">
-        <button id="prev" class="btn-primary">&lt</button>
-        <button id="next" class="btn-primary">&gt</button>
+    <div class="row">
+      <div class="col-3">
+
+      </div>
+      <div class="col-3">
+        <a href="#" id="button-share">
+          <i class="fa fa-share pull-right"></i>
+        </a>
+      </div>
     </div>
-    <div class="slide-count">
-        <span>Slide: <span id="page_num"></span> / <span id="page_count"></span></span>
-    </div>
+  </div>
 </div>

@@ -4,7 +4,7 @@
 import { retrieveLatestPdf } from './home';
 import { initPdfDropzone } from './slideupload';
 import { retrievePdf, retrieveAudio, initAudioDropzone, submitListen } from './editpresentation';
-import { retrievePresentationById } from './viewpresentation';
+import { retrievePdfById, retrieveAudioByPresId, retrievePresentationById } from './viewpresentation';
 
 /*
 ******** Onload Function Calls ********
@@ -26,6 +26,8 @@ window.onload = function () {
       submitListen();
       break;
     case '/view-presentation/':
+      retrievePdfById();
+      retrieveAudioByPresId();
       retrievePresentationById();
       break;
     default:
