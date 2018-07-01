@@ -20,7 +20,9 @@
   },
   "globals": {
     "$": false,
-    "Dropzone": false
+    "Dropzone": false,
+    "Handlebars": false,
+    "moment": false
   },
   "plugins": [
     "prettier"

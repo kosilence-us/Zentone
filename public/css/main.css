@@ -9790,6 +9790,10 @@ footer {
   footer ul {
     margin-bottom: 0; }
 
+ul,
+ol {
+  list-style-type: none; }
+
 a:hover {
   text-decoration: none; }
 
@@ -10152,8 +10156,21 @@ img {
 .blog {
   grid-column: 2 / 3;
   display: grid;
-  grid-template-rows: 35px 70px 1fr;
+  grid-template-rows: 70px 20px 1fr 10px;
   grid-gap: 10px; }
 
 .tags {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(auto, 50px));
   grid-auto-flow: column; }
+
+.title {
+  display: grid;
+  align-self: end; }
+
+.created-at {
+  display: grid;
+  align-self: start; }
+
+.article {
+  padding-top: 20px; }

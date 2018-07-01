@@ -1,9 +1,15 @@
-<ol class="tags">
-  <li>{{blog-tags}}</li>
-</ol>
-<div class="title">
-  <h4>{{blog-title}}</h4>
-</div>
-<div class="article">
-  <p>{{blog-article}}</p>
-</div>
+<template id="blog-template" type="text/template">
+  <div class="title">
+    <h3>\{{title}}</h3>
+  </div>
+  <div class="created-at">
+    <p>\{{createdAt}}</p>
+  </div>
+  <div class="article">
+    <p>\{{article}}</p>
+  </div>
+  <ul class="tags">
+    <li>Tags: </li>
+    <li>\{{tags}}</li>
+  </ul>
+</template>

@@ -17,6 +17,37 @@ function getParams() {
     return params;
 }
 
+/**
+ * Fill Audio SRC
+ */
+function fillAudioSrc() {
+  const audio = document.querySelector('#audio');
+  const thisAudio = audioArr.filter(audio => audio.pageNum === pageNum);
+  if (thisAudio[0].fileUrl) {
+    audio.src = thisAudio[0].fileUrl;
+    audio.play();
+  } else {
+    console.info('no audio');
+  }
+}
+
+/**
+ * Build Blog
+ */
+function buildBlog(presentation) {
+  const createdAt = moment(presentation.createdAt).format('MMMM Do YYYY');
+  const blog = document.querySelector('#blog');
+  const source = document.querySelector('#blog-template').innerHTML;
+  const template = Handlebars.compile(source);
+  const context = {
+    title: presentation.title,
+    createdAt,
+    article: presentation.blog,
+    tags: presentation.tags
+  }
+  blog.innerHTML = template(context);
+}
+
 /*
 ******** Presentation Viewport ********
 */
@@ -102,6 +133,7 @@ async function pdfViewer(pdf) {
     }
     pageNum--;
     queueRenderPage(pageNum);
+    fillAudioSrc();
   }
   document.getElementById('prev').addEventListener('click', onPrevPage);
 
@@ -114,6 +146,7 @@ async function pdfViewer(pdf) {
     }
     pageNum++;
     queueRenderPage(pageNum);
+    fillAudioSrc();
   }
   document.getElementById('next').addEventListener('click', onNextPage);
 
@@ -154,6 +187,7 @@ async function retrieveAudioByPresId() {
     if (res.status === 404) throw new Error(`No Audio Found for ${params.id}`);
     const presAudioArr = await res.json();
     audioArr = presAudioArr.slice(0);
+    fillAudioSrc();
   } catch (err) {
     console.error(err);
   }
@@ -163,8 +197,7 @@ async function retrievePresentationById() {
     const params = getParams();
     const res = await fetch(`/api/presentation/${params.id}`);
     const presentation = await res.json();
-    console.log(presentation);
-    // TODO: fill out blog
+    buildBlog(presentation);
   } catch (err) {
     console.error(err);
   }
