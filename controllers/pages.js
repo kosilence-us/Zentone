@@ -42,7 +42,6 @@ exports.editPresentation = (req, res) => {
  */
 exports.viewPresentation = (req, res) => {
   res.render('view-presentation', {
-    layout: 'presentations',
     title: 'View Presentation',
     page: '/view-presentation/:id'
   });

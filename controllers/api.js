@@ -231,20 +231,18 @@ exports.updateAudio = async (req, res) => {
  */
 exports.updatePresentation = async (req, res) => {
   try {
-    const id = req.params.presentationID || req.sessionID
-    console.log('--> Updating Presentation...');
-    console.log(id);
+    const id = req.params.presentationID || req.sessionID;
+    console.log('--> Updating Presentation...', id);
     const tags = req.body.tags.split(',');
     const title = req.body.title.trim();
-    const blog = req.body.blog.trim();
-    console.log({ tags, title, blog });
+    const article = req.body.article.trim();
     const updated = await Presentations.update({
-      tags, title, blog
+      tags, title, article
     }, {
       where: { id },
       returning: true
     });
-    console.log('--> Updated Presentation: ', updated);
+    console.log('--> Updated Presentation: ', updated.id);
     res.status(200).send(id);
   } catch (err) {
     res.status(400).send(err);

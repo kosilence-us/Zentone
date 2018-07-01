@@ -23,11 +23,9 @@ function getParams() {
 function fillAudioSrc() {
   const audio = document.querySelector('#audio');
   const thisAudio = audioArr.filter(audio => audio.pageNum === pageNum);
-  if (thisAudio[0].fileUrl) {
+  if (thisAudio[0]) {
     audio.src = thisAudio[0].fileUrl;
     audio.play();
-  } else {
-    console.info('no audio');
   }
 }
 
@@ -42,7 +40,7 @@ function buildBlog(presentation) {
   const context = {
     title: presentation.title,
     createdAt,
-    article: presentation.blog,
+    article: presentation.article,
     tags: presentation.tags
   }
   blog.innerHTML = template(context);

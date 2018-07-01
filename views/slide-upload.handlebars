@@ -1,38 +1,11 @@
-<div class="container-fluid">
-    {{#if messages.success}}
-        <div role="alert" class="alert alert-success">
-            {{#each messages.success}}
-                <div>{{msg}}</div>
-            {{/each}}
-        </div>
-    {{/if}}
-    {{#if messages.error}}
-        <div role="alert" class="alert alert-danger">
-            {{#each messages.error}}
-                <div>{{msg}}</div>
-            {{/each}}
-        </div>
-    {{/if}}
-    {{#if messages.info}}
-        <div role="alert" class="alert alert-info">
-            {{#each messages.info}}
-                <div>{{msg}}</div>
-            {{/each}}
-        </div>
-    {{/if}}
-    <section id="main-display">
-        <form class="dropzone dropzone-big" id="slide-dropzone"></form>
-    </section>
-    <div class="container">
-        <div class="row">
-            <div class="col-9 offset-lg-0">
-                <a href="#"><img src="img/itsme.jpg" class="img-user"></a>
-            </div>
-            <div class="col-3">
-                <a href="#" id="button-share">
-                    <i class="fa fa-share pull-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
+<section class="flash">
+  {{> flash}}
+</section>
+<section class="dropzone-container">
+  <form class="dropzone dropzone-big" id="slide-dropzone">
+    <label for="file" class="br_dropzone">
+      <input id="fileName" type="text" name="fileName" placeholder="Drop your pdf here or click to upload." readonly>
+      <span class="note dz-message">If your presentation is not in pdf form, please export it to pdf on your machine before uploading</span>
+    </label>
+  </form>
+</section>

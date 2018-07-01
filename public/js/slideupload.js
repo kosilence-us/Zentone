@@ -7,15 +7,17 @@ function initPdfDropzone() {
     maxFilesize: 50, // mb
     uploadMultiple: false,
     addRemoveLinks: true,
+    createImageThumbnails: false,
     dictResponseError: 'Server not Configured',
     acceptedFiles: '.pdf',
     headers: {
       'X-CSRF-Token': $('input[name="csrf_token"]').val()
     },
     init() {
-      console.log('initializing...');
       const self = this;
       const date = new Date().getTime();
+      const fileInput = document.querySelector('#fileName');
+      fileInput.value = '';
       // config
       self.options.addRemoveLinks = true;
       self.options.dictRemoveFile = 'Delete';
@@ -46,6 +48,8 @@ function initPdfDropzone() {
       // File success
       self.on('success', (file, res) => {
         console.log('success!', file);
+        const fileInput = document.querySelector('#fileName');
+        fileInput.value = file.name;
         window.location = '/edit-presentation';
       });
       // On removing file

@@ -90,66 +90,11 @@ submit {
   background-color: #ffcc5c;
 }
 
-// Slide-Upload
-// -------------------------
-.dropzone-big {
-  height: 350px;
-}
-
-// Edit-Presentation
-// -------------------------
-section>.editing-container {
-  display: grid;
-  grid-gap: 3px;
-  grid-template-columns: repeat(6, minmax(200px, 1fr));
-  grid-template-rows: 600px 150px;
-  figure {
-    grid-column: 2 / 5;
-    div {
-      margin-top: auto;
-      height: 20px;
-    }
-  }
-}
-
-figcaption>div {
-  display: flex;
-  justify-content: space-around;
-}
-
-.thumbnail-slide {
-  grid-column: 5 / 6;
-}
-
-.audio-viewer {
-  grid-column: 2 / 5;
-  select {
-    width: 100%;
-    height: 100%;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
-    border: 1px;
-  }
-}
-
-.audio-dropzone {
-  grid-column: 5 / 6;
-  background-color: white;
-  overflow: auto;
-  @include transition(.4s);
-  :hover {
-    background-color: #e0f5fb;
-    @include transition(.4s);
-  }
-  form {
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
-    border-radius: 0;
-  }
-}
-
 // Input Fields
 // -------------------------
 textarea {
-  resize: vertical;
+  resize: none;
+  border: none;
 }
 
 .form-control {
@@ -398,15 +343,92 @@ img {
 
 // Dropzone
 // -------------------------
+.dropzone-container {
+  grid-column: 2 / 3;
+  color: silver;
+  @include transition(.4s);
+  :hover,
+  :hover>.br_dropzone input {
+    background-color: #e0f5fb;
+    @include transition(.4s);
+  }
+}
+
 .dropzone {
-  background: white;
-  border-radius: 5px;
+  background: rgba(0, 0, 0, 0);
+  display: grid;
+  align-content: center;
+  border: none;
+}
+
+.dropzone-big {
+  height: 400px;
+  border-radius: 10px;
   border: 2px dashed rgb(0, 135, 247);
-  border-image: none;
-  max-height: 500px;
-  max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
+}
+
+.audio-dropzone {
+  border-radius: 5px;
+  overflow: hidden;
+  &.success {
+    background: rgba(0, 255, 0, 0.02);
+    border: 2px dotted green;
+  }
+  &.incomplete {
+    border: 2px dashed tomato;
+    background: rgba(255, 0, 0, 0.02);
+    &:hover {
+      border: 2px dotted red;
+    }
+  }
+}
+
+.dz-details {
+  display: none;
+}
+
+.dz-image {
+  display: none !important;
+}
+
+.dz-complete {
+  position: fixed !important;
+}
+
+.dz-remove {
+  position: fixed;
+  display: none !important;
+}
+
+.remove {
+  &:hover {
+    color: #279dff;
+    cursor: pointer;
+  }
+}
+
+.br_dropzone {
+  display: grid;
+  place-content: center center;
+  font-weight: 500;
+  input {
+    z-index: -1;
+  }
+}
+
+.br_dropzone input[type=file] {
+  font-size: 2rem;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.br_dropzone input[type=text] {
+  text-align: center;
+  font-size: 2rem;
+}
+
+.note {
+  color: #e6e6e7;
 }
 
 /*
@@ -416,11 +438,79 @@ img {
 .main {
   display: grid;
   grid-template-columns: 150px 1fr 150px;
-  grid-template-rows: auto 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  grid-auto-rows: 1fr;
 }
 
 .flash {
   grid-column: 2 / 3;
+}
+
+/*
+** --------- Slide Editor -----------
+*/
+
+.slide-editor {
+  grid-column: 2 / 3;
+  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 500px 155px 20px;
+  grid-gap: 5px;
+}
+
+.pdf-container {
+  grid-column: 1 / 4;
+  .canvas-container {
+    height: 100%;
+  }
+}
+
+.audio-dropzone {
+  grid-column: 1 / 5;
+}
+
+.editor-count {
+  grid-column: 2 / 4;
+  text-align: center;
+  color: grey;
+  font-weight: 600;
+}
+
+/*
+** --------- Blog Editor -----------
+*/
+
+.blog-editor {
+  grid-column: 2 / 3;
+  padding-top: 30px;
+  display: grid;
+  grid-template-rows: 70px 70px 1fr 50px;
+  grid-gap: 10px;
+}
+
+.form-input {
+  display: grid;
+  grid-template-rows: 25px 1fr;
+  padding: 5px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+  input {
+    border: none;
+  }
+}
+
+.submit {
+  background-color: #279dff;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+  color: white;
+  font-weight: 600;
+  font-size: 20px;
+  @include transition(.2s);
+  &:hover {
+    background-color: #F8F8F8;
+    color: #76B9F4;
+    @include transition(.2s);
+  }
 }
 
 /*
@@ -448,6 +538,10 @@ img {
   width: 150px;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
   font-weight: 600;
+  &:hover {
+    background-color: #F8F8F8;
+    color: #279dff;
+  }
 }
 
 #next {

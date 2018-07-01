@@ -14,13 +14,14 @@
 </head>
 
 <body>
-  {{> header}}
-  <div class="white-sides">
+  {{!-- nav --}} {{> header}}
+  <main class="main">
     {{{body}}}
-  </div>
-  {{> footer}}
+  </main>
+  {{!-- footer --}} {{> footer}}
   <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
   <script src="/js/lib/dropzone.js"></script>
+  <script src="/js/lib/moment.js"></script>
   <script src="/js/lib/handlebars-v4.0.11.js"></script>
   <script src="/js/bundle.min.js"></script>
 

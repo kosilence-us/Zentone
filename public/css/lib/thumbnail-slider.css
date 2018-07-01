@@ -1,14 +1,10 @@
 /* http: //www.menucool.com/jquery-slider */
 
 .thumbnail-container {
-  height: 555px;
-  display: inline-block;
-  *display: inline;
   /* hack for old IE6-7 */
   background-color: #fff;
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
   padding: 16px;
-  /*position: relative;*/
   -webkit-user-select: none;
   user-select: none;
 }
@@ -19,9 +15,9 @@
   /*the followings should not be changed */
   height: 100%;
   box-sizing: border-box;
-  position: relative;
   overflow: scroll;
   margin: 0 auto;
+  display: grid;
 }
 
 .thumbnail-container div.inner ul {
@@ -55,7 +51,7 @@
 
 .thumbnail-container .focus {
   /*box-shadow: 0 0 4px #999;*/
-  border-color: black;
+  outline-color: black;
 }
 
 .thumbnail-container li:active {

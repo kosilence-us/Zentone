@@ -7,21 +7,95 @@ let audioArr = [];
 let pageNum = 1;
 let pageRendering = false;
 
-/**
- * Build Audio Box
+/*
+ ******** Audio Dropzone ********
  */
-// TODO: Select for current page
-function buildAudioSelect() {
-  const selectBox = document.querySelector('#audio-box');
-  const pageAudioArr = audioArr.filter(audio => audio.pageNum === pageNum);
-  selectBox.textContent = '';
-  console.info('Populating Select Box...');
-  console.log(audioArr);
+function deleteAudio(e) {
+  e = e || event;
+  e.preventDefault();
+  console.log(e);
+}
 
-  pageAudioArr.forEach((audio) => {
-    const option = document.createElement('option');
-    option.textContent = audio.originalFileName;
-    selectBox.appendChild(option);
+function addSuccessDz(message, audioDropzone) {
+  const remove = document.createElement('a');
+  message.textContent = '';
+  message.appendChild(remove);
+  remove.classList.add('remove');
+  remove.textContent = 'Delete';
+  remove.onclick = 'return false;';
+  remove.dataset.dzRemove = 'dz-remove';
+  remove.addEventListener('click', deleteAudio);
+  audioDropzone.classList.add('success');
+  audioDropzone.classList.remove('dz-clickable');
+}
+// TODO: Select for current page
+function buildAudioDz() {
+  const audioDropzone = document.querySelector('.audio-dropzone');
+  const fileInput = document.querySelector('#fileName');
+  const remove = document.querySelector('.dz-remove');
+  const message = document.querySelector('.dz-message');
+  const pageAudio = audioArr.filter(audio => audio.pageNum === pageNum);
+  console.info('Populating Select Box...');
+  console.log(pageAudio.length);
+  if (pageAudio.length !== 0) {
+    audioDropzone.classList.remove('incomplete');
+    addSuccessDz(message, audioDropzone);
+    fileInput.value = pageAudio[0].originalFileName;
+  } else if (remove) {
+    audioDropzone.classList.remove('success');
+    remove.remove();
+    fileInput.value = 'no audio';
+    message.textContent = 'Add audio to this slide!';
+    audioDropzone.classList.add('incomplete');
+    audioDropzone.classList.add('dz-clickable');
+  }
+}
+// TODO: migrate from jQuery
+function initAudioDropzone() {
+  $('#audio-dropzone').dropzone({
+    url: '/api/audio',
+    maxFilesize: 50, // mb
+    addRemoveLinks: null,
+    createImageThumbnails: false,
+    acceptedFiles: 'audio/*',
+    headers: {
+      'X-CSRF-Token': $('input[name="csrf_token"]').val()
+    },
+    init() {
+      const self = this;
+      self.options.addRemoveLinks = true;
+      self.options.dictRemoveFile = 'Delete';
+      self.on('error', (err) => {
+        console.error('Upload Error: ', err.xhr.responseText);
+      });
+      self.on('addedfile', (file) => {
+        console.log('new file added ', file);
+      });
+      self.on('sending', (file, xhr, fileData) => {
+        file.pageNum = pageNum;
+        fileData.append('pageNum', pageNum);
+        fileData.append('size', file.size);
+        $('.meter').show();
+      });
+      self.on('totaluploadprogress', (progress) => {
+        console.log('progress ', progress);
+        $('.roller').width(`${progress}%`);
+      });
+      self.on('queuecomplete', () => {
+        // $('.meter').delay(999).slideUp(999);
+      });
+      self.on('success', (file, res) => {
+        audioArr.push(res);
+        buildAudioDz();
+      });
+      self.on('removedfile', (file) => {
+        audioArr = audioArr.filter(audio => audio.pageNum !== pageNum);
+        console.log(audioArr);
+      });
+    },
+    accept(file, done) {
+      return done();
+    }
   });
 }
 
@@ -47,7 +121,7 @@ async function pdfEditor(pdf) {
   // console.log(pdfjsLib.GlobalWorkerOptions);
   pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
   const desiredWidth = windowWidth / 2.3;
-  const desiredHeight = 555;
+  const desiredHeight = 500;
   const canvas = document.getElementById('the-canvas');
   const ctx = canvas.getContext('2d');
   let pdfDoc = null;
@@ -86,46 +160,7 @@ async function pdfEditor(pdf) {
     } catch (err) {
       console.log(err);
     }
-  // TODO: Click event listener
   }
-
-  /**
-   * If another page rendering in progress, waits until the rendering is
-   * finised. Otherwise, executes rendering immediately.
-   */
-  function queueRenderPage(num) {
-    if (pageRendering) {
-      pageNumPending = num;
-    } else {
-      renderPage(num);
-    }
-  }
-
-  /**
-   * Displays previous page.
-   */
-  function onPrevPage() {
-    if (pageNum <= 1) {
-      return;
-    }
-    pageNum--;
-    queueRenderPage(pageNum);
-    buildAudioSelect();
-  }
-  document.getElementById('prev').addEventListener('click', onPrevPage);
-
-  /**
-   * Displays next page.
-   */
-  function onNextPage() {
-    if (pageNum >= pdfDoc.numPages) {
-      return;
-    }
-    pageNum++;
-    queueRenderPage(pageNum);
-    buildAudioSelect();
-  }
-  document.getElementById('next').addEventListener('click', onNextPage);
 
   // Creates thumb-sized canvas elements and renders the pages inside
   function makeThumb(page) {
@@ -136,26 +171,78 @@ async function pdfEditor(pdf) {
     canvas.height = 96;
     const scale = Math.min(canvas.width / vp.width, canvas.height / vp.height);
     canvas.classList.add('thumb');
-    return page.render({ canvasContext: canvas.getContext('2d'), viewport: page.getViewport(scale) }).promise.then(() => canvas);
+    return page.render({
+      canvasContext: canvas.getContext('2d'),
+      viewport: page.getViewport(scale)
+    }).promise.then(() => canvas);
   }
 
-  function selectPage() {
+   /**
+    * Page Handling
+    * If another page rendering in progress, waits until the rendering is
+    * finised. Otherwise, executes rendering immediately.
+    */
+   function queueRenderPage(num) {
+     if (pageRendering) {
+       pageNumPending = num;
+     } else {
+       renderPage(num);
+     }
+   }
+
+   function selectThumb(thumbNum) {
+    const pageThumb = document.querySelector(`[data-page-num="${thumbNum}"]`);
     const prev = document.querySelector('.focus');
-    const pageThumb = this;
     if (prev) {
       prev.classList.remove('focus');
     }
     pageThumb.classList.add('focus');
-    pageNum = parseInt(pageThumb.dataset.pageNum, 10);
-    console.log({ pageThumb, prev });
-    queueRenderPage(pageNum);
-    buildAudioSelect();
-  }
+   }
+
+   function selectPage() {
+     const prev = document.querySelector('.focus');
+     const pageThumb = this;
+     if (prev) {
+       prev.classList.remove('focus');
+     }
+     pageThumb.classList.add('focus');
+     pageNum = parseInt(pageThumb.dataset.pageNum, 10);
+     console.log({
+       pageThumb,
+       prev
+     });
+     queueRenderPage(pageNum);
+     buildAudioDz();
+   }
+
+   function onPrevPage() {
+     if (pageNum <= 1) {
+       return;
+     }
+     pageNum--;
+     queueRenderPage(pageNum);
+     selectThumb(pageNum);
+     buildAudioDz();
+   }
+
+   function onNextPage() {
+     if (pageNum >= pdfDoc.numPages) {
+       return;
+     }
+     pageNum++;
+     queueRenderPage(pageNum);
+     selectThumb(pageNum);
+     buildAudioDz();
+   }
+
+   document.getElementById('prev').addEventListener('click', onPrevPage);
+   document.getElementById('next').addEventListener('click', onNextPage);
+
+   /**
+    * Asynchronously downloads PDF.
+    */
 
   try {
-    /**
-     * Asynchronously downloads PDF.
-     */
     const pdfDoc_ = await pdfjsLib.getDocument(url);
     if (!pdfDoc_) {
       return new Error('Invalid URL');
@@ -168,7 +255,6 @@ async function pdfEditor(pdf) {
     /**
      * Asynchronously Builds PDF Thumbs.
      */
-    console.log('building thumbs...', pdfDoc);
     const thumbnailSlider = document.querySelector('#thumbnail-slider');
     const pages = [];
     while (pages.length < pdfDoc.numPages) pages.push(pages.length + 1);
@@ -179,7 +265,6 @@ async function pdfEditor(pdf) {
       
       li.addEventListener('click', selectPage);
       li.dataset.pageNum = num;
-      // li.appendChild(a);
       thumbnailSlider.appendChild(li);
       return pdfDoc.getPage(num).then(makeThumb)
         .then((canvas) => {
@@ -190,60 +275,6 @@ async function pdfEditor(pdf) {
   } catch (err) {
     console.log(err.message);
   }
-}
-
-/*
-******** Audio Dropzone ********
-*/
-// TODO: migrate from jQuery
-function initAudioDropzone() {
-  $('#audio-dropzone').dropzone({
-    url: '/api/audio',
-    maxFilesize: 50, // mb
-    uploadMultiple: false,
-    addRemoveLinks: true,
-    dictResponseError: 'Server not Configured',
-    acceptedFiles: 'audio/*',
-    headers: {
-      'X-CSRF-Token': $('input[name="csrf_token"]').val()
-    },
-    init() {
-      const self = this;
-      self.options.addRemoveLinks = true;
-      self.options.dictRemoveFile = 'Delete';
-      self.on('error', (err) => {
-        console.error('Upload Error: ', err.xhr.responseText);
-      });
-      self.on('addedfile', (file) => {
-        console.log('new file added ', file);
-      });
-      self.on('sending', (file, xhr, fileData) => {
-        file.pageNum = pageNum;
-        fileData.append('pageNum', pageNum);
-        fileData.append('size', file.size);
-        $('.meter').show();
-      });
-      self.on('totaluploadprogress', (progress) => {
-        console.log('progress ', progress);
-        $('.roller').width(`${progress}%`);
-      });
-      self.on('queuecomplete', () => {
-        // $('.meter').delay(999).slideUp(999);
-      });
-      self.on('success', (file, res) => {
-        // console.log(res);
-        // res.pageNum = pageNum; // TODO: return pageNum
-        audioArr.push(res);
-        buildAudioSelect();
-      });
-      self.on('removedfile', (file) => {
-        console.log(file);
-      });
-    },
-    accept(file, done) {
-      return done();
-    }
-  });
 }
 
 /*
@@ -278,7 +309,7 @@ async function retrieveAudio() {
     const presAudioArr = await res.json();
     if (res.status === 400) throw new Error('Could not retrieve Audio');
     audioArr = presAudioArr.slice(0);
-    return buildAudioSelect();
+    return buildAudioDz();
   } catch (err) {
     console.error(err);
   }
@@ -323,10 +354,10 @@ function submitPresentation(e) {
   e.preventDefault();
   const tags = document.querySelector('input[name="tags"]').value;
   const title = document.querySelector('input[name="title"]').value;
-  const blog = document.querySelector('textarea[name="blog"]').value;
+  const article = document.querySelector('textarea[name="article"]').value;
   Promise.all([
     updateAudio({ audioArr }), 
-    updatePresentation({ tags, title, blog })
+    updatePresentation({ tags, title, article })
   ]).then((res) => {
     window.location = `/view-presentation/?id=${res[1]}`;
   });

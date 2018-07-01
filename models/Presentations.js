@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => sequelize
       type: DataTypes.STRING,
       defaultValue: 'empty'
     },
-    blog: {
+    article: {
       type: DataTypes.TEXT,
       defaultValue: 'empty'
     },
