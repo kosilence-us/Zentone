@@ -230,7 +230,7 @@ app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedi
 });
 app.get('/auth/linkedin', passport.authenticate('linkedin', { state: 'SOME STATE' }));
 app.get('/auth/linkedin/callback', passport.authenticate('linkedin', { failureRedirect: '/login' }), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
+  // res.redirect(req.session.returnTo || '/');
 });
 
 /**
@@ -242,7 +242,7 @@ app.use(errorHandler());
  * Start Express server.
  */
 db.sequelize.sync({
-  force: true,
+  force: false,
   // CAREFUL!: This clears the database of data
   // Only use after changing the structure of the db
 }).then(() => {
