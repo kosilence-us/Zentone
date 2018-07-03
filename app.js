@@ -189,14 +189,14 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 app.post('/api/pdf', upload, apiController.sendPdf);
 app.get('/api/pdf', apiController.retrievePdf);
 app.get('/api/pdf/:id', apiController.retrievePdfByPresId);
-app.get('/api/pdf/new', apiController.retrievePdfByLatest);
+app.get('/api/new/pdf', apiController.retrievePdfByLatest);
 app.post('/api/audio', upload, apiController.sendAudio);
 app.get('/api/audio', apiController.retrieveAudio);
 app.get('/api/audio/:id', apiController.retrieveAudioByPresId);
 app.put('/api/audio', apiController.updateAudio);
 app.put('/api/presentation', apiController.updatePresentation);
 app.get('/api/presentation/:id', apiController.retrievePresentationById);
-app.get('/api/presentation/new', apiController.retrievePresentationByLatest);
+app.get('/api/new/presentation', apiController.retrievePresentationByLatest);
 
 // app.get('/api/presentation', apiController.retrievePres);
 

@@ -1,7 +1,6 @@
 /**
  * Globals
  */
-const audioArr = [];
 let pageNum = 1;
 let pageRendering = false;
 
@@ -140,7 +139,7 @@ async function pdfViewer(pdf) {
 // TODO: get audio for presentation
 async function retrieveLatestPdf() {
   try {
-    const res = await fetch('/api/pdf/new', { credentials: 'include' });
+    const res = await fetch('/api/new/pdf', { credentials: 'include' });
     const pdf = await res.json();
     pdfViewer(pdf);
   } catch (err) {
