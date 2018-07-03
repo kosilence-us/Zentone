@@ -8926,29 +8926,6 @@ textarea {
     grid-auto-flow: column; } }
 
 /*
-** --------- Main Content -----------
-*/
-.body {
-  display: grid;
-  grid-template-rows: 100px 1fr 200px;
-  grid-gap: 20px; }
-
-.main {
-  display: grid;
-  grid-template-columns: 150px 1fr 150px;
-  grid-template-rows: auto 1fr;
-  grid-auto-rows: 1fr; }
-
-.flash {
-  grid-column: 2 / 3; }
-
-#button-share {
-  font-size: xx-large;
-  color: lightgrey; }
-  #button-share:hover {
-    color: grey; }
-
-/*
 ** --------- Navbar -----------
 */
 .nav {
@@ -9001,37 +8978,27 @@ textarea {
   place-content: center center; }
 
 /*
-** --------- Footer -----------
+** --------- Body -----------
 */
-.footer {
+.body {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: 10px 1fr 30px; }
-  .footer div {
-    display: grid;
-    grid-auto-rows: 22px;
-    justify-content: center; }
-    .footer div a {
-      padding-top: 5px; }
+  grid-template-rows: 100px 1fr 200px;
+  grid-gap: 20px; }
 
-.divider {
-  grid-column: 2 / -2;
-  border-top: 2px solid rgba(0, 0, 0, 0.2);
-  box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.2); }
+.main {
+  display: grid;
+  grid-template-columns: 150px 1fr 150px;
+  grid-template-rows: auto 1fr;
+  grid-auto-rows: 1fr; }
 
-.footer .logo {
+.flash {
   grid-column: 2 / 3; }
 
-.footer .company {
-  grid-column-start: 4; }
-
-.footer div:last-child {
-  grid-row-start: 3;
-  grid-column: 1 / -1; }
-
-.footer h4 {
-  color: #000;
-  font-weight: bold; }
+#button-share {
+  font-size: xx-large;
+  color: lightgrey; }
+  #button-share:hover {
+    color: grey; }
 
 .dropzone-container {
   grid-column: 2 / 3;
@@ -9041,7 +9008,7 @@ textarea {
   transition: 0.4s; }
   .dropzone-container :hover,
   .dropzone-container :hover > .br_dropzone input {
-    background-color: #e0f5fb;
+    border: 2px dotted #0087f7;
     -webkit-transition: 0.4s;
     -o-transition: 0.4s;
     transition: 0.4s; }
@@ -9061,6 +9028,8 @@ textarea {
   border-radius: 5px;
   overflow: hidden; }
   .audio-dropzone.success {
+    cursor: default;
+    pointer-events: none;
     background: rgba(0, 255, 0, 0.02);
     border: 2px dotted green; }
   .audio-dropzone.incomplete {
@@ -9076,15 +9045,18 @@ textarea {
   display: none !important; }
 
 .dz-complete {
-  position: fixed !important; }
+  position: fixed !important;
+  place-self: center center; }
 
 .dz-remove {
   position: fixed;
   display: none !important; }
 
-.remove:hover {
-  color: #279dff;
-  cursor: pointer; }
+.remove {
+  cursor: pointer;
+  pointer-events: auto; }
+  .remove:hover {
+    color: #279dff; }
 
 .br_dropzone {
   display: grid;
@@ -9105,9 +9077,6 @@ textarea {
 .note {
   color: #e6e6e7; }
 
-/*
-** --------- Slide Editor -----------
-*/
 .slide-editor {
   grid-column: 2 / 3;
   justify-content: center;
@@ -9130,9 +9099,6 @@ textarea {
   color: grey;
   font-weight: 600; }
 
-/*
-** --------- Blog Editor -----------
-*/
 .blog-editor {
   grid-column: 2 / 3;
   padding-top: 30px;
@@ -9171,9 +9137,6 @@ textarea {
   margin: auto;
   padding: 20px; }
 
-/*
-** --------- Slide Viewer -----------
-*/
 .slide-viewer {
   grid-column: 2 / 3;
   justify-content: center;
@@ -9196,6 +9159,10 @@ textarea {
   .slide-controls:hover {
     background-color: #F8F8F8;
     color: #279dff; }
+  .slide-controls.success {
+    background: rgba(0, 255, 0, 0.05); }
+  .slide-controls.incomplete {
+    background: rgba(255, 0, 0, 0.05); }
 
 #next {
   display: grid;
@@ -9233,9 +9200,6 @@ textarea {
 .slide-next {
   font-size: 24px; }
 
-/*
-** --------- Blog -----------
-*/
 .blog {
   grid-column: 2 / 3;
   display: grid;
@@ -9270,3 +9234,36 @@ textarea {
   margin-top: 20px;
   margin-right: auto;
   font-size: 40px; }
+
+/*
+** --------- Footer -----------
+*/
+.footer {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: 10px 1fr 30px; }
+  .footer div {
+    display: grid;
+    grid-auto-rows: 22px;
+    justify-content: center; }
+    .footer div a {
+      padding-top: 5px; }
+
+.footer-divider {
+  grid-column: 2 / -2;
+  border-top: 2px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.1); }
+
+.footer .logo {
+  grid-column: 2 / 3; }
+
+.footer .company {
+  grid-column-start: 4; }
+
+.footer div:last-child {
+  grid-row-start: 3;
+  grid-column: 1 / -1; }
+
+.footer h4 {
+  color: #000;
+  font-weight: bold; }

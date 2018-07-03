@@ -1,5 +1,3 @@
-// TODO: Submit data function
-// TODO: update audio entries with page data
 /**
  * Globals
  */
@@ -16,19 +14,44 @@ function deleteAudio(e) {
   console.log(e);
 }
 
+function addSuccessControls() {
+  const slideControls = document.querySelectorAll('.slide-controls');
+  slideControls.forEach((control) => {
+    control.classList.remove('incomplete');
+    control.classList.add('success');
+  });
+}
+
+function addIncompleteControls() {
+  const slideControls = document.querySelectorAll('.slide-controls');
+  slideControls.forEach((control) => {
+    control.classList.remove('success');
+    control.classList.add('incomplete');
+  });
+}
+
 function addSuccessDz(message, audioDropzone) {
   const remove = document.createElement('a');
-  message.textContent = '';
-  message.appendChild(remove);
   remove.classList.add('remove');
-  remove.textContent = 'Delete';
+  remove.textContent = 'Choose New';
   remove.onclick = 'return false;';
+  remove.href = 'javascript:undefined;';
   remove.dataset.dzRemove = 'dz-remove';
   remove.addEventListener('click', deleteAudio);
-  audioDropzone.classList.add('success');
+  message.textContent = '';
+  message.appendChild(remove);
   audioDropzone.classList.remove('dz-clickable');
+  audioDropzone.classList.remove('incomplete');
+  audioDropzone.classList.add('success');
 }
-// TODO: Select for current page
+
+function addIncompleteDz(message, audioDropzone) {
+  message.textContent = 'Add audio to this slide!';
+  audioDropzone.classList.remove('success');
+  audioDropzone.classList.add('incomplete');
+  audioDropzone.classList.add('dz-clickable');
+}
+
 function buildAudioDz() {
   const audioDropzone = document.querySelector('.audio-dropzone');
   const fileInput = document.querySelector('#fileName');
@@ -36,18 +59,17 @@ function buildAudioDz() {
   const message = document.querySelector('.dz-message');
   const pageAudio = audioArr.filter(audio => audio.pageNum === pageNum);
   console.info('Populating Select Box...');
-  console.log(pageAudio.length);
-  if (pageAudio.length !== 0) {
-    audioDropzone.classList.remove('incomplete');
-    addSuccessDz(message, audioDropzone);
-    fileInput.value = pageAudio[0].originalFileName;
-  } else if (remove) {
-    audioDropzone.classList.remove('success');
+  if (remove) {
     remove.remove();
+  }
+  if (pageAudio.length !== 0) {
+    fileInput.value = pageAudio[0].originalFileName;
+    addSuccessDz(message, audioDropzone);
+    addSuccessControls();
+  } else {
     fileInput.value = 'no audio';
-    message.textContent = 'Add audio to this slide!';
-    audioDropzone.classList.add('incomplete');
-    audioDropzone.classList.add('dz-clickable');
+    addIncompleteDz(message, audioDropzone);
+    addIncompleteControls();
   }
 }
 // TODO: migrate from jQuery
