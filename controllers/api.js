@@ -226,6 +226,24 @@ exports.updateAudio = async (req, res) => {
 };
 
 /**
+ * DELETE /api/audio/:id
+ * Delete Audio by ID
+ */
+exports.deleteAudioById = async (req, res) => {
+  try {
+    console.log('--> Deleting Audio...', req.params.id);
+    const { id } = req.params;
+    const deleted = await Audio.destroy({
+      where: { id }
+    });
+    console.log('deleted');
+    res.status(200).send({ deleted });
+  } catch (err) {
+    res.status(400).send(err);
+  }
+}
+
+/**
  * UPDATE /api/presentation
  * Update Presentation Blog Contents
  */

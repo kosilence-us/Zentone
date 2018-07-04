@@ -9053,8 +9053,10 @@ textarea {
   display: none !important; }
 
 .remove {
-  cursor: pointer;
-  pointer-events: auto; }
+  place-self: end center;
+  position: absolute;
+  margin-bottom: 30px;
+  cursor: pointer; }
   .remove:hover {
     color: #279dff; }
 
@@ -9082,7 +9084,7 @@ textarea {
   justify-content: center;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: 500px 155px 20px;
+  grid-template-rows: 550px 155px 20px;
   grid-gap: 5px; }
 
 .pdf-container {
@@ -9090,8 +9092,9 @@ textarea {
   .pdf-container .canvas-container {
     height: 100%; }
 
-.audio-dropzone {
-  grid-column: 1 / 5; }
+.audio-container {
+  grid-column: 1 / 5;
+  display: grid; }
 
 .editor-count {
   grid-column: 2 / 4;

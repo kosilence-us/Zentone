@@ -194,6 +194,7 @@ app.post('/api/audio', upload, apiController.sendAudio);
 app.get('/api/audio', apiController.retrieveAudio);
 app.get('/api/audio/:id', apiController.retrieveAudioByPresId);
 app.put('/api/audio', apiController.updateAudio);
+app.delete('/api/audio/:id', apiController.deleteAudioById);
 app.put('/api/presentation', apiController.updatePresentation);
 app.get('/api/presentation/:id', apiController.retrievePresentationById);
 app.get('/api/new/presentation', apiController.retrievePresentationByLatest);

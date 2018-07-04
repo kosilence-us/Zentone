@@ -8,10 +8,34 @@ let pageRendering = false;
 /*
  ******** Audio Dropzone ********
  */
-function deleteAudio(e) {
-  e = e || event;
-  e.preventDefault();
-  console.log(e);
+function addIncompleteDz() {
+  const audioDropzone = document.querySelector('.audio-dropzone');
+  const message = document.querySelector('.dz-message');
+  message.textContent = 'Add audio to this slide!';
+  audioDropzone.classList.remove('success');
+  audioDropzone.classList.add('incomplete');
+  audioDropzone.classList.add('dz-clickable');
+}
+
+async function deleteAudio() {
+  const fileInput = document.querySelector('#fileName');
+  const remove = document.querySelector('.remove');
+  const audio = audioArr.filter(audio => audio.pageNum === pageNum);
+  addIncompleteDz();
+  remove.remove();
+  fileInput.value = '';
+  try {
+    const res = await fetch(`/api/audio/${audio[0].id}`, {
+      credentials: 'include',
+      method: 'DELETE'
+    });
+    const deleted = await res.json();
+    if (deleted === 0) {
+      throw new Error('Audio not deleted');
+    }
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 function addSuccessControls() {
@@ -30,45 +54,33 @@ function addIncompleteControls() {
   });
 }
 
-function addSuccessDz(message, audioDropzone) {
+function addSuccessDz() {
+  const audioDropzone = document.querySelector('.audio-dropzone');
+  const audioContainer = document.querySelector('.audio-container');
+  const message = document.querySelector('.dz-message');
   const remove = document.createElement('a');
   remove.classList.add('remove');
-  remove.textContent = 'Choose New';
-  remove.onclick = 'return false;';
-  remove.href = 'javascript:undefined;';
+  remove.textContent = 'Remove';
   remove.dataset.dzRemove = 'dz-remove';
   remove.addEventListener('click', deleteAudio);
   message.textContent = '';
-  message.appendChild(remove);
+  audioContainer.appendChild(remove);
   audioDropzone.classList.remove('dz-clickable');
   audioDropzone.classList.remove('incomplete');
   audioDropzone.classList.add('success');
 }
 
-function addIncompleteDz(message, audioDropzone) {
-  message.textContent = 'Add audio to this slide!';
-  audioDropzone.classList.remove('success');
-  audioDropzone.classList.add('incomplete');
-  audioDropzone.classList.add('dz-clickable');
-}
-
 function buildAudioDz() {
-  const audioDropzone = document.querySelector('.audio-dropzone');
   const fileInput = document.querySelector('#fileName');
-  const remove = document.querySelector('.dz-remove');
-  const message = document.querySelector('.dz-message');
   const pageAudio = audioArr.filter(audio => audio.pageNum === pageNum);
   console.info('Populating Select Box...');
-  if (remove) {
-    remove.remove();
-  }
   if (pageAudio.length !== 0) {
     fileInput.value = pageAudio[0].originalFileName;
-    addSuccessDz(message, audioDropzone);
+    addSuccessDz();
     addSuccessControls();
   } else {
     fileInput.value = 'no audio';
-    addIncompleteDz(message, audioDropzone);
+    addIncompleteDz();
     addIncompleteControls();
   }
 }
@@ -126,26 +138,18 @@ function initAudioDropzone() {
 */
 // TODO: fix viewport scaling issue
 async function pdfEditor(pdf) {
-  console.log('pdf loading data...');
-  console.log(pdf.fileUrl);
   if (!pdf) {
     return console.log('Could not retrieve PDF from current session');
   }
-
-  const windowWidth = window.innerWidth || document.body.clientWidth;
+  console.log('pdf loading data...', pdf.fileUrl);
   const url = pdf.fileUrl;
   // If absolute URL from the remote server is provided, configure the CORS
   // header on that server.
-  // const url = '//cdn.mozilla.net/pdfjs/tracemonkey.pdf';
   // Loaded via <script> tag, create shortcut to access PDF.js exports.
   const pdfjsLib = window['pdfjs-dist/build/pdf'];
   // The workerSrc property shall be specified.
-  // console.log(pdfjsLib.GlobalWorkerOptions);
+  // TODO: download worker src
   pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
-  const desiredWidth = windowWidth / 2.3;
-  const desiredHeight = 500;
-  const canvas = document.getElementById('the-canvas');
-  const ctx = canvas.getContext('2d');
   let pdfDoc = null;
   let pageNumPending = null;
   pageRendering = true;
@@ -159,15 +163,16 @@ async function pdfEditor(pdf) {
       // fetch page
       console.log('rendering page...', num);
       const page = await pdfDoc.getPage(num);
+      const canvas = document.getElementById('the-canvas');
       const viewport = page.getViewport(1);
-      const scale = desiredHeight / viewport.height;
-      const scaledViewport = page.getViewport(scale);
-      canvas.height = scaledViewport.height;
-      canvas.width = desiredWidth;
-       // Render PDF page into canvas context
+      canvas.width = viewport.width;
+      canvas.height = 550;
+      const scale = Math.min(
+        canvas.width / viewport.width,
+        canvas.height / viewport.height);
       const renderContext = {
-        canvasContext: ctx,
-        viewport
+        canvasContext: canvas.getContext('2d'),
+        viewport: page.getViewport(scale)
       };
       // Wait for rendering to finish
       await page.render(renderContext);
@@ -187,16 +192,16 @@ async function pdfEditor(pdf) {
   // Creates thumb-sized canvas elements and renders the pages inside
   function makeThumb(page) {
     // draw page to fit into 96x96 canvas
-    const canvas = document.createElement('canvas');
+    const thumbCanvas = document.createElement('canvas');
     const vp = page.getViewport(1);
-    canvas.width = 96;
-    canvas.height = 96;
-    const scale = Math.min(canvas.width / vp.width, canvas.height / vp.height);
-    canvas.classList.add('thumb');
+    thumbCanvas.width = 147;
+    thumbCanvas.height = 147;
+    const scale = Math.min(thumbCanvas.width / vp.width, thumbCanvas.height / vp.height);
+    thumbCanvas.classList.add('thumb');
     return page.render({
-      canvasContext: canvas.getContext('2d'),
+      canvasContext: thumbCanvas.getContext('2d'),
       viewport: page.getViewport(scale)
-    }).promise.then(() => canvas);
+    }).promise.then(() => thumbCanvas);
   }
 
    /**
@@ -289,8 +294,8 @@ async function pdfEditor(pdf) {
       li.dataset.pageNum = num;
       thumbnailSlider.appendChild(li);
       return pdfDoc.getPage(num).then(makeThumb)
-        .then((canvas) => {
-          a.appendChild(canvas);
+        .then((thumbCanvas) => {
+          a.appendChild(thumbCanvas);
           li.appendChild(a);
         });
     }));

@@ -219,8 +219,10 @@ textarea {
 }
 
 .remove {
+  place-self: end center;
+  position: absolute;
+  margin-bottom: 30px;
   cursor: pointer;
-  pointer-events: auto;
   &:hover {
     color: #279dff;
   }
@@ -257,7 +259,7 @@ textarea {
   justify-content: center;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: 500px 155px 20px;
+  grid-template-rows: 550px 155px 20px;
   grid-gap: 5px;
 }
 
@@ -268,8 +270,9 @@ textarea {
   }
 }
 
-.audio-dropzone {
+.audio-container {
   grid-column: 1 / 5;
+  display: grid;
 }
 
 .editor-count {
