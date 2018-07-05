@@ -164,7 +164,8 @@ app.get('/', homeController.index);
 app.get('/home', homeController.index);
 app.get('/slide-upload', pagesController.slide);
 app.get('/edit-presentation', pagesController.editPresentation);
-app.get('/view-presentation/', pagesController.viewPresentation)
+app.get('/view-presentation/', pagesController.viewPresentation);
+app.get('/user-presentations', pagesController.userPresentations);
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);

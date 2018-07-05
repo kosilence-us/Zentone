@@ -47,3 +47,14 @@ exports.viewPresentation = (req, res) => {
   });
 };
 
+/**
+ * GET /user-presentations
+ * Get User Presentations page.
+ */
+exports.userPresentations = (req, res) => {
+  res.render('user-presentations', {
+    title: 'My Presentations',
+    page: '/user-presentations'
+  });
+};
+

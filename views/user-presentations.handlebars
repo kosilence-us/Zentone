@@ -1,0 +1,48 @@
+<section class="user__presentations">
+  <div class="user__header">
+    <div class="user__picture">{{#if user.picture}}
+      <img src="{{user.picture}}"> {{else}}
+      <img src="{{user.gravatar}}"> {{/if}}
+      <button class="follow">Follow</button>
+    </div>
+    <div class="user__header-info">
+      <h4>Name</h4>
+      <p>Company</p>
+      <p>Description</p>
+    </div>
+    <div class="user__social">
+      <div class="user__social-buttons">
+        <a href="#">
+          <svg class="icon icon-linkedin" aria-hidden="true"></svg>
+        </a>
+        <a href="#">
+          <svg class="icon icon-facebook" aria-hidden="true"></svg>
+        </a>
+        <a href="#">
+          <svg class="icon icon-twitter" aria-hidden="true"></svg>
+        </a>
+      </div>
+      <div class="user__followers">
+        600 Followers
+      </div>
+    </div>
+
+  </div>
+  <div class="user__presentations-header">
+    <h3>Latest Stories</h3>
+  </div>
+  <div class="user__presentations-list-container">
+    <ul class="user__presentations-list"></ul>
+  </div>
+</section>
+
+<template id="user__presentation-item">
+  <div class="user__presentation-item">
+    <div class="user__presentation-item-canvas"></div>
+    <div class="user__presentation-item-blog">
+      <h4></h4>
+      <p></p>
+      <p></p>
+    </div>
+  </div>
+</template>

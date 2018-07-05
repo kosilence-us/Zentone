@@ -1,7 +1,7 @@
 /*
 ******** Import Functions ********
 */
-import { retrieveLatestPdf } from './home';
+import { retrieveLatestPdf } from './teaser-home';
 import { initPdfDropzone } from './slideupload';
 import { retrievePdf, retrieveAudio, initAudioDropzone, submitListen } from './editpresentation';
 import { retrievePdfById, retrieveAudioByPresId, retrievePresentationById } from './viewpresentation';
@@ -13,7 +13,9 @@ window.onload = function () {
   const pathname = window.location.pathname.split('?')[0];
   console.log(pathname);
   switch (pathname) {
-    case '/':
+    case '/': 
+      break;
+    case '/teaser-home':
       retrieveLatestPdf();
       break;
     case '/slide-upload':

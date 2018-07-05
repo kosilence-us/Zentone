@@ -11,6 +11,10 @@ let pageRendering = false;
 function addIncompleteDz() {
   const audioDropzone = document.querySelector('.audio-dropzone');
   const message = document.querySelector('.dz-message');
+  const remove = document.querySelectorAll('.remove');
+  if (remove) {
+    remove.forEach(remove => remove.remove());
+  }
   message.textContent = 'Add audio to this slide!';
   audioDropzone.classList.remove('success');
   audioDropzone.classList.add('incomplete');
@@ -31,8 +35,9 @@ async function deleteAudio() {
     });
     const deleted = await res.json();
     if (deleted === 0) {
-      throw new Error('Audio not deleted');
+      return new Error('Audio not deleted');
     }
+    console.log('Deleted ', audio[0].id);
   } catch (err) {
     console.error(err);
   }
