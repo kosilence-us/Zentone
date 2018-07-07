@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
-    username: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -33,6 +33,18 @@ module.exports = (sequelize, DataTypes) => {
     location: {
       type: DataTypes.STRING
     },
+    website: {
+      type: DataTypes.STRING
+    },
+    company: {
+      type: DataTypes.STRING
+    },
+    description: {
+      type: DataTypes.STRING
+    },
+    gravatar: {
+      type: DataTypes.STRING
+    },
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
@@ -50,6 +62,18 @@ module.exports = (sequelize, DataTypes) => {
         });
       });
     }));
+    // TODO: add hook
+  // Users.beforeUpdate((user, options) => new Promise((resolve, reject) => {
+  //   const { password } = user;
+  //   bcrypt.genSalt(10, (err, salt) => {
+  //     if (err) reject(err);
+  //     bcrypt.hash(password, salt, null, (error, hash) => {
+  //       if (error) reject(err);
+  //       user.password = hash;
+  //       resolve(user);
+  //     });
+  //   });
+  // }));
   Users.prototype.comparePassword = function (candidatePassword, done) {
     bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
       done(err, isMatch);

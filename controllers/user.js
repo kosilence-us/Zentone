@@ -47,7 +47,7 @@ exports.postLogin = (req, res, next) => {
       // console.log('errors', info);
       return res.redirect('/login');
     }
-    const userID = user.dataValues.id;
+    const userID = user.id;
     req.logIn(userID, (err) => {
       if (err) {
         return next(err);
@@ -87,15 +87,16 @@ exports.getSignup = (req, res) => {
  * Create a new local account.
  */
 exports.postSignup = (req, res, next) => {
-  // console.log('--> ROUTE REACHED: postSignup');
+  console.log('--> Posting Signup...');
   req.assert('email', 'Email is not valid').isEmail();
   req.assert('password', 'Password must be at least 4 characters long').len(4);
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
   const errors = req.validationErrors();
+  console.log(req.body);
   const user = {
-    username: req.body.username,
+    name: req.body.name,
     email: req.body.email,
     password: req.body.password
   };
@@ -145,63 +146,68 @@ exports.getAccount = (req, res) => {
  * POST /account/profile
  * Update profile information.
  */
-exports.postUpdateProfile = (req, res, next) => {
+exports.postUpdateProfile = async (req, res, next) => {
+  console.log('--> Updating Profile...', req.user.id);
   req.assert('email', 'Please enter a valid email address.').isEmail();
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
   const errors = req.validationErrors();
-
   if (errors) {
     req.flash('errors', errors);
     return res.redirect('/account');
   }
 
-  User.findById(req.user.id).then((user) => {
-    // if (err) { return next(err); }
-    user.email = req.body.email || '';
-    user.profile.name = req.body.name || '';
-    user.profile.gender = req.body.gender || '';
-    user.profile.location = req.body.location || '';
-    user.profile.website = req.body.website || '';
-    user.save((err) => {
-      if (err) {
-        if (err.code === 11000) {
-          req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
-          return res.redirect('/account');
+  try {
+    await User.update({
+      email: req.body.email || '',
+      name: req.body.name || '',
+      gender: req.body.gender || '',
+      location: req.body.location || '',
+      website: req.body.website || '',
+    }, {
+        where: {
+          id: req.user.id
         }
-        return next(err);
-      }
-      req.flash('success', { msg: 'Profile information has been updated.' });
-      res.redirect('/account');
-    });
-  });
-};
+      });
+    req.flash('success', { msg: 'Profile information has been updated.' });
+    res.redirect('/account');
+  } catch (err) {
+    if (err.code === 11000) {
+      req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
+      return res.redirect('/account');
+    } 
+    return res.status(400).redirect('/account');
+  }
+}
 
 /**
  * POST /account/password
  * Update current password.
  */
-exports.postUpdatePassword = (req, res, next) => {
+exports.postUpdatePassword = async (req, res, next) => {
   req.assert('password', 'Password must be at least 4 characters long').len(4);
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
   const errors = req.validationErrors();
-
   if (errors) {
     req.flash('errors', errors);
     return res.redirect('/account');
   }
 
-  User.findById(req.user.id).then((user) => {
-    // if (err) { return next(err); }
-    user.password = req.body.password;
-    user.save((err) => {
-      if (err) { return next(err); }
-      req.flash('success', { msg: 'Password has been changed.' });
-      res.redirect('/account');
-    });
-  });
-};
+  try {
+    await User.update({
+      password: req.body.password
+    }, {
+        where: {
+          id: req.user.id
+        }
+      });
+    req.flash('success', { msg: 'Password has been changed.' });
+    res.redirect('/account');
+  } catch (err) {
+    return next(err);
+  }
+}
 
 /**
  * POST /account/delete
