@@ -49,66 +49,57 @@ function buildBlog(presentation) {
 /*
 ******** Presentation Viewport ********
 */
-// TODO: fix viewport scaling issue
 async function pdfViewer(pdf) {
-  console.log('pdf loading data...');
-  console.log(pdf.fileUrl);
-  if (!pdf) {
-    return console.log('Could not retrieve PDF from current session');
-  }
+if (!pdf) {
+  return console.log('Could not retrieve PDF from current session');
+}
+console.log('pdf loading data...', pdf.fileUrl);
+const url = pdf.fileUrl;
+// If absolute URL from the remote server is provided, configure the CORS
+// header on that server.
+// Loaded via <script> tag, create shortcut to access PDF.js exports.
+const pdfjsLib = window['pdfjs-dist/build/pdf'];
+// The workerSrc property shall be specified.
+// TODO: download worker src
+pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
+let pdfDoc = null;
+let pageNumPending = null;
+pageRendering = true;
 
-  const windowWidth = window.innerWidth || document.body.clientWidth;
-  const url = pdf.fileUrl;
-  // If absolute URL from the remote server is provided, configure the CORS
-  // header on that server.
-  // const url = '//cdn.mozilla.net/pdfjs/tracemonkey.pdf';
-  // Loaded via <script> tag, create shortcut to access PDF.js exports.
-  const pdfjsLib = window['pdfjs-dist/build/pdf'];
-  // The workerSrc property shall be specified.
-  // console.log(pdfjsLib.GlobalWorkerOptions);
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
-  const desiredWidth = windowWidth / 2.3;
-  const desiredHeight = 555;
-  const canvas = document.getElementById('the-canvas');
-  const ctx = canvas.getContext('2d');
-  let pdfDoc = null;
-  let pageNumPending = null;
-  pageRendering = true;
-
-  /**
-   * Get page info from document, resize canvas accordingly, and render page.
-   * @param num Page number.
-   */
-  async function renderPage(num) {
-    try {
-      // fetch page
-      console.log('rendering page...', num);
-      const page = await pdfDoc.getPage(num);
-      const viewport = page.getViewport(1);
-      const scale = desiredHeight / viewport.height;
-      const scaledViewport = page.getViewport(scale);
-      canvas.height = scaledViewport.height;
-      canvas.width = desiredWidth;
-       // Render PDF page into canvas context
-      const renderContext = {
-        canvasContext: ctx,
-        viewport
-      };
-      // Wait for rendering to finish
-      await page.render(renderContext);
-      pageRendering = false;
-        if (pageNumPending !== null) {
-          // New page rendering is pending
-          renderPage(pageNumPending);
-          pageNumPending = null;
-        }
-      // Update page counters
-      document.getElementById('page_num').textContent = num;
-    } catch (err) {
-      console.log(err);
+/**
+ * Get page info from document, resize canvas accordingly, and render page.
+ * @param num Page number.
+ */
+async function renderPage(num) {
+  try {
+    // fetch page
+    console.log('rendering page...', num);
+    const page = await pdfDoc.getPage(num);
+    const canvas = document.getElementById('the-canvas');
+    const viewport = page.getViewport(1);
+    canvas.width = viewport.width;
+    canvas.height = 550;
+    const scale = Math.min(
+      canvas.width / viewport.width,
+      canvas.height / viewport.height);
+    const renderContext = {
+      canvasContext: canvas.getContext('2d'),
+      viewport: page.getViewport(scale)
+    };
+    // Wait for rendering to finish
+    await page.render(renderContext);
+    pageRendering = false;
+    if (pageNumPending !== null) {
+      // New page rendering is pending
+      renderPage(pageNumPending);
+      pageNumPending = null;
     }
-  // TODO: Click event listener
+    // Update page counters
+    document.getElementById('page_num').textContent = num;
+  } catch (err) {
+    console.log(err);
   }
+}
 
   /**
    * If another page rendering in progress, waits until the rendering is

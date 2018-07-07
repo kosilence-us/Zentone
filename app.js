@@ -189,6 +189,7 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 // TODO: Create Postman Tests
 app.post('/api/pdf', upload, apiController.sendPdf);
 app.get('/api/pdf', apiController.retrievePdf);
+app.get('/api/user/pdfs', apiController.retrievePdfByUserId);
 app.get('/api/pdf/:id', apiController.retrievePdfByPresId);
 app.get('/api/new/pdf', apiController.retrievePdfByLatest);
 app.post('/api/audio', upload, apiController.sendAudio);
@@ -197,6 +198,7 @@ app.get('/api/audio/:id', apiController.retrieveAudioByPresId);
 app.put('/api/audio', apiController.updateAudio);
 app.delete('/api/audio/:id', apiController.deleteAudioById);
 app.put('/api/presentation', apiController.updatePresentation);
+app.get('/api/user/presentations', apiController.retrievePresentationByUserId);
 app.get('/api/presentation/:id', apiController.retrievePresentationById);
 app.get('/api/new/presentation', apiController.retrievePresentationByLatest);
 

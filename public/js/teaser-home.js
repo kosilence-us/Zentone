@@ -7,28 +7,19 @@ let pageRendering = false;
 /*
 ******** Presentation Viewport ********
 */
-// TODO: fix viewport scaling issue
 async function pdfViewer(pdf) {
-  console.log('pdf loading data...');
-  console.log(pdf.fileUrl);
   if (!pdf) {
     return console.log('Could not retrieve PDF from current session');
   }
-
-  const windowWidth = window.innerWidth || document.body.clientWidth;
+  console.log('pdf loading data...', pdf.fileUrl);
   const url = pdf.fileUrl;
   // If absolute URL from the remote server is provided, configure the CORS
   // header on that server.
-  // const url = '//cdn.mozilla.net/pdfjs/tracemonkey.pdf';
   // Loaded via <script> tag, create shortcut to access PDF.js exports.
   const pdfjsLib = window['pdfjs-dist/build/pdf'];
   // The workerSrc property shall be specified.
-  // console.log(pdfjsLib.GlobalWorkerOptions);
+  // TODO: download worker src
   pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
-  const desiredWidth = windowWidth / 2.3;
-  const desiredHeight = 555;
-  const canvas = document.getElementById('the-canvas');
-  const ctx = canvas.getContext('2d');
   let pdfDoc = null;
   let pageNumPending = null;
   pageRendering = true;
@@ -42,30 +33,30 @@ async function pdfViewer(pdf) {
       // fetch page
       console.log('rendering page...', num);
       const page = await pdfDoc.getPage(num);
+      const canvas = document.getElementById('the-canvas');
       const viewport = page.getViewport(1);
-      const scale = desiredHeight / viewport.height;
-      const scaledViewport = page.getViewport(scale);
-      canvas.height = scaledViewport.height;
-      canvas.width = desiredWidth;
-       // Render PDF page into canvas context
+      canvas.width = viewport.width;
+      canvas.height = 550;
+      const scale = Math.min(
+        canvas.width / viewport.width,
+        canvas.height / viewport.height);
       const renderContext = {
-        canvasContext: ctx,
-        viewport
+        canvasContext: canvas.getContext('2d'),
+        viewport: page.getViewport(scale)
       };
       // Wait for rendering to finish
       await page.render(renderContext);
       pageRendering = false;
-        if (pageNumPending !== null) {
-          // New page rendering is pending
-          renderPage(pageNumPending);
-          pageNumPending = null;
-        }
+      if (pageNumPending !== null) {
+        // New page rendering is pending
+        renderPage(pageNumPending);
+        pageNumPending = null;
+      }
       // Update page counters
       document.getElementById('page_num').textContent = num;
     } catch (err) {
       console.log(err);
     }
-  // TODO: Click event listener
   }
 
   /**

@@ -8902,6 +8902,9 @@ button.close {
     display: grid;
     grid-template-rows: repeat(4, 1fr); }
 
+.user__presentations-list-container ul {
+  padding-left: 0; }
+
 /*
 ** Root Variables
 */

@@ -50,8 +50,8 @@
 - [x] Send pageNum to dropzone upload
 - [x] POST blog entry
 - [x] UPDATE audioArr
-- [ ] Retrieve pdf to home
-- [ ] Create audio player
+- [x] Retrieve pdf to home
+- [x] Create audio player
 
 
 ### Bugs
@@ -70,3 +70,4 @@
 - [ ] Remove unnecessary scripts
 - [ ] Migrate from jQuery to vanilla js
 - [ ] Lazy load thumbnail slider
+- [ ] Handlebars.js precompile elements on server

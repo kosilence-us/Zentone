@@ -141,7 +141,6 @@ function initAudioDropzone() {
 /*
 ******** Presentation Viewport ********
 */
-// TODO: fix viewport scaling issue
 async function pdfEditor(pdf) {
   if (!pdf) {
     return console.log('Could not retrieve PDF from current session');

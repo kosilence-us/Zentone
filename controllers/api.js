@@ -105,6 +105,25 @@ exports.retrievePdfByPresId = async (req, res) => {
 };
 
 /**
+ * GET /api/user/pdf
+ * Get all pdfs from user
+ */
+exports.retrievePdfByUserId = async (req, res) => {
+  try {
+    const userID = req.user.id;
+    const pdfs = await Pdfs.findAll({
+      where: {
+        userID
+      }
+    });
+    console.log('Retrieved presentation for user...', req.user.id);
+    res.status(200).send(pdfs);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+}
+
+/**
  * GET /api/pdf/new
  * Get latest presentaion by user
  */
@@ -262,6 +281,24 @@ exports.updatePresentation = async (req, res) => {
     });
     console.log('--> Updated Presentation: ', updated.id);
     res.status(200).send(id);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+}
+
+/**
+ * GET /api/user/presentation
+ * Get all presentations from user
+ */
+exports.retrievePresentationByUserId = async (req, res) => {
+  try {
+    
+    const userID = req.user.id;
+    const presentations = await Presentations.findAll({
+      where: { userID }
+    });
+    console.log('Retrieved presentation for user...', req.user.id);
+    res.status(200).send(presentations);
   } catch (err) {
     res.status(400).send(err);
   }

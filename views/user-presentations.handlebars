@@ -32,17 +32,19 @@
     <h3>Latest Stories</h3>
   </div>
   <div class="user__presentations-list-container">
-    <ul class="user__presentations-list"></ul>
+    <ul id="user__presentations-list"></ul>
   </div>
 </section>
 
 <template id="user__presentation-item">
   <div class="user__presentation-item">
-    <div class="user__presentation-item-canvas"></div>
+    <div class="user__presentation-item-canvas">
+      <canvas id="\{{id}}"></canvas>
+    </div>
     <div class="user__presentation-item-blog">
-      <h4></h4>
-      <p></p>
-      <p></p>
+      <h4>\{{title}}</h4>
+      <p>\{{createdAt}}</p>
+      <p>\{{article}}</p>
     </div>
   </div>
 </template>
