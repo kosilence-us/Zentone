@@ -1,14 +1,17 @@
 <section class="user__presentations">
   <div class="user__header">
-    <div class="user__picture">{{#if user.picture}}
-      <img src="{{user.picture}}"> {{else}}
-      <img src="{{user.gravatar}}"> {{/if}}
+    <div class="user__picture">
+      {{#if user.gravatar}}
+      <div class="user__gravatar">
+        <img src="{{user.gravatar}}">
+      </div>
+      {{/if}}
       <button class="follow">Follow</button>
     </div>
     <div class="user__header-info">
-      <h4>Name</h4>
-      <p>Company</p>
-      <p>Description</p>
+      <h3>{{#if user.name}} {{user.name}} {{/if}}</h3>
+      <p>{{#if user.company}} {{user.company}} {{/if}}</p>
+      <p>{{#if user.description}} {{user.description}} {{/if}}</p>
     </div>
     <div class="user__social">
       <div class="user__social-buttons">

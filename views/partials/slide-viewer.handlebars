@@ -19,8 +19,8 @@
   </div>
   {{/if}}
   <div class="author__info">
-    <h3>Name</h3>
-    <p>Company</p>
+    <h3>{{#if user.name}} {{user.name}} {{/if}}</h3>
+    <p>{{#if user.company}} {{user.company}} {{/if}}</p>
   </div>
 </div>
 

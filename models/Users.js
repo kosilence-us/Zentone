@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     birthday: {
-      type: DataTypes.INTEGER
+      type: DataTypes.DATE
     },
     gender: {
       type: DataTypes.STRING
@@ -44,6 +44,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     gravatar: {
       type: DataTypes.STRING
+    },
+    followers: {
+      type: DataTypes.INTEGER
     },
     createdAt: {
       type: DataTypes.DATE,

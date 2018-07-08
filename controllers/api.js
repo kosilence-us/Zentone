@@ -345,6 +345,7 @@ exports.retrievePresentationByLatest = async (req, res) => {
  * Facebook API example.
  */
 exports.getFacebook = (req, res, next) => {
+  console.log('--> Facebook API route reached...', req.user.tokens);
   const token = req.user.tokens.find(token => token.kind === 'facebook');
   graph.setAccessToken(token.accessToken);
   graph.get(`${req.user.facebook}?fields=id,name,email,first_name,last_name,gender,link,locale,timezone`, (err, results) => {

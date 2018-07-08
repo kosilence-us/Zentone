@@ -23,6 +23,9 @@ module.exports = (sequelize, DataTypes) => sequelize
       type: DataTypes.TEXT,
       defaultValue: 'empty'
     },
+    views: {
+      type: DataTypes.INTEGER
+    },
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW

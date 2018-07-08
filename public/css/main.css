@@ -8881,17 +8881,21 @@ button.close {
 .user__presentations {
   grid-column: 2 / 3;
   display: grid;
-  grid-template-rows: 200px 1fr;
+  grid-template-rows: 220px 1fr;
   grid-gap: 20px; }
 
 .user__header {
   display: grid;
-  grid-template-columns: 150px 1fr 150px;
+  grid-template-columns: 130px 1fr 130px;
   grid-gap: 20px; }
   .user__header .user__picture {
     display: grid;
     grid-template-rows: 4fr 1fr;
     grid-gap: 5px; }
+    .user__header .user__picture .user__gravatar {
+      width: 130px; }
+      .user__header .user__picture .user__gravatar img {
+        width: 100%; }
   .user__header .follow {
     background-color: var(--zentone-blue);
     color: white; }
@@ -8901,6 +8905,9 @@ button.close {
   .user__header .user__social {
     display: grid;
     grid-template-rows: repeat(4, 1fr); }
+
+.user__presentations-header {
+  margin-top: 60px; }
 
 .user__presentations-list-container ul {
   padding-left: 0; }
