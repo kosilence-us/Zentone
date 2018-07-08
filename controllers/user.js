@@ -47,15 +47,15 @@ exports.postLogin = (req, res, next) => {
       // console.log('errors', info);
       return res.redirect('/login');
     }
-    const userID = user.id;
-    req.logIn(userID, (err) => {
+    // const userID = user.id;
+    req.logIn(user, (err) => {
       if (err) {
         return next(err);
       }
       req.flash('success', { msg: 'Success! You are logged in.' });
-      console.log('--> Success! UserID:', userID);
+      console.log('--> Success! UserID:', user.id);
       console.log(req.session);
-      return req.session.save(() => res.redirect('/')); // TODO: req.session.returnTo || 
+      req.session.save(() => res.redirect('/')); // TODO: req.session.returnTo ||
     });
   })(req, res, next);
 };
@@ -103,7 +103,7 @@ exports.postSignup = (req, res, next) => {
 
   if (errors) {
     console.log('--> validationErrors:', errors);
-    req.flash('error', errors);
+    req.flash('error', errors[0].msg);
     return res.redirect('/signup');
   }
 
@@ -147,9 +147,10 @@ exports.getAccount = (req, res) => {
  * Update profile information.
  */
 exports.postUpdateProfile = async (req, res, next) => {
-  console.log('--> Updating Profile...', req.user.id);
   req.assert('email', 'Please enter a valid email address.').isEmail();
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+  // console.log('--> Updating Profile...', req.body);
+  // console.log(req.files.gravatar[0]);
 
   const errors = req.validationErrors();
   if (errors) {
@@ -158,17 +159,23 @@ exports.postUpdateProfile = async (req, res, next) => {
   }
 
   try {
-    await User.update({
+    const updated = await User.update({
       email: req.body.email || '',
       name: req.body.name || '',
       gender: req.body.gender || '',
       location: req.body.location || '',
       website: req.body.website || '',
+      company: req.body.company || '',
+      description: req.body.description || '',
+      gravatar: req.files.gravatar[0].url || ''
     }, {
         where: {
           id: req.user.id
         }
-      });
+    });
+    if (updated[0] === 1) {
+      console.log('success!');
+    }
     req.flash('success', { msg: 'Profile information has been updated.' });
     res.redirect('/account');
   } catch (err) {
@@ -180,28 +187,41 @@ exports.postUpdateProfile = async (req, res, next) => {
   }
 }
 
+// /**
+//  * POST /account/gravatar
+//  * Update profile picture
+//  */
+// exports.postUpdateGravatar = async (req, res, next) => {
+//   console.log('----- file from OSS -----', req.body);
+//   const { gravatar } = req.body;
+//   const updated = 
+// }
+
 /**
  * POST /account/password
  * Update current password.
  */
 exports.postUpdatePassword = async (req, res, next) => {
   req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+  req.assert('confirm', 'Passwords do not match').equals(req.body.password);
+  console.log('updating password...', req.body);
 
   const errors = req.validationErrors();
   if (errors) {
-    req.flash('errors', errors);
+    console.log('**errors', errors[0].msg);
+    req.flash('errors', { msg: errors[0].msg });
     return res.redirect('/account');
   }
 
   try {
-    await User.update({
+    const updated = await User.update({
       password: req.body.password
     }, {
-        where: {
-          id: req.user.id
-        }
-      });
+      where: {
+        id: req.user.id
+      }
+    });
+    console.log('--> updated:', updated);
     req.flash('success', { msg: 'Password has been changed.' });
     res.redirect('/account');
   } catch (err) {
@@ -213,13 +233,19 @@ exports.postUpdatePassword = async (req, res, next) => {
  * POST /account/delete
  * Delete user account.
  */
-exports.postDeleteAccount = (req, res, next) => {
-  User.remove({ _id: req.user.id }, (err) => {
-    if (err) { return next(err); }
+exports.postDeleteAccount = async (req, res, next) => {
+  try {
+    await User.destroy({
+      where: {
+        id: req.user.id
+      }
+    });
     req.logout();
     req.flash('info', { msg: 'Your account has been deleted.' });
     res.redirect('/');
-  });
+  } catch (err) {
+    return next(err);
+  }
 };
 
 /**

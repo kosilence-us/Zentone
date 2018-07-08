@@ -50,7 +50,7 @@ const upload = Multer({
       done(null, filename);
     }
   })
-}).single('file');
+});
 
 /**
  * Controllers (route handlers).
@@ -178,7 +178,7 @@ app.post('/signup', userController.postSignup);
 app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
 app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
-app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);
+app.post('/account/profile', passportConfig.isAuthenticated, upload.fields([{ name: 'gravatar', maxCount: 1 }]), userController.postUpdateProfile);
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
@@ -187,12 +187,12 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
  * Internal API routes.
  */
 // TODO: Create Postman Tests
-app.post('/api/pdf', upload, apiController.sendPdf);
+app.post('/api/pdf', upload.single('file'), apiController.sendPdf);
 app.get('/api/pdf', apiController.retrievePdf);
 app.get('/api/user/pdfs', apiController.retrievePdfByUserId);
 app.get('/api/pdf/:id', apiController.retrievePdfByPresId);
 app.get('/api/new/pdf', apiController.retrievePdfByLatest);
-app.post('/api/audio', upload, apiController.sendAudio);
+app.post('/api/audio', upload.single('file'), apiController.sendAudio);
 app.get('/api/audio', apiController.retrieveAudio);
 app.get('/api/audio/:id', apiController.retrieveAudioByPresId);
 app.put('/api/audio', apiController.updateAudio);

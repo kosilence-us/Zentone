@@ -13,9 +13,11 @@
 <button class="slide-controls" id="next">&gt</button>
 
 <div class="author">
-  {{#if user.picture}}
-  <img src="{{user.picture}}"> {{else}}
-  <img src="{{user.gravatar}}"> {{/if}}
+  {{#if user.gravatar}}
+  <div class="gravatar">
+    <img src="{{user.gravatar}}">
+  </div>
+  {{/if}}
   <div class="author__info">
     <h3>Name</h3>
     <p>Company</p>

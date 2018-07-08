@@ -3,13 +3,6 @@
     <img src="/img/zentone_logo.png">
   </a>
 </div>
-{{!--
-<button type="button" data-toggle="collapse" data-target="#navbar" class="navbar-toggle collapsed">
-  <span class="sr-only">Toggle navigation</span>
-  <span class="icon-bar"></span>
-  <span class="icon-bar"></span>
-  <span class="icon-bar"></span>
-</button> --}}
 <div class="teaser-note" id="teaser-note">
   <strong>Zentone is coming soon...</strong>
   <p>Free advertising! Upload your whitepaper or presentation for the chance to be featured, daily.</p>
@@ -21,10 +14,13 @@
   {{#if user}}
   <li class="dropdown">
     <a href="#" data-toggle="dropdown" class="navbar-avatar dropdown-toggle">
-      {{#if user.picture}}
-      <img src="{{user.picture}}"> {{else}}
-      <img src="{{user.gravatar}}"> {{/if}} {{#if user.name}} {{user.name}} {{else}} {{user.email}} {{/if}}
+      {{#if user.gravatar}}
+      <div class="gravatar">
+        <img src="{{user.gravatar}}">
+      </div>
+      {{else}} {{#if user.name}} {{user.name}} {{else}} {{user.email}} {{/if}}
       <i class="caret"></i>
+      {{/if}}
     </a>
     <ul class="dropdown-menu">
       <li>

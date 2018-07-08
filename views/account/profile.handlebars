@@ -14,7 +14,7 @@
         {{/each}}
       </div>
       {{/if}}
-      <form method="POST" action="/account/profile" class="form-horizontal">
+      <form method="POST" enctype="multipart/form-data" action="/account/profile" class="form-horizontal">
         <legend>Profile Information</legend>
         <div class="form-group">
           <label for="email" class="col-sm-3">Email</label>
@@ -54,9 +54,26 @@
           </div>
         </div>
         <div class="form-group">
+          <label for="company" class="col-sm-3">Company</label>
+          <div class="col-sm-7">
+            <input type="text" name="company" id="company" class="form-control" value="{{user.company}}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="description" class="col-sm-3">Personal Description</label>
+          <div class="col-sm-7">
+            <input type="text" name="description" id="description" class="form-control" value="{{user.description}}">
+          </div>
+        </div>
+        <div class="form-group">
           <label class="col-sm-3">Gravatar</label>
           <div class="col-sm-4">
-            <img src="{{user.gravatar}}" class="profile" width="100" height="100">
+            {{#if user.gravatar}}
+            <div class="profile">
+              <img src="{{user.gravatar}}">
+            </div>
+            {{/if}}
+            <input type="file" id="gravatar" name="gravatar" accept="image/png, image/jpeg">
           </div>
         </div>
         <div class="form-group">
@@ -137,7 +154,7 @@
   </div>
   <div class="panel">
     <div class="panel-body">
-      <form method="POST" action="/account?_method=DELETE" class="form-horizontal">
+      <form method="POST" action="/account/delete" class="form-horizontal">
         <legend>Delete Account</legend>
         <div class="form-group">
           <p class="col-sm-offset-3 col-sm-9">You can delete your account, but keep in mind this action is irreversible.</p>

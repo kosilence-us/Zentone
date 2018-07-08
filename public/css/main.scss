@@ -89,6 +89,21 @@ textarea {
 
 // Images
 // -------------------------
+.gravatar {
+  height: 50px;
+  img {
+    height: 100%;
+    border-radius: 5px;
+  }
+}
+
+.profile {
+  height: 100px;
+  img {
+    height: 100%;
+  }
+}
+
 .img-user {
   height: 71px;
   width: 56px;
