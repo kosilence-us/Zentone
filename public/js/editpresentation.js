@@ -180,6 +180,7 @@ async function pdfEditor(pdf) {
       const canvasContainer = document.querySelector('.canvas-container');
       const ctx = canvas.getContext('2d');
       const viewport = page.getViewport(1);
+      // Set scale and center page
       canvas.width = canvasContainer.offsetWidth;
       canvas.height = canvasContainer.offsetHeight;
       const scaleX = canvas.width / viewport.width;
@@ -217,10 +218,19 @@ async function pdfEditor(pdf) {
   function makeThumb(page) {
     // draw page to fit into 96x96 canvas
     const thumbCanvas = document.createElement('canvas');
+    const thumbCtx = thumbCanvas.getContext('2d');
     const vp = page.getViewport(1);
     thumbCanvas.width = 147;
     thumbCanvas.height = 147;
     const scale = Math.min(thumbCanvas.width / vp.width, thumbCanvas.height / vp.height);
+    const thumbSize = Math.min(vp.height, vp.width) * scale;
+    const thumbContainerSize = Math.min(thumbCanvas.height, thumbCanvas.width);
+    const translateDistance = (thumbContainerSize - thumbSize) / 2;
+    if (vp.width > vp.height) {
+      thumbCtx.translate(0, translateDistance);
+    } else {
+      thumbCtx.translate(translateDistance, 0);
+    }
     thumbCanvas.classList.add('thumb');
     return page.render({
       canvasContext: thumbCanvas.getContext('2d'),

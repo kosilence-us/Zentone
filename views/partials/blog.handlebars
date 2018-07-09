@@ -9,7 +9,11 @@
     <p>\{{article}}</p>
   </div>
   <ul class="tags">
-    <li>Tags: </li>
-    <li>\{{tags}}</li>
+    <h5>Tags:</h5>
+    \{{#each tags}}
+    <a href="#">
+      <li>\{{this}} </li>
+    </a>
+    \{{/each}}
   </ul>
 </template>

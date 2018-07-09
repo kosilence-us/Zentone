@@ -491,6 +491,16 @@ textarea {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(auto, 50px));
   grid-auto-flow: column;
+  place-content: center start;
+  a {
+    display: grid;
+    place-content: center center;
+    background-color: #76B9F4;
+    color: white;
+    border-radius: 5px;
+    margin: 2px;
+    padding: 0 2px;
+  }
 }
 
 .title {

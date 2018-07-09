@@ -34,14 +34,25 @@ async function pdfViewer(pdf) {
       console.log('rendering page...', num);
       const page = await pdfDoc.getPage(num);
       const canvas = document.getElementById('the-canvas');
+      const canvasContainer = document.querySelector('.canvas-container');
+      const ctx = canvas.getContext('2d');
       const viewport = page.getViewport(1);
-      canvas.width = viewport.width;
-      canvas.height = 550;
-      const scale = Math.min(
-        canvas.width / viewport.width,
-        canvas.height / viewport.height);
+      // Set scale and center page
+      canvas.width = canvasContainer.offsetWidth;
+      canvas.height = canvasContainer.offsetHeight;
+      const scaleX = canvas.width / viewport.width;
+      const scaleY = canvas.height / viewport.height;
+      const scale = Math.min(scaleX, scaleY);
+      const pageSize = Math.min(viewport.height, viewport.width) * scale;
+      const containerSize = Math.min(canvas.height, canvas.width);
+      const translateDistance = (containerSize - pageSize) / 2;
+      if (viewport.width > viewport.height) {
+        ctx.translate(0, translateDistance);
+      } else {
+        ctx.translate(translateDistance, 0);
+      }
       const renderContext = {
-        canvasContext: canvas.getContext('2d'),
+        canvasContext: ctx,
         viewport: page.getViewport(scale)
       };
       // Wait for rendering to finish
@@ -55,7 +66,7 @@ async function pdfViewer(pdf) {
       // Update page counters
       document.getElementById('page_num').textContent = num;
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   }
 
