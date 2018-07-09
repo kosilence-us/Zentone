@@ -2,72 +2,91 @@
 
 ## Overview
 
+Share Audio Enhanced Presentations
+
 ## Scope
+#### Front End:
+  - Handlebars.js
+  - Bootstrap
+  - CSS Grid
+  - SCSS Precompiler
+  - jQuery
+#### Back End:
+  - Node.js
+  - Express.js
+  - Sequelize ORM
+  - PostgreSQL
+  - Webpack
+#### Libraries:
+  - PDF.js
+#### Hosting:
+  - Aliyun OSS
+  - Heroku
+#### OAuth 2.0:
+  - LinkedIn
+  - Facebook
+  - Twitter
 
-### To Do
-- [ ] Front End
-  - [x] Slide viewport parsing
-  - [x] Audio SQL uploading
-  - [x] Fluid redirection
-  - [ ] Rewrite Nav to Flex
-  - [ ] User Bar Partial
-  - [ ] PDF Editor Controls
-  - [ ] Dropzone styles
-  - [ ] Thumbs border moves with next/prev buttons
-  - [ ] Eliminate Bootstrap
+## To Do
+#### - [ ] Front End
+  - [ ] Presentations Views, Share, Bookmark, Download
+  - [ ] Collapse Blog on User Presentations Page
+  - [ ] Stop / Start Audio Button
+  - [ ] Audio Progress Bar
+  - [ ] User Birthday Entry
+  - [ ] Home Page
+  - [ ] Categories Nav Options
+  - [ ] Categories Page
+  - [ ] Bookmarks Page
+  - [ ] 1 Featured Presentation Partial
+  - [ ] 3 Followers' Presentations Partial
+  - [ ] 3 Trending Presentations Partial
+  - [ ] 4 x 5 Lazy Load Presentations Grid
+  - [ ] Plans & Pricing Page
+  - [ ] Payment Page
+  - [ ] Statistics Page
+  - [ ] Line Graph (Views / Time)
+  - [ ] Age Overview Donut Chart (Views + Age)
+  - [ ] Location Map (Views + Location)
+  - [ ] Admin Featured Editor
+  - [ ] Footer Pages
 
-- [ ] Back End
-  - [ ] Pdf size attached to upload
-  - [x] Check file before aliyun upload
-  - [ ] User data collection
-  - [ ] Post data collection
-  - [x] User Local Authentication Route
-  - [ ] DB change blog to article
 
-- [ ] Security & Authentication
-  - [ ] User OAuth strategies
+#### - [ ] Back End
+  - [x] isAdmin User Boolean
+  - [x] Premium Users Boolean
+  - [x] Views data collection
+  - [x] Followers count
+  - [x] Following array
+  - [x] Bookmarks array
+  - [ ] Save OAuth tokens to session
+  - [ ] Payments Controller (Paypal?)
+  - [ ] Mailing Service 
+
+#### - [ ] Security & Authentication
+  - [ ] LinkedIn OAuth strategy
+  - [ ] Facebook OAuth strategy
+  - [ ] Twitter OAuth strategy
   - [ ] User cookies and site tokens
   - [ ] CORS protection
-  - [x] Database password encryption
   - [ ] Set secure cookies
 
-- [ ] Production & Hosting
-  - [ ] Prepare code for production environment 
+#### - [ ] Production & Hosting
+  - [ ] Buy Web Service Plan
   - [ ] Migrate site to custom domain
   - [ ] Give keys and access to owner
-  - [x] Serve pdfs over HTTPS
-
-### Process
-- [x] Attach aliyun links to presentations & audio
-- [X] Retrieve from pdf.js
-- [x] Display pdf in window
-- [x] Break pdf into slide array
-- [x] Fetch Audio relating to presentation
-- [x] Display audio in select box
-- [x] Relate Audio to Slides
-- [x] Regenerate req.session to upload multiple presentations
-- [x] Thumbnail control pageNum
-- [x] Send pageNum to dropzone upload
-- [x] POST blog entry
-- [x] UPDATE audioArr
-- [x] Retrieve pdf to home
-- [x] Create audio player
+  - [ ] Admin Tools for Custom Featured Presentation
 
 
 ### Bugs
-- [x] Signup successful, but doesn't redirect
-- [x] Fetch doesn't assign res.user
-- [x] Wrapping two table entries in Promise.all sets multiple res.header
-- [x] Body width overflow
-- [x] POST /api/audio return pageNum
 - [ ] Delayed & stacking message flashing
-- [x] Production: Login failure
-- [x] Production: api/pdf returns 400
-- [ ] Login redirects to /api/newpdf
 
 ### Optimize && Refactor
+- [ ] Lazy Load Presentations Grid
+- [ ] Account Settings Styles
 - [ ] Organize css into scss pages
 - [ ] Remove unnecessary scripts
 - [ ] Migrate from jQuery to vanilla js
 - [ ] Lazy load thumbnail slider
 - [ ] Handlebars.js precompile elements on server
+- [ ] Eliminate Bootstrap

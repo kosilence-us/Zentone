@@ -26,6 +26,12 @@ module.exports = (sequelize, DataTypes) => sequelize
     views: {
       type: DataTypes.INTEGER
     },
+    bookmarks: {
+      type: DataTypes.INTEGER
+    },
+    shares: {
+      type: DataTypes.INTEGER
+    },
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW

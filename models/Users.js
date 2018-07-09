@@ -45,8 +45,11 @@ module.exports = (sequelize, DataTypes) => {
     gravatar: {
       type: DataTypes.STRING
     },
-    followers: {
-      type: DataTypes.INTEGER
+    isAdmin: {
+      type: DataTypes.BOOLEAN
+    },
+    isPremium: {
+      type: DataTypes.BOOLEAN
     },
     createdAt: {
       type: DataTypes.DATE,
