@@ -79,6 +79,7 @@ Share Audio Enhanced Presentations
 
 
 ### Bugs
+- [ ] Canvas width overflow
 - [ ] Delayed & stacking message flashing
 
 ### Optimize && Refactor

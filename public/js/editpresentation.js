@@ -141,6 +141,15 @@ function initAudioDropzone() {
 /*
 ******** Presentation Viewport ********
 */
+function selectThumb(thumbNum) {
+  const pageThumb = document.querySelector(`[data-page-num="${thumbNum}"]`);
+  const prev = document.querySelector('.focus');
+  if (prev) {
+    prev.classList.remove('focus');
+  }
+  pageThumb.classList.add('focus');
+}
+
 async function pdfEditor(pdf) {
   if (!pdf) {
     return console.log('Could not retrieve PDF from current session');
@@ -168,28 +177,39 @@ async function pdfEditor(pdf) {
       console.log('rendering page...', num);
       const page = await pdfDoc.getPage(num);
       const canvas = document.getElementById('the-canvas');
+      const canvasContainer = document.querySelector('.canvas-container');
+      const ctx = canvas.getContext('2d');
       const viewport = page.getViewport(1);
-      canvas.width = viewport.width;
-      canvas.height = 550;
-      const scale = Math.min(
-        canvas.width / viewport.width,
-        canvas.height / viewport.height);
+      canvas.width = canvasContainer.offsetWidth;
+      canvas.height = canvasContainer.offsetHeight;
+      const scaleX = canvas.width / viewport.width;
+      const scaleY = canvas.height / viewport.height;
+      const scale = Math.min(scaleX, scaleY);
+      const pageSize = Math.min(viewport.height, viewport.width) * scale;
+      const containerSize = Math.min(canvas.height, canvas.width);
+      const translateDistance = (containerSize - pageSize) / 2;
+      if (viewport.width > viewport.height) {
+        ctx.translate(0, translateDistance);
+      } else {
+        ctx.translate(translateDistance, 0);
+      }
       const renderContext = {
-        canvasContext: canvas.getContext('2d'),
+        canvasContext: ctx,
         viewport: page.getViewport(scale)
       };
       // Wait for rendering to finish
       await page.render(renderContext);
       pageRendering = false;
-        if (pageNumPending !== null) {
-          // New page rendering is pending
-          renderPage(pageNumPending);
-          pageNumPending = null;
-        }
+      selectThumb(pageNum);
+      if (pageNumPending !== null) {
+        // New page rendering is pending
+        renderPage(pageNumPending);
+        pageNumPending = null;
+      }
       // Update page counters
       document.getElementById('page_num').textContent = num;
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   }
 
@@ -219,15 +239,6 @@ async function pdfEditor(pdf) {
      } else {
        renderPage(num);
      }
-   }
-
-   function selectThumb(thumbNum) {
-    const pageThumb = document.querySelector(`[data-page-num="${thumbNum}"]`);
-    const prev = document.querySelector('.focus');
-    if (prev) {
-      prev.classList.remove('focus');
-    }
-    pageThumb.classList.add('focus');
    }
 
    function selectPage() {
@@ -331,7 +342,7 @@ async function retrievePdf() {
     if (res.status === 400) throw new Error('Could not retrieve PDF');
     return pdfEditor(pdf);
   } catch (err) {
-    console.error(err);
+    console.error(err.message);
   }
 }
 async function retrieveAudio() {
@@ -342,7 +353,7 @@ async function retrieveAudio() {
     audioArr = presAudioArr.slice(0);
     return buildAudioDz();
   } catch (err) {
-    console.error(err);
+    console.error(err.message);
   }
 }
 async function updateAudio(data) {
@@ -358,7 +369,7 @@ async function updateAudio(data) {
     const audio = await res.json();
     return audio;
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
   }
 }
 async function updatePresentation(data) {
@@ -374,7 +385,7 @@ async function updatePresentation(data) {
     const presentation = await res.text();
     return presentation;
   } catch (err) {
-    console.error(err);
+    console.error(err.message);
   }
 }
 
