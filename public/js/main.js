@@ -6,6 +6,7 @@ import { initPdfDropzone } from './slideupload';
 import { retrievePdf, retrieveAudio, initAudioDropzone, submitListen } from './editpresentation';
 import { retrievePdfById, retrieveAudioByPresId, retrievePresentationById } from './viewpresentation';
 import { runUserRetrievals } from './userpresentations';
+import { addSocialListeners } from './social';
 
 // TODO: combine retrieve functions to single promise.all
 /*
@@ -34,6 +35,7 @@ window.onload = function () {
       retrievePdfById();
       retrieveAudioByPresId();
       retrievePresentationById();
+      addSocialListeners();
       break;
     case '/user-presentations':
       runUserRetrievals();

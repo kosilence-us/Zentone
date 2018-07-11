@@ -35,6 +35,7 @@ Share Audio Enhanced Presentations
   - [ ] Audio Progress Bar
   - [ ] User Birthday Entry
   - [ ] Home Page
+  - [ ] Expand Slide View
   - [ ] Categories Nav Options
   - [ ] Categories Page
   - [ ] Bookmarks Page
@@ -94,3 +95,4 @@ Share Audio Enhanced Presentations
 - [ ] Eliminate Bootstrap
 - [ ] Tag Sizing
 - [ ] Link on Home
+

@@ -8953,18 +8953,23 @@ h4 {
 
 a {
   color: #777777;
-  text-decoration: none; }
+  text-decoration: none;
+  outline: none; }
 
 a:hover,
 a:active,
 a:focus {
   color: #000;
-  text-decoration: none; }
+  text-decoration: none;
+  outline: none; }
 
 input,
 button,
 submit {
   border: none; }
+
+img {
+  outline: none; }
 
 textarea {
   resize: none;
@@ -9310,6 +9315,10 @@ textarea {
   display: grid;
   grid-template-rows: repeat(10, 1fr);
   place-items: center center; }
+
+.social-selected {
+  -webkit-filter: opacity(1);
+  filter: opacity(1); }
 
 .blog {
   grid-column: 2 / 3;

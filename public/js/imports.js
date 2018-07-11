@@ -9,5 +9,6 @@ import './teaser-home';
 import './slideupload';
 import './editpresentation';
 import './userpresentations';
+import './social';
 import './main';
 // import 'pdfjs-dist/build/pdf';

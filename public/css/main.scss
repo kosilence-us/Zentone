@@ -52,6 +52,7 @@ h4 {
 a {
   color: rgb(119, 119, 119);
   text-decoration: none;
+  outline: none;
 }
 
 a:hover,
@@ -59,12 +60,17 @@ a:active,
 a:focus {
   color: #000;
   text-decoration: none;
+  outline: none;
 }
 
 input,
 button,
 submit {
   border: none;
+}
+
+img {
+  outline: none;
 }
 
 textarea {
@@ -490,13 +496,22 @@ textarea {
 
 .slide-next {
   font-size: 24px;
-} // Social
+}
+
+// Social
 // -------------------------
 .social {
   display: grid;
   grid-template-rows: repeat(10, 1fr);
   place-items: center center;
-} // Blog
+}
+
+.social-selected {
+  -webkit-filter: opacity(1);
+  filter: opacity(1);
+}
+
+// Blog
 // -------------------------
 .blog {
   grid-column: 2 / 3;

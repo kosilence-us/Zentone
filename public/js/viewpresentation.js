@@ -46,6 +46,22 @@ function buildBlog(presentation) {
   blog.innerHTML = template(context);
 }
 
+/**
+ * PDF Download Link
+ */
+// const downloading = browser.downloads.download({
+//   url: downloadUrl,
+//   filename: 'my-image-again.png',
+//   conflictAction: 'uniquify'
+// });
+function pdfDownload(pdf) {
+  const downloadLink = document.querySelector('#download-link');
+  // const fileUrl = new File(pdf.fileUrl);
+  // console.log(pdf.fileUrl, fileUrl);
+  downloadLink.setAttribute('href', pdf.fileUrl);
+  // downloadLink.setAttribute('download', pdf.fileName);
+}
+
 /*
 ******** Presentation Viewport ********
 */
@@ -184,6 +200,7 @@ async function retrievePdfById() {
     const res = await fetch(`/api/pdf/${params.id}`);
     const pdf = await res.json();
     pdfViewer(pdf);
+    pdfDownload(pdf);
   } catch (err) {
     console.error(err);
   }
