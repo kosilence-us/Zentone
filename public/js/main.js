@@ -16,6 +16,7 @@ window.onload = function () {
   console.log(pathname);
   switch (pathname) {
     case '/': 
+      retrieveLatestPdf();
       break;
     case '/teaser-home':
       retrieveLatestPdf();

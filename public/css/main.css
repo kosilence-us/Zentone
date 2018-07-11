@@ -8897,6 +8897,7 @@ button.close {
       .user__header .user__picture .user__gravatar img {
         width: 100%; }
   .user__header .follow {
+    grid-row: 2 / 3;
     background-color: var(--zentone-blue);
     color: white; }
   .user__header .user__header-info {
@@ -8911,6 +8912,10 @@ button.close {
 
 .user__presentations-list-container ul {
   padding-left: 0; }
+
+.user__presentations-list-container .user__presentation-item {
+  display: grid;
+  grid-auto-rows: 1fr; }
 
 /*
 ** Root Variables
@@ -8998,12 +9003,24 @@ textarea {
 .icon {
   width: 20px;
   height: 20px; }
-  .icon.icon-linkedin {
-    background: url("/img/icons/icon-linkedin.svg"); }
-  .icon.icon-facebook {
-    background: url("/img/icons/icon-facebook.svg"); }
-  .icon.icon-twitter {
-    background: url("/img/icons/icon-twitter.svg"); }
+
+.icon-md {
+  width: 30px;
+  height: 30px;
+  -webkit-filter: opacity(0.4);
+  filter: opacity(0.4); }
+  .icon-md:hover {
+    -webkit-filter: opacity(0.6);
+    filter: opacity(0.6); }
+
+.icon-linkedin {
+  background: url("/img/icons/icon-linkedin.svg"); }
+
+.icon-facebook {
+  background: url("/img/icons/icon-facebook.svg"); }
+
+.icon-twitter {
+  background: url("/img/icons/icon-twitter.svg"); }
 
 /*
 ** --------- Navbar -----------
@@ -9173,6 +9190,18 @@ textarea {
   grid-template-rows: 550px 155px 20px;
   grid-gap: 5px; }
 
+.slide-controls {
+  width: 150px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+  font-weight: 600; }
+  .slide-controls:hover {
+    background-color: #F8F8F8;
+    color: #279dff; }
+  .slide-controls.success {
+    background: rgba(0, 255, 0, 0.05); }
+  .slide-controls.incomplete {
+    background: rgba(255, 0, 0, 0.05); }
+
 .pdf-container {
   grid-column: 1 / 4; }
   .pdf-container .canvas-container {
@@ -9241,18 +9270,6 @@ textarea {
   justify-content: center;
   align-content: center; }
 
-.slide-controls {
-  width: 150px;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
-  font-weight: 600; }
-  .slide-controls:hover {
-    background-color: #F8F8F8;
-    color: #279dff; }
-  .slide-controls.success {
-    background: rgba(0, 255, 0, 0.05); }
-  .slide-controls.incomplete {
-    background: rgba(255, 0, 0, 0.05); }
-
 #next {
   display: grid;
   justify-self: end; }
@@ -9288,6 +9305,11 @@ textarea {
 
 .slide-next {
   font-size: 24px; }
+
+.social {
+  display: grid;
+  grid-template-rows: repeat(10, 1fr);
+  place-items: center center; }
 
 .blog {
   grid-column: 2 / 3;

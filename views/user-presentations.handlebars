@@ -16,13 +16,13 @@
     <div class="user__social">
       <div class="user__social-buttons">
         <a href="#">
-          <svg class="icon icon-linkedin" aria-hidden="true"></svg>
+          <svg class="icon icon-linkedin" aria-hidden="true" alt="LinkedIn"></svg>
         </a>
         <a href="#">
-          <svg class="icon icon-facebook" aria-hidden="true"></svg>
+          <svg class="icon icon-facebook" aria-hidden="true" alt="Facebook"></svg>
         </a>
         <a href="#">
-          <svg class="icon icon-twitter" aria-hidden="true"></svg>
+          <svg class="icon icon-twitter" aria-hidden="true" alt="Twitter"></svg>
         </a>
       </div>
       <div class="user__followers">
@@ -41,8 +41,10 @@
 
 <template id="user__presentation-item">
   <div class="user__presentation-item">
-    <div class="user__presentation-item-canvas">
-      <canvas id="\{{id}}"></canvas>
+    <div id="container-\{{id}}" class="user__presentation-item-canvas">
+      <a href="/view-presentation/?id=\{{id}}" target=”_blank”>
+        <canvas id="\{{id}}"></canvas>
+      </a>
     </div>
     <div class="user__presentation-item-blog">
       <h4>\{{title}}</h4>

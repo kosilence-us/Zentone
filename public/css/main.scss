@@ -119,16 +119,38 @@ textarea {
 .icon {
   width: 20px;
   height: 20px;
-  &.icon-linkedin {
-    background: url("/img/icons/icon-linkedin.svg"); // background-size: 20px 20px;
-  }
-  &.icon-facebook {
-    background: url("/img/icons/icon-facebook.svg"); // background-size: 20px 20px;
-  }
-  &.icon-twitter {
-    background: url("/img/icons/icon-twitter.svg"); // background-size: 20px 20px;
+}
+
+.icon-md {
+  width: 30px;
+  height: 30px;
+  -webkit-filter: opacity(.4);
+  filter: opacity(.4);
+  &:hover {
+    -webkit-filter: opacity(.6);
+    filter: opacity(.6);
   }
 }
+
+.icon-linkedin {
+  background: url("/img/icons/icon-linkedin.svg");
+}
+
+.icon-facebook {
+  background: url("/img/icons/icon-facebook.svg");
+}
+
+.icon-twitter {
+  background: url("/img/icons/icon-twitter.svg");
+}
+
+.icon-share {}
+
+.icon-bookmark {}
+
+.icon-download {}
+
+.icon-more {}
 
 /*
 ** --------- Navbar -----------
@@ -224,9 +246,7 @@ textarea {
   &:hover {
     color: grey;
   }
-}
-
-// Dropzone
+} // Dropzone
 // -------------------------
 .dropzone-container {
   grid-column: 2 / 3;
@@ -320,9 +340,7 @@ textarea {
 
 .note {
   color: #e6e6e7;
-}
-
-// Slide Editor
+} // Slide Editor
 // -------------------------
 .slide-editor {
   grid-column: 2 / 3;
@@ -331,6 +349,22 @@ textarea {
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 550px 155px 20px;
   grid-gap: 5px;
+}
+
+.slide-controls {
+  width: 150px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  &:hover {
+    background-color: #F8F8F8;
+    color: #279dff;
+  }
+  &.success {
+    background: rgba(0, 255, 0, 0.05);
+  }
+  &.incomplete {
+    background: rgba(255, 0, 0, 0.05);
+  }
 }
 
 .pdf-container {
@@ -351,9 +385,7 @@ textarea {
   text-align: center;
   color: grey;
   font-weight: 600;
-}
-
-// Blog Editor
+} // Blog Editor
 // -------------------------
 .blog-editor {
   grid-column: 2 / 3;
@@ -394,9 +426,7 @@ textarea {
 .slide-form {
   margin: auto;
   padding: 20px;
-}
-
-// Slide Editor
+} // Slide Viewer
 // -------------------------
 .slide-viewer {
   grid-column: 2 / 3;
@@ -413,22 +443,6 @@ textarea {
   display: grid;
   justify-content: center;
   align-content: center;
-}
-
-.slide-controls {
-  width: 150px;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
-  font-weight: 600;
-  &:hover {
-    background-color: #F8F8F8;
-    color: #279dff;
-  }
-  &.success {
-    background: rgba(0, 255, 0, 0.05);
-  }
-  &.incomplete {
-    background: rgba(255, 0, 0, 0.05);
-  }
 }
 
 #next {
@@ -476,9 +490,13 @@ textarea {
 
 .slide-next {
   font-size: 24px;
-}
-
-// Blog
+} // Social
+// -------------------------
+.social {
+  display: grid;
+  grid-template-rows: repeat(10, 1fr);
+  place-items: center center;
+} // Blog
 // -------------------------
 .blog {
   grid-column: 2 / 3;

@@ -79,7 +79,7 @@ Share Audio Enhanced Presentations
 
 
 ### Bugs
-- [ ] Canvas width overflow
+- [x] Canvas width overflow
 - [ ] Delayed & stacking message flashing
 
 ### Optimize && Refactor
@@ -87,6 +87,7 @@ Share Audio Enhanced Presentations
 - [ ] Account Settings Styles
 - [ ] Organize css into scss pages
 - [ ] Remove unnecessary scripts
+- [ ] Single PDF parser js function
 - [ ] Migrate from jQuery to vanilla js
 - [ ] Lazy load thumbnail slider
 - [ ] Handlebars.js precompile elements on server

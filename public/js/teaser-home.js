@@ -43,13 +43,21 @@ async function pdfViewer(pdf) {
       const scaleX = canvas.width / viewport.width;
       const scaleY = canvas.height / viewport.height;
       const scale = Math.min(scaleX, scaleY);
-      const pageSize = Math.min(viewport.height, viewport.width) * scale;
-      const containerSize = Math.min(canvas.height, canvas.width);
-      const translateDistance = (containerSize - pageSize) / 2;
-      if (viewport.width > viewport.height) {
-        ctx.translate(0, translateDistance);
-      } else {
+      const pageWidth = viewport.width * scale;
+      const pageHeight = viewport.height * scale;
+      // Determine if center width or height 
+      if (canvas.width > pageWidth) {
+        const translateDistance = (canvas.width - pageWidth) / 2;
+        console.log('container wider');
+        console.log(canvas.width, pageWidth);
+        console.log({translateDistance});
         ctx.translate(translateDistance, 0);
+      } else {
+        const translateDistance = (canvas.height - pageHeight) / 2;
+        console.log('page wider');
+        console.log(canvas.height, pageHeight);
+        console.log({translateDistance});
+        ctx.translate(0, translateDistance);
       }
       const renderContext = {
         canvasContext: ctx,
