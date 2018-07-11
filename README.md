@@ -92,3 +92,5 @@ Share Audio Enhanced Presentations
 - [ ] Lazy load thumbnail slider
 - [ ] Handlebars.js precompile elements on server
 - [ ] Eliminate Bootstrap
+- [ ] Tag Sizing
+- [ ] Link on Home

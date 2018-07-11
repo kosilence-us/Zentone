@@ -45,7 +45,7 @@
   }
   .user__presentation-item {
     display: grid;
-    grid-auto-rows: 1fr;
+    grid-template-rows: 500px 1fr;
   }
   .user__presentation-item-canvas {}
 }

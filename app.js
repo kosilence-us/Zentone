@@ -246,7 +246,7 @@ app.use(errorHandler());
  * Start Express server.
  */
 db.sequelize.sync({
-  force: true,
+  force: false,
   // CAREFUL!: This clears the database of data
   // Only use after changing the structure of the db
 }).then(() => {
