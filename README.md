@@ -28,7 +28,7 @@ Share Audio Enhanced Presentations
   - Twitter
 
 ## To Do
-#### - [ ] Front End
+#### Front End
   - [ ] Presentations Views, Share, Bookmark, Download
   - [ ] Collapse Blog on User Presentations Page
   - [ ] Stop / Start Audio Button
@@ -53,18 +53,20 @@ Share Audio Enhanced Presentations
   - [ ] Footer Pages
 
 
-#### - [ ] Back End
+#### Back End
   - [x] isAdmin User Boolean
-  - [x] Premium Users Boolean
+  - [x] Personal Premium Users Boolean
+  - [x] Professional Premium Users Boolean
   - [x] Views data collection
   - [x] Followers count
   - [x] Following array
   - [x] Bookmarks array
+  - [ ] Views, Shares, and Bookmarking  Routes
   - [ ] Save OAuth tokens to session
   - [ ] Payments Controller (Paypal?)
   - [ ] Mailing Service 
 
-#### - [ ] Security & Authentication
+#### Security & Authentication
   - [ ] LinkedIn OAuth strategy
   - [ ] Facebook OAuth strategy
   - [ ] Twitter OAuth strategy
@@ -72,7 +74,7 @@ Share Audio Enhanced Presentations
   - [ ] CORS protection
   - [ ] Set secure cookies
 
-#### - [ ] Production & Hosting
+#### Production & Hosting
   - [ ] Buy Web Service Plan
   - [ ] Migrate site to custom domain
   - [ ] Give keys and access to owner
@@ -96,3 +98,52 @@ Share Audio Enhanced Presentations
 - [ ] Tag Sizing
 - [ ] Link on Home
 
+## Pages Overview
+
+#### Home
+![Home](mockup/Zentone_-_Home_Page.png)
+* Two Hero Headers
+* Three Featured Presentations (sort by views / recent)
+* Three Rows of Popular Categories (sort by views / recent)
+
+#### Categories
+![Categories](mockup/Zentone_-_Categories_Page.png)
+* Admin-Controlled Featured Presentation
+* Three Featured Presentations (sort by category / views / recent)
+* 4 x 5 Grid Presentations (sort by category / recent)
+
+#### User Presentations
+![User-Presentations](mockup/Zentone_-_Personal_Feed.png)
+* User Display with Social Links and Follow
+* Uploaded Presentations (sort by user / recent)
+
+#### Slide Viewer
+![Slide-Viewer](mockup/Zentone_-_Slide_Page.png)
+* Main Display with Audio Player and Social Buttons
+* Blog
+* Tags
+* Four Presentations (sort by category / recent)
+
+#### Slide Editor
+![Slide-Editor](mockup/Zentone_-_Upload_&_Edit_Page_(unfinished).png)
+* Display PDF and Thumbnail Slider
+* Upload Audio per Page
+* Write Blog Form Fields
+
+#### Analytics (Premium)
+![Analytics-Premium](mockup/Zentone_Analytics_Page_-_If_Subscribed.png)
+* Line Graph (Views, Bookmarks, Downloads, Shares, Completion / time)
+* Donut Chart (age / views)
+* Map (location / views)
+
+#### Analytics (!Premium)
+![Analytics-!Premium](mockup/Zentone_Analytics_Page_-_If_NOT_Subscribed.png)
+* Link to Pricing Page
+* Fake Data
+
+#### Pricing
+![Pricing](mockup/Zentone_-_Pricing_Page.png)
+* Three Plans
+
+#### Settings
+![Settings](mockup/Zentone_Settings_Page.png)

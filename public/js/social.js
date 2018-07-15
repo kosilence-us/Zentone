@@ -1,4 +1,16 @@
 /**
+ * Get Params from URL
+ */
+function getParams() {
+  const search = window.location.search.substring(1);
+  const params = JSON.parse(
+    `{"${  search.replace(/&/g, '","').replace(/=/g,'":"').replace(/\+/g, '%20')  }"}`,
+    (key, value) => key === "" ? value : decodeURIComponent(value));
+  console.log(params.id);
+  return params;
+}
+
+/**
 ******** Ajax Requests ********
 */
 async function sendShare() {
@@ -13,8 +25,26 @@ async function removeBookmark() {
   console.log('removing bookmark...');
 }
 
-async function retrieveDownload() {
-  console.log('retrieving download...');
+export async function retrieveDownload() {
+    try {
+      const params = getParams();
+      const res = await fetch(`/api/pdf/${params.id}`);
+      
+      const pdf = await res.blob();
+      console.log(pdf);
+      
+      // const file = JSON.stringify(pdf.fileUrl);
+      // const blob = new Blob([file], { type: 'application/pdf' });
+      const link = URL.createObjectURL(pdf);
+      const downloadLink = document.querySelector('#download-link');
+      // const fileUrl = new File(pdf.fileUrl);
+      // console.log(pdf.fileUrl, fileUrl);
+      downloadLink.setAttribute('href', link);
+      console.log(downloadLink.href);
+      // downloadLink.setAttribute('download', pdf.fileName);
+    } catch (err) {
+      console.error(err);
+    }
 }
 
 /**
@@ -39,7 +69,7 @@ function bookmark(bookmarkLink) {
 
 function download(downloadLink) {
   downloadLink.classList.add('social-selected');
-  retrieveDownload();
+  // retrieveDownload();
   downloadLink.classList.remove('social-selected');
 }
 
