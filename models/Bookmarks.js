@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Social = sequelize.define('Social', {
+  const Bookmarks = sequelize.define('Bookmarks', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -12,15 +12,18 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
-    followers: {
-      type: DataTypes.INTEGER
+    userBookmarkedID: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
     },
-    following: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+    presentationID: {
+      type: DataTypes.STRING
     },
-    bookmarked: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
     }
   });
-  return Social;
+  return Bookmarks;
 };

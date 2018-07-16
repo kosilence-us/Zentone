@@ -36,10 +36,13 @@ Object.keys(db).forEach((modelName) => {
 });
 
 db.user = sequelize.import('Users.js');
-db.social = sequelize.import('Social.js');
 db.presentations = sequelize.import('Presentations.js');
 db.pdfs = sequelize.import('Pdfs.js');
 db.audio = sequelize.import('Audio.js');
+db.bookmarks = sequelize.import('Bookmarks.js');
+db.downloads = sequelize.import('Downloads.js');
+db.shares = sequelize.import('Shares.js');
+db.views = sequelize.import('Views.js');
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
