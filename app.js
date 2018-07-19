@@ -202,8 +202,14 @@ app.get('/api/user/presentations', apiController.retrievePresentationByUserId);
 app.get('/api/presentation/:id', apiController.retrievePresentationById);
 app.get('/api/new/presentation', apiController.retrievePresentationByLatest);
 
-// app.get('/api/presentation', apiController.retrievePres);
-
+/**
+ * Social API routes.
+ */
+app.post('/api/social/share', apiController.sendShare);
+app.post('/api/social/bookmark', apiController.sendBookmark);
+app.get('/api/social/bookmark/:id', apiController.retrieveBookmarkById);
+app.delete('/api/social/bookmark', apiController.deleteBookmark);
+app.post('/api/social/download', apiController.sendDownload);
 
 /**
  * External API routes.
@@ -246,7 +252,7 @@ app.use(errorHandler());
  * Start Express server.
  */
 db.sequelize.sync({
-  force: true,
+  force: false,
   // CAREFUL!: This clears the database of data
   // Only use after changing the structure of the db
 }).then(() => {

@@ -4,7 +4,7 @@ const nodemailer = require('nodemailer');
 const passport = require('passport');
 const db = require('../models/db.js');
 
-const User = db.user;
+const Users = db.users;
 
 /**
  * GET /login
@@ -107,7 +107,7 @@ exports.postSignup = (req, res, next) => {
     return res.redirect('/signup');
   }
 
-  User.find({
+  Users.find({
     where: { email: req.body.email }
   }).then((existingUser) => {
     if (existingUser) {
@@ -116,7 +116,7 @@ exports.postSignup = (req, res, next) => {
       return res.redirect('/signup');
     }
 
-    User.create(user)
+    Users.create(user)
       .then((user) => {
         console.log('---> saving new User:', JSON.stringify(user, undefined, 2));
         req.login(user, (err) => {
@@ -159,7 +159,7 @@ exports.postUpdateProfile = async (req, res, next) => {
   }
 
   try {
-    const updated = await User.update({
+    const updated = await Users.update({
       email: req.body.email || '',
       name: req.body.name || '',
       gender: req.body.gender || '',
@@ -214,7 +214,7 @@ exports.postUpdatePassword = async (req, res, next) => {
   }
 
   try {
-    const updated = await User.update({
+    const updated = await Users.update({
       password: req.body.password
     }, {
       where: {
@@ -235,7 +235,7 @@ exports.postUpdatePassword = async (req, res, next) => {
  */
 exports.postDeleteAccount = async (req, res, next) => {
   try {
-    await User.destroy({
+    await Users.destroy({
       where: {
         id: req.user.id
       }
@@ -254,7 +254,7 @@ exports.postDeleteAccount = async (req, res, next) => {
  */
 exports.getOauthUnlink = (req, res, next) => {
   const { provider } = req.params;
-  User.findById(req.user.id).then((user) => {
+  Users.findById(req.user.id).then((user) => {
     // if (err) { return next(err); }
     user[provider] = undefined;
     user.tokens = user.tokens.filter(token => token.kind !== provider);
@@ -274,7 +274,7 @@ exports.getReset = (req, res, next) => {
   if (req.isAuthenticated()) {
     return res.redirect('/');
   }
-  User
+  Users
     .findOne({ passwordResetToken: req.params.token })
     .where('passwordResetExpires').gt(Date.now())
     .exec((err, user) => {
@@ -305,7 +305,7 @@ exports.postReset = (req, res, next) => {
   }
 
   const resetPassword = () =>
-    User
+    Users
       .findOne({ passwordResetToken: req.params.token })
       .where('passwordResetExpires').gt(Date.now())
       .then((user) => {
@@ -384,7 +384,7 @@ exports.postForgot = (req, res, next) => {
     .then(buf => buf.toString('hex'));
 
   const setRandomToken = token =>
-    User
+    Users
       .findOne({
         where: { email: req.body.email }
       }).then((user) => {

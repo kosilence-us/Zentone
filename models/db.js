@@ -35,7 +35,7 @@ Object.keys(db).forEach((modelName) => {
   }
 });
 
-db.user = sequelize.import('Users.js');
+db.users = sequelize.import('Users.js');
 db.presentations = sequelize.import('Presentations.js');
 db.pdfs = sequelize.import('Pdfs.js');
 db.audio = sequelize.import('Audio.js');

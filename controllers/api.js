@@ -8,10 +8,16 @@ const paypal = require('paypal-rest-sdk');
 const uuidv4 = require('uuid/v4');
 const db = require('.././models/db');
 
+const Users = db.users;
+const Presentations = db.presentations;
 const Pdfs = db.pdfs;
 const Audio = db.audio;
-const Presentations = db.presentations;
+const Bookmarks = db.bookmarks;
+const Downloads = db.downloads;
+const Shares = db.shares;
+const Views = db.views;
 
+/* ** ** ** ** ** ** ** Internal API Routes ** ** ** ** ** ** * */
 /**
  * POST /api/pdf
  * Upload PDFs
@@ -340,6 +346,172 @@ exports.retrievePresentationByLatest = async (req, res) => {
   }
 };
 
+/* ** ** ** ** ** ** ** Social API Routes ** ** ** ** ** ** * */
+/**
+ * POST /api/social/share
+ * Post Shared Presentation
+ */
+exports.sendShare = async (req, res) => {
+  try {
+    const { body } = req;
+    console.log('--> Sending share for...', body.id);
+    // console.log(req.user.id);
+    const presentationShared = await Presentations.findById(body.id);
+    const userSharedID = presentationShared.userID;
+    console.log(userSharedID);
+    const shared = await Shares.findOrCreate({
+      where: {
+        userID: req.user.id,
+        userSharedID,
+        presentationID: body.id
+      }
+    });
+    console.log(shared);
+    if (shared[0].isNewRecord) {
+      res.status(200).send(shared[0]);
+    } else {
+      res.send({ msg: 'Already Shared!' });
+    }
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
+/**
+ * POST /api/social/share
+ * Post Shared Presentation
+ */
+exports.sendShare = async (req, res) => {
+  try {
+    const { body } = req;
+    console.log('--> Sending share for...', body.id);
+    // console.log(req.user.id);
+    const presentationShared = await Presentations.findById(body.id);
+    const userSharedID = presentationShared.userID;
+    console.log(userSharedID);
+    const shared = await Shares.findOrCreate({
+      where: {
+        userID: req.user.id,
+        userSharedID,
+        presentationID: body.id
+      }
+    });
+    console.log(shared);
+    if (shared[0].isNewRecord) {
+      res.status(200).send(shared[0]);
+    } else {
+      res.send({ msg: 'Already Shared!' });
+    }
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
+/**
+ * GET /api/social/bookmark/:id
+ * Get Bookmark by PresentationID
+ */
+exports.retrieveBookmarkById = async (req, res) => {
+  try {
+    const { params } = req;
+    console.log('--> Retrieving bookmark for...', params.id);
+    const bookmark = await Bookmarks.find({
+      where: {
+        presentationID: params.id
+      }
+    });
+    if (bookmark) {
+      res.status(200).send({ bookmark });
+    } else {
+      res.send({ msg: 'No bookmark for this presentation found '});
+    }
+  } catch (err) {
+    res.status(400).send(err);
+  }
+}
+
+/**
+ * POST /api/social/bookmark
+ * Post Bookmarked Presentation
+ */
+exports.sendBookmark = async (req, res) => {
+  try {
+    const { body } = req;
+    console.log('--> Sending bookmark for...', body.id);
+    const presentationShared = await Presentations.findById(body.id);
+    const userBookmarkedID = presentationShared.userID;
+    const bookmarked = await Bookmarks.findOrCreate({
+      where: {
+        userID: req.user.id,
+        userBookmarkedID,
+        presentationID: body.id
+      }
+    });
+    if (bookmarked[0].id) {
+      res.status(200).send(bookmarked[0]);
+    } else {
+      res.send({ msg: 'Already Bookmarked!' });
+    }
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
+/**
+ * DELETE /api/social/bookmark
+ * Delete Bookmarked Presentation
+ */
+exports.deleteBookmark = async (req, res) => {
+  try {
+    const { body } = req;
+    console.log('--> Deleting bookmark for...', body.id);
+    const presentationShared = await Presentations.findById(body.id);
+    const userBookmarkedID = presentationShared.userID;
+    const bookmarked = await Bookmarks.destroy({
+      where: {
+        userID: req.user.id,
+        userBookmarkedID,
+        presentationID: body.id
+      }
+    });
+    if (bookmarked.length !== 0) {
+      res.status(200).send({ bookmarked });
+    } else {
+      res.send({ msg: 'Already Bookmarked!' });
+    }
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
+/**
+ * POST /api/social/download
+ * Post Downloaded Presentation
+ */
+exports.sendDownload = async (req, res) => {
+  try {
+    const { body } = req;
+    console.log('--> Sending download for...', body.id);
+    const presentationDownloaded = await Presentations.findById(body.id);
+    const userDownloadedID = presentationDownloaded.userID;
+    const downloaded = await Downloads.findOrCreate({
+      where: {
+        userID: req.user.id,
+        userDownloadedID,
+        presentationID: body.id
+      }
+    });
+    if (downloaded[0].isNewRecord) {
+      res.status(200).send(downloaded[0]);
+    } else {
+      res.send({ msg: 'Already Shared!' });
+    }
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
+/* ** ** ** ** ** ** ** External API Routes ** ** ** ** ** ** * */
 /**
  * GET /api/facebook
  * Facebook API example.

@@ -4,9 +4,8 @@
 function getParams() {
   const search = window.location.search.substring(1);
   const params = JSON.parse(
-    `{"${  search.replace(/&/g, '","').replace(/=/g,'":"').replace(/\+/g, '%20')  }"}`,
+    `{"${search.replace(/&/g, '","').replace(/=/g,'":"').replace(/\+/g, '%20')}"}`,
     (key, value) => key === "" ? value : decodeURIComponent(value));
-  console.log(params.id);
   return params;
 }
 
@@ -14,44 +13,74 @@ function getParams() {
 ******** Ajax Requests ********
 */
 async function sendShare() {
-  console.log('sending share...');
+  const params = JSON.stringify(getParams());
+  console.log(params);
+  try {
+    const res = await fetch('/api/social/share', {
+      method: 'POST',
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: params,
+      credentials: 'include'
+    });
+    const result = await res.json();
+    console.log(result);
+  } catch (err) {
+    console.error(err.message);
+  }
 }
 
 async function sendBookmark() {
-  console.log('sending bookmark...');
+  const params = JSON.stringify(getParams());
+  try {
+    const res = await fetch('/api/social/bookmark', {
+      method: 'POST',
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: params,
+      credentials: 'include' 
+    });
+    const result = await res.json();
+    console.log(result);
+  } catch (err) {
+    console.error(err.message);
+  }
 }
 
 async function removeBookmark() {
-  console.log('removing bookmark...');
+  const params = JSON.stringify(getParams());
+  try {
+    const res = await fetch('/api/social/bookmark', {
+      method: 'DELETE',
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: params,
+      credentials: 'include'
+    });
+    const result = await res.json();
+    console.log(result);
+  } catch (err) {
+    console.error(err.message);
+  }
 }
 
-export async function retrieveDownload() {
-    try {
-      const params = getParams();
-      const res = await fetch(`/api/pdf/${params.id}`);
-      
-      const pdf = await res.blob();
-      console.log(pdf);
-      
-      // const file = JSON.stringify(pdf.fileUrl);
-      // const blob = new Blob([file], { type: 'application/pdf' });
-      const link = URL.createObjectURL(pdf);
-      const downloadLink = document.querySelector('#download-link');
-      // const fileUrl = new File(pdf.fileUrl);
-      // console.log(pdf.fileUrl, fileUrl);
-      downloadLink.setAttribute('href', link);
-      console.log(downloadLink.href);
-      // downloadLink.setAttribute('download', pdf.fileName);
-    } catch (err) {
-      console.error(err);
-    }
+async function sendDownload() {
+  const params = JSON.stringify(getParams());
+  try {
+    const res = await fetch('/api/social/download', {
+      method: 'POST',
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: params,
+      credentials: 'include'
+    });
+    const result = await res.json();
+    console.log(result);
+  } catch (err) {
+    console.error(err.message);
+  }
 }
 
 /**
 ******** Social Functions ********
 */
 function share(shareLink) {
-  console.log(shareLink);
   shareLink.classList.add('social-selected');
   sendShare();
   shareLink.classList.remove('social-selected');
@@ -69,7 +98,7 @@ function bookmark(bookmarkLink) {
 
 function download(downloadLink) {
   downloadLink.classList.add('social-selected');
-  // retrieveDownload();
+  sendDownload();
   downloadLink.classList.remove('social-selected');
 }
 
@@ -81,13 +110,20 @@ function more(moreLink) {
 /**
 ******** Social Event Listeners ********
 */
-export function addSocialListeners() {
+export async function addSocialListeners() {
   const shareLink = document.querySelector('#share');
   const bookmarkLink = document.querySelector('#bookmark');
   const downloadLink = document.querySelector('#download');
   const moreLink = document.querySelector('#more');
+  const params = getParams();
+  const res = await fetch(`/api/social/bookmark/${params.id}`);
+  const isBookmarked = await res.json();
   shareLink.addEventListener('click', () => share(shareLink));
   bookmarkLink.addEventListener('click', () => bookmark(bookmarkLink));
   downloadLink.addEventListener('click', () => download(downloadLink));
   moreLink.addEventListener('click', () => more(moreLink));
+  console.log(isBookmarked);
+  if (!isBookmarked.msg) {
+    bookmarkLink.classList.add('social-selected');
+  }
 }
